@@ -33,7 +33,7 @@ public class Artatawe extends Application {
 		VBox loginVBox = new VBox();
 		loginVBox.setAlignment(javafx.geometry.Pos.CENTER);
 		
-		//editing the borderpane
+		//editing the BorderPane
 		BorderPane loginItems = new BorderPane();
 		loginItems.setMaxHeight(100);
 		loginItems.setMinHeight(100);
@@ -47,7 +47,7 @@ public class Artatawe extends Application {
 		loginImage.setEffect(new GaussianBlur());
 		loginImage.setImage(loginBackgroundImage);
 		
-		//adds image to Stackpane
+		//adds image to StackPane
 		loginStackPane.getChildren().add(loginImage);
 		
 		//create title Label
@@ -59,25 +59,44 @@ public class Artatawe extends Application {
 		usernameTextField.setId("username-TextField");
 		usernameTextField.setPromptText("Username");
 		
+		//Edit errorLabel
+		Label errorLabel = new Label("");
+		errorLabel.setId("errorLabel");
+		
 		//Login Button
 		Button loginButton = new Button("Connect");
 		loginButton.setMinWidth(300);
 		loginButton.setId("loginButton");
 		
-		//adds items to borderpane
-		loginItems.setCenter(usernameTextField);
-		loginItems.setBottom(loginButton);
+		loginButton.setOnAction( e -> {
+			if(usernameTextField.getText().equals("")) { //checkProfileExists()
+				errorLabel.setText("Wrong Username!");
+				errorLabel.setStyle("-fx-text-fill: red");
+			}else {
+				errorLabel.setText("");
+			}
+		});
 		
-		//vbox items Customization
+		//create VBox to go in borderPane bottom
+		VBox borderPaneVBox = new VBox();
+		borderPaneVBox.getChildren().addAll(errorLabel, loginButton);
+		borderPaneVBox.setMargin(errorLabel,new Insets(5,5,5,6));
+		
+		//adds items to borderPane
+		loginItems.setCenter(usernameTextField);
+		loginItems.setBottom(borderPaneVBox);
+		
+		//vbox items Customisation
 		loginItems.setMargin(usernameTextField,new Insets(5,5,5,5));
 		
-		//adds borderpane to vbox
+		//adds borderPane to vbox
 		loginVBox.getChildren().addAll(titleLabel, loginItems);
 		
-		//add items to stackpane
+		//add items to stackPane
 		loginStackPane.getChildren().add(loginVBox);
 		
 		Scene LoginScene = new Scene(loginStackPane, 1000, 700);
+		loginVBox.requestFocus();
 		LoginScene.getStylesheets().add("application.css");
 		primaryStage.setScene(LoginScene);
 		primaryStage.show();
