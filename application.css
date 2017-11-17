@@ -5,9 +5,11 @@
 	-fx-font-weight: bold;
 	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 	-fx-font-family: "MV Boli";
+	-fx-text-fill: black;
 }
 #username-TextField{
 	-fx-padding: 5px;
+	-fx-text-fill: black;
 }
 #loginBox{
 	-fx-background-color: white;
@@ -22,7 +24,8 @@
 	-fx-background-radius: 0 0 10 10;
 	-fx-background-color: #e8e8e8;
 	-fx-font-size: 15px;
+	-fx-font-weight: bold;
 }
 #loginButton:hover{
-	-fx-opacity: 0.5;
+	-fx-background-color: #cccccc;
 }

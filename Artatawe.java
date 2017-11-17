@@ -25,7 +25,7 @@ public class Artatawe extends Application {
 	public void start(Stage primaryStage) throws Exception{
 		//stuff to do with the stage
 		primaryStage.setTitle("Artatawe");
-		//primaryStage.getIcons().add(new Image("sureLogoIcon.png"));
+		primaryStage.getIcons().add(new Image("applicationIcon.png"));
 		
 		StackPane loginStackPane = new StackPane();
 		
@@ -69,11 +69,11 @@ public class Artatawe extends Application {
 		loginButton.setId("loginButton");
 		
 		loginButton.setOnAction( e -> {
-			if(usernameTextField.getText().equals("")) { //checkProfileExists()
+			if(usernameTextField.getText().equals("")) { //add check for profile Exists, method return boolean
 				errorLabel.setText("Wrong Username!");
 				errorLabel.setStyle("-fx-text-fill: red");
 			}else {
-				errorLabel.setText("");
+				
 			}
 		});
 		
