@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 #titleLabel{
 	-fx-padding: 0 0 75 0;
@@ -28,4 +29,33 @@
 }
 #loginButton:hover{
 	-fx-background-color: #cccccc;
+=======
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+#titleLabel{
+	-fx-padding: 0 0 75 0;
+	-fx-font-size: 100px;
+	-fx-font-weight: bold;
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+	-fx-font-family: "MV Boli";
+}
+#username-TextField{
+	-fx-padding: 5px;
+}
+#loginBox{
+	-fx-background-color: white;
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+	-fx-background-radius: 10px;
+}
+#errorLabel{
+	-fx-font-weight: bold;
+	-fx-font-size: 12px;
+}
+#loginButton{
+	-fx-background-radius: 0 0 10 10;
+	-fx-background-color: #e8e8e8;
+	-fx-font-size: 15px;
+}
+#loginButton:hover{
+	-fx-opacity: 0.5;
+>>>>>>> 77d5c9b2c613e50dd3cd0b0db31b98a096261451
 }
