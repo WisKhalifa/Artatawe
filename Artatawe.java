@@ -18,26 +18,41 @@ import javafx.stage.Stage;
 
 public class Artatawe extends Application {
 	
+	//The scene used for the program.
+	private Scene artataweScene;
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception{
+		
 		//stuff to do with the stage
 		primaryStage.setTitle("Artatawe");
 		primaryStage.getIcons().add(new Image("applicationIcon.png"));
-		primaryStage.setMaxHeight(700);
-		primaryStage.setMaxWidth(1000);
 		primaryStage.setResizable(false);
 		
+		artataweScene = makeLoginPage();
+		artataweScene.getStylesheets().add("application.css");
+		
+		primaryStage.setScene(artataweScene);
+		primaryStage.show();
+	}
+	
+	/**
+	 * Creates the Login page for Artatawe.
+	 * @return A scene containing the Login page
+	 */
+	public Scene makeLoginPage(){
+		//The root pane everything will be attached to.
 		StackPane loginStackPane = new StackPane();
 		
-		//Editing the VBox
+		//Editing the VBox.
 		VBox loginVBox = new VBox();
 		loginVBox.setAlignment(javafx.geometry.Pos.CENTER);
 		
-		//editing the BorderPane
+		//Editing the BorderPane.
 		BorderPane loginItems = new BorderPane();
 		loginItems.setMaxHeight(100);
 		loginItems.setMinHeight(100);
@@ -45,13 +60,11 @@ public class Artatawe extends Application {
 		loginItems.setMinWidth(300);
 		loginItems.setId("loginBox");
 		
-		//Create Image
+		//Create background image
 		Image loginBackgroundImage = new Image("swanseaBay.png");
 		ImageView loginImage = new ImageView();
 		loginImage.setEffect(new GaussianBlur());
 		loginImage.setImage(loginBackgroundImage);
-		
-		//adds image to StackPane
 		loginStackPane.getChildren().add(loginImage);
 		
 		//create title Label
@@ -72,12 +85,15 @@ public class Artatawe extends Application {
 		loginButton.setMinWidth(300);
 		loginButton.setId("loginButton");
 		
+		//When you click the Login Button
 		loginButton.setOnAction( e -> {
-			if(usernameTextField.getText().equals("")) { //add check for profile Exists, method return boolean
+			if(usernameTextField.getText().equals("")) { 
 				errorLabel.setText("Wrong Username!");
 				errorLabel.setStyle("-fx-text-fill: red");
+			}else if(true){
+				//add check for profile Exists, method return boolean
 			}else {
-				
+				//go to dashboard.
 			}
 		});
 		
@@ -90,20 +106,20 @@ public class Artatawe extends Application {
 		loginItems.setCenter(usernameTextField);
 		loginItems.setBottom(borderPaneVBox);
 		
-		//vbox items Customisation
+		//VBox items Customisation
 		loginItems.setMargin(usernameTextField,new Insets(5,5,5,5));
 		
-		//adds borderPane to vbox
+		//adds borderPane to VBox
 		loginVBox.getChildren().addAll(titleLabel, loginItems);
 		
-		//add items to stackPane
+		//add items to stackPane.
 		loginStackPane.getChildren().add(loginVBox);
 		
-		Scene LoginScene = new Scene(loginStackPane, 1000, 700);
-			
+		Scene scene = new Scene(loginStackPane, 1000, 700);
+		
+		//removes focus from the text Field, has to be placed after scene implementation.
 		loginVBox.requestFocus();
-		LoginScene.getStylesheets().add("application.css");
-		primaryStage.setScene(LoginScene);
-		primaryStage.show();
+		
+		return scene;
 	}
 }
