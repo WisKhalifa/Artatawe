@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Artatawe extends Application {
@@ -26,6 +27,9 @@ public class Artatawe extends Application {
 		//stuff to do with the stage
 		primaryStage.setTitle("Artatawe");
 		primaryStage.getIcons().add(new Image("applicationIcon.png"));
+		primaryStage.setMaxHeight(700);
+		primaryStage.setMaxWidth(1000);
+		primaryStage.setResizable(false);
 		
 		StackPane loginStackPane = new StackPane();
 		
@@ -96,6 +100,7 @@ public class Artatawe extends Application {
 		loginStackPane.getChildren().add(loginVBox);
 		
 		Scene LoginScene = new Scene(loginStackPane, 1000, 700);
+			
 		loginVBox.requestFocus();
 		LoginScene.getStylesheets().add("application.css");
 		primaryStage.setScene(LoginScene);

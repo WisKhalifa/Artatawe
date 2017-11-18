@@ -2,7 +2,7 @@
 	-fx-padding: 0 0 75 0;
 	-fx-font-size: 100px;
 	-fx-font-weight: bold;
-	-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+	-fx-effect: dropshadow(three-pass-box, rgba(255,255,255,1), 20, 0.5, 0, 0);
 	-fx-font-family: "MV Boli";
 	-fx-text-fill: black;
 }
