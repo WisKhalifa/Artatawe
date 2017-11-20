@@ -28,3 +28,60 @@
 #loginButton:hover{
 	-fx-background-color: #cccccc;
 }
+
+/* BorderPane Top */
+#mainBorderPane{
+	-fx-background-color: white;
+}
+#BannerTitle{
+	-fx-font-size: 50px;
+	-fx-effect: dropshadow(three-pass-box, rgba(255,255,255,1), 20, 0.5, 0, 0);
+	-fx-font-weight: bold;
+	-fx-font-family: "MV Boli";
+	-fx-text-fill: black;
+}
+#navigationBar{
+	-fx-background-color: #e8e8e8;
+	-fx-border-width: 1 0 1 0;
+	-fx-border-color: grey;
+}
+#viewAuctionsButton{
+	-fx-background-color: transparent;
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+}
+#viewProfileButton{
+	-fx-background-color: transparent;
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+}
+#viewAuctionsButton:hover{
+	-fx-opacity: 0.5;
+}
+#viewProfileButton:hover{
+	-fx-opacity: 0.5;
+}
+/* Auction Navigation bar */
+#auctionNavigationBar{
+	-fx-background-color: #e8e8e8;
+	-fx-border-width: 0 0 1 0;
+	-fx-border-color: grey;
+}
+#filterlabel{
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-padding: 10 10 0 40;
+}
+#filterPaintingCheckBox{
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+}
+#filterSculptureCheckBox{
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+}
+#searchLabel{
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-padding: 10 10 0 40;
+}
