@@ -35,25 +35,25 @@ public class Artatawe extends Application {
 	public final int AUCTION_FLOWPANE_LENGTH = 1000;
 	
 	private Scene artataweScene; //The scene used for the program.
-	//private ProfileManager profileManager;
-	//private AuctionManager auctionManager;
+	private ProfileManager profileManager;
+	private AuctionManager auctionManager;
 	//private Profile mainProfile; //the profile that is being used on the program.
 	private VBox mainBorderPaneTopVBox;
 	private HBox auctionNavigationBar;
 	private BorderPane mainBorderPane;
+	private FlowPane AuctionFP;
 	private int paintingFilter;
 	private int sculptureFilter;
 	
 	public static void main(String[] args) {
-		//creates the profile and auction managers.
-		//profileManager = new profileManager();
-		//auctionManager = new AuctionManager();
-		
 		launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception{
+		//creates the profile and auction managers.
+		profileManager = new ProfileManager();
+		auctionManager = new AuctionManager();
 		
 		//stuff to do with the stage
 		primaryStage.setTitle("Artatawe");
@@ -170,90 +170,37 @@ public class Artatawe extends Application {
 	}
 	
 	/**
-	 * Creates the dashboard page, This GUI is loaded once the user logs in.
-	 * The dashboard page is the browse Auction page.
+	 * Creates the dash board page, This GUI is loaded once the user logs in.
+	 * The dash board page is the browse Auction page.
 	 */
 	public void makeDashboard() {	
 		mainBorderPane = new BorderPane();
 		mainBorderPane.setId("mainBorderPane");
 		
-		//Creation of everything in the top BorderPane
+		//Creation of containers in the top BorderPane
 		mainBorderPaneTopVBox = new VBox();
-		
 		StackPane bannerSP = new StackPane();
 		
-		ImageView bannerImageView = createImage("bannerImage.png");
+		//Creation of containers in the center BorderPane
+		ScrollPane borderPaneSP = new ScrollPane();
+		borderPaneSP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		AuctionFP = new FlowPane(Orientation.HORIZONTAL);
+		AuctionFP.setHgap(AUCTION_FLOWPANE_H_GAP);
+		AuctionFP.setPrefWrapLength(AUCTION_FLOWPANE_LENGTH);
 		
+		ImageView bannerImageView = createImage("bannerImage.png");
 		Label bannerTitle = new Label("Artatawe");
 		bannerTitle.setId("BannerTitle");
 		bannerSP.setMargin(bannerTitle,new Insets(0,800,0,0));
-		
 		bannerSP.getChildren().addAll(bannerImageView, bannerTitle);
 		
 		//calls a method that creates the navigation bar.
 		HBox navigationBar = createNavigationBar();
-		
-		auctionNavigationBar = new HBox();
-		auctionNavigationBar.setId("auctionNavigationBar");
-		auctionNavigationBar.setMaxHeight(AUCTION_NAVIGATION_BAR_HEIGHT);
-		auctionNavigationBar.setMinHeight(AUCTION_NAVIGATION_BAR_HEIGHT);
-		
-		Label filterlabel = new Label("Filter:");
-		CheckBox paintingCheckBox = new CheckBox("Painting");
-        CheckBox sculptureCheckBox = new CheckBox("Scultpure");
-
-		Label searchLabel = new Label("Search:");
-		TextField searchUserArtwork = new TextField();
-		searchUserArtwork.setPromptText("Username");
-		
-		filterlabel.setId("filterlabel");
-		searchLabel.setId("searchLabel");
-		searchUserArtwork.setId("searchUserArtwork");
-		paintingCheckBox.setId("filterPaintingCheckBox");
-		sculptureCheckBox.setId("filterSculptureCheckBox");
-		
-		auctionNavigationBar.getChildren().addAll(filterlabel, paintingCheckBox, sculptureCheckBox, searchLabel, searchUserArtwork);
-		auctionNavigationBar.setMargin(searchUserArtwork,new Insets(7,0,0,0));
-		auctionNavigationBar.setMargin(paintingCheckBox,new Insets(10,10,0,0));
-		auctionNavigationBar.setMargin(sculptureCheckBox,new Insets(10,10,0,0));
+		HBox auctionNavigationBar = createAuctionNavigationBar();
 		
 		mainBorderPaneTopVBox.getChildren().addAll(bannerSP, navigationBar, auctionNavigationBar);
 		
-		//Creation of everything in the center BorderPane
-		ScrollPane borderPaneSP = new ScrollPane();
-		borderPaneSP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		
-		FlowPane AuctionFP = new FlowPane(Orientation.HORIZONTAL);
-		AuctionFP.setHgap(AUCTION_FLOWPANE_H_GAP);
-		AuctionFP.setPrefWrapLength(AUCTION_FLOWPANE_LENGTH);
-		
-		/*
-		//creates the actions for the filter checkboxes.
-		paintingCheckBox.setOnAction( e -> {
-			sculptureCheckBox.setSelected(false);
-			sculptureFilter = 0;
-			if(paintingCheckBox.isSelected()) {
-				paintingFilter = 1;
-				displayAuctions(AuctionFP,paintingFilter,sculptureFilter);
-			}else {
-				paintingFilter = 0;
-				displayAuctions(AuctionFP,paintingFilter,sculptureFilter);
-			}
-		});
-		sculptureCheckBox.setOnAction( e -> {
-			paintingCheckBox.setSelected(false);
-			paintingFilter = 0;
-			if(sculptureCheckBox.isSelected()) {
-				sculptureFilter = 1;
-				displayAuctions(AuctionFP,paintingFilter,sculptureFilter);
-			}else {
-				sculptureFilter = 0;
-				displayAuctions(AuctionFP,paintingFilter,sculptureFilter);
-			}
-		});
-		*/
-		
-		//creates and displays all the Auctions into the flowpane.
+		//creates and displays all the Auction's into the flowPane.
 		//displayAuctions(AuctionFP);
 		//HERE
 		BorderPane auctionItemBox = new BorderPane();
@@ -302,6 +249,67 @@ public class Artatawe extends Application {
 	}
 	
 	/**
+	 * Creates the Auction Navigation bar that appears when you are 
+	 * viewing all the auction's.
+	 * @param AuctionFP
+	 * @return A container containing the navigation bar.
+	 */
+	public HBox createAuctionNavigationBar() {
+		auctionNavigationBar.setId("auctionNavigationBar");
+		auctionNavigationBar.setMaxHeight(AUCTION_NAVIGATION_BAR_HEIGHT);
+		auctionNavigationBar.setMinHeight(AUCTION_NAVIGATION_BAR_HEIGHT);
+		
+		Label filterlabel = new Label("Filter:");
+		CheckBox paintingCheckBox = new CheckBox("Painting");
+        CheckBox sculptureCheckBox = new CheckBox("Scultpure");
+
+		Label searchLabel = new Label("Search:");
+		TextField searchUserArtwork = new TextField();
+		searchUserArtwork.setPromptText("Username");
+		
+		filterlabel.setId("filterlabel");
+		searchLabel.setId("searchLabel");
+		searchUserArtwork.setId("searchUserArtwork");
+		paintingCheckBox.setId("filterPaintingCheckBox");
+		sculptureCheckBox.setId("filterSculptureCheckBox");
+		
+		auctionNavigationBar.getChildren().addAll(filterlabel, paintingCheckBox, sculptureCheckBox, searchLabel, searchUserArtwork);
+		auctionNavigationBar.setMargin(searchUserArtwork,new Insets(7,0,0,0));
+		auctionNavigationBar.setMargin(paintingCheckBox,new Insets(10,10,0,0));
+		auctionNavigationBar.setMargin(sculptureCheckBox,new Insets(10,10,0,0));
+		/*
+		//creates the actions for the filter check boxes.
+		paintingCheckBox.setOnAction( e -> {
+			sculptureCheckBox.setSelected(false);
+			sculptureFilter = 0;
+			if(paintingCheckBox.isSelected()) {
+				paintingFilter = 1;
+				mainBorderPane.setCenter(null);
+				displayAuctions(paintingFilter,sculptureFilter);
+			}else {
+				paintingFilter = 0;
+				mainBorderPane.setCenter(null);
+				displayAuctions(paintingFilter,sculptureFilter);
+			}
+		});
+		sculptureCheckBox.setOnAction( e -> {
+			paintingCheckBox.setSelected(false);
+			paintingFilter = 0;
+			if(sculptureCheckBox.isSelected()) {
+				sculptureFilter = 1;
+				mainBorderPane.setCenter(null);
+				displayAuctions(paintingFilter,sculptureFilter);
+			}else {
+				sculptureFilter = 0;
+				mainBorderPane.setCenter(null);
+				displayAuctions(paintingFilter,sculptureFilter);
+			}
+		});*/
+		
+		return auctionNavigationBar;
+	}
+	
+	/**
 	 * Creates the Navigation bar used for in the application.
 	 * @return A container containing the Navigation bar.
 	 */
@@ -326,12 +334,13 @@ public class Artatawe extends Application {
 	}
 	
 	/**
-	 * This checks the filters and then displays the correct auctions
+	 * This checks the filters and then displays the correct auction's
 	 * based off the filters
-	 * @param AuctionFP what holds all the auctions.
+	 * @param paintingFilter Used to see if the painting filter needs to be applied.
+	 * @param sculptureFilter Used to see if the sculpture filter needs to be applied.
 	 */
 	/*
-	public void displayAuctions(FlowPane AuctionFP, int paintingFilter, int sculptureFilter) {
+	public void displayAuctions(int paintingFilter, int sculptureFilter) {
 		for(Auction auction : AuctionManager.getAllElements()) {
 		
 			BorderPane auctionItemBox = new BorderPane();
@@ -355,11 +364,10 @@ public class Artatawe extends Application {
 	}*/
 	
 	/**
-	 * This finds all the auctions and creates a GUI for them and then displays them
-	 * in the auction page or dashboard.
-	 * @param AuctionFP What holds all the auctions.
+	 * This finds all the auction's and creates a GUI for them and then displays them
+	 * in the auction page or dash board.
 	 *//*
-	public void createAuctionItem(FlowPane AuctionFP) {
+	public void createAuctionItem() {
 		BorderPane auctionItemBoxPicContainer = new BorderPane();
 		ImageView auctionBoxImageView = createImage(auction.getArtwork().getMainPhoto());
 		auctionBoxImageView.fitWidthProperty().bind(auctionItemBoxPicContainer.widthProperty());
