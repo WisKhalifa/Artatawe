@@ -73,7 +73,7 @@ public class FileWriter {
 				auctionWriter.println(auctions.get(i).getArtwork().getDepth());
 				auctionWriter.println(auctions.get(i).getArtwork().getMaterial());
 				for(int j = 0; j < auctions.get(i).getArtwork().getAdditionalPhotos.length; j++){
-					auctionWriter.println(auctions.get(i).getArtwork().getExtraPhotos().get(i));
+					auctionWriter.println(auctions.get(i).getArtwork().getExtraPhotos()[i]);
 				}
 				profileWriter.println("."); //shows the end of saving additional photos
 			}else { //if its a painting.
