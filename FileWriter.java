@@ -11,10 +11,10 @@ import java.util.ArrayList;
  */
 public class FileWriter {
 	
-	String profileFilePath;
-	String auctionFilePath;
-	PrintWriter profileWriter;
-	PrintWriter auctionWriter;
+	private String profileFilePath;
+	private String auctionFilePath;
+	private PrintWriter profileWriter;
+	private PrintWriter auctionWriter;
 	
 	/**
 	 * This constructor allows the user to save profiles and Auction's to a text file.
