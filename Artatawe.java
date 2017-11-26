@@ -413,7 +413,7 @@ public class Artatawe extends Application {
 		Label artworkDateAndTime = new Label("Time uploaded: " + auction.getArtwork().getDateAndTime());
 		Label artworkDescription = new Label(auction.getArtwork().getDescription());
 		
-		//creates a button to view oweners profile.
+		//creates a button to view owners profile.
 		Button viewProfile = new Button("View Profile");
 		
 		//creates the input to make a bid.

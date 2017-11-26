@@ -66,17 +66,17 @@ public class FileWriter {
 			auctionWriter.println(auctions.get(i).getArtwork().getBidTotal());
 			auctionWriter.println(auctions.get(i).getArtwork().getDateAndTime());
 			
-			//saves details if it is a Painting.
-			if(auctions.get(i).getArtwork() instanceof Painting) {
+			//saves details if it is a Sculpture.
+			if(auctions.get(i).getArtwork() instanceof Sculpture) {
 				auctionWriter.println(auctions.get(i).getArtwork().getWidth());
 				auctionWriter.println(auctions.get(i).getArtwork().getHeight());
 				auctionWriter.println(auctions.get(i).getArtwork().getDepth());
 				auctionWriter.println(auctions.get(i).getArtwork().getMaterial());
 				for(int j = 0; j < auctions.get(i).getArtwork().getAdditionalPhotos.length; j++){
-					auctionWriter.println(auctions.get(i).getArtwork().getAdditionalPhotos[i]);
+					auctionWriter.println(auctions.get(i).getArtwork().getExtraPhotos().get(i));
 				}
 				profileWriter.println("."); //shows the end of saving additional photos
-			}else {
+			}else { //if its a painting.
 				auctionWriter.println(auctions.get(i).getArtwork().getWidth());
 				auctionWriter.println(auctions.get(i).getArtwork().getHeight());
 			}
