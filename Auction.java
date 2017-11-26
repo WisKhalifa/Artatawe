@@ -39,7 +39,19 @@ public class Auction {
         }
         
         public void placeBid(Bid b) {
-            // place bid here
+                Bid currenstHighestBid = bids.peek();
+                // if the bidder is already the highest bidder error
+                if (b.getBidder() == currenstHighestBid.getBidder()) {
+                    // error
+                } else if (artwork.getPrice() > b.getAmount()) {
+                    // if the artwork reserve price is greater than the amount then error
+                } else if (currenstHighestBid.getAmount() > b.getAmount()) {
+                    // if the amount of the highest bid is more than the bid error
+                } else {
+                    // accept bid
+                    bids.add(b);
+                }
+                
         }
 
 }
