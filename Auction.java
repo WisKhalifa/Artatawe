@@ -1,20 +1,20 @@
 
-import java.util.ArrayList;
+
+import java.util.Stack;
+
 
 /**
  *
  * @author Cormac
  */
 public class Auction {
-        //private final Artwork artwork;
-        // bids possibly in a stack structure?
-        private ArrayList<Bid> bids;
-        private Bid currentHighestBid;
+        private final Artwork artwork;
+        private Stack<Bid> bids;
         private Boolean isComplete;
         
-        public Auction() {
-                //this.artwork = a;
-                bids = new ArrayList<>();
+        public Auction(Artwork a) {
+                this.artwork = a;
+                bids = new Stack<>();
                 isComplete = false;
         }
         
@@ -23,10 +23,10 @@ public class Auction {
         }
         
         public Bid getHighestBid() {
-                return currentHighestBid;
+                return bids.peek();
         }
         
-        public ArrayList<Bid> getAllBids() {
+        public Stack<Bid> getAllBids() {
                 return bids;
         }
         
@@ -34,8 +34,8 @@ public class Auction {
                 return isComplete;
         }
         
-        public Profile getSeller() {
-                return artwork.getSeller();
+        public String getSeller() {
+                return artwork.getCreatorName();
         }
         
         public void placeBid(Bid b) {

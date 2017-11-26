@@ -3,21 +3,31 @@ import java.util.ArrayList;
 
 /**
  *
- * @author 911013
+ * @author Anderson
  */
 public class AuctionManager extends Manager {
+        private ArrayList<Auction> auctions;
         
+        /**
+         * Creates an instance of an auction manager.
+         */
         public AuctionManager() {
-            super();
+                auctions = new ArrayList<>();
         }
         
-        @Override
-        public void addElement(Object a) {
-                super.getAllElements().add(a);
+        /**
+         * Adds an auction to the auction manager.
+         * @param a 
+         */
+        public void addAuction(Auction a) {
+                auctions.add(a);
         }
         
-        @Override
-        public void deleteElement(Object a) {
+        /**
+         * Removes an auction from the auction manager.
+         * @param a the auction to be removed
+         */
+        public void deleteAuction(Auction a) {
                 super.getAllElements().remove(a);
         }
         

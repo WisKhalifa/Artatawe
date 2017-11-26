@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author 911013
+ * @author Cormac Anderson
  */
 abstract class Manager {
         private ArrayList<Object> listOfElements;
@@ -12,9 +12,13 @@ abstract class Manager {
                 listOfElements = new ArrayList<>();
         }
         
-        abstract void addElement(Object elem);
+        public void addElement(Object elem) {
+                listOfElements.add(elem);
+        };
         
-        abstract void deleteElement(Object elem);
+        public void deleteElement(Object elem) {
+                listOfElements.remove(elem);
+        };
         
         public ArrayList<Object> getAllElements() {
                 return listOfElements;

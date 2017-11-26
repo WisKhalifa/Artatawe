@@ -1,21 +1,32 @@
+import java.util.ArrayList;
+
 /**
  *
- * @author Cormac
+ * @author Cormac Anderson
  */
 public class ProfileManager extends Manager {
-                
+        private ArrayList<Profile> profiles;
+        
+        /**
+         * Creates an instance of a profile manager.
+         */
         public ProfileManager() {
-            super();
+            profiles = new ArrayList<>();
         }
         
-        @Override
-        public void addElement(Object a) {
-                super.getAllElements().add(a);
+        /**
+         * Adds a profile to the profile manager.
+         * @param a 
+         */
+        public void addProfile(Profile a) {
+                profiles.getAllElements().add(a);
         }
         
-        @Override
-        public void deleteElement(Object a) {
-                super.getAllElements().remove(a);
+        /**
+         * Removes a profile from the profile manager.
+         * @param a the auction to be removed
+         */        public void deleteProfile(Profile a) {
+                profiles.getAllElements().remove(a);
         }
         
 }
