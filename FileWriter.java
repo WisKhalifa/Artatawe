@@ -102,7 +102,10 @@ public class FileWriter {
 			auctionWriter.println(auctions.get(i).isComplete());
 			
 			for(int j = 0; j < auctions.get(i).getAllBids().size(); j++){
-				auctionWriter.println(auctions.get(i).getAllBids().get(i));	
+				auctionWriter.println(auctions.get(i).getAllBids().get(i).getAmount());
+				auctionWriter.println(auctions.get(i).getAllBids().get(i).getDate());
+				auctionWriter.println(auctions.get(i).getAllBids().get(i).getBidder().getUsername());
+				auctionWriter.println(".");
 			}
 			profileWriter.println(","); //shows the end of an Auction save
 		}

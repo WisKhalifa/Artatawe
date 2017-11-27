@@ -10,16 +10,8 @@ redneck //creator
 60 //height (its a painting)
 redneck //seller
 false //is complete
-620.99 //list of bids, highest and most recent at the top
-615
-610.99
-605
-604
-600
-580
-550
-540
-520
-510
-500
+620.99 //Amount
+2017/10/27 14:50:22 //Date
+chrome //username
+. //end of bid
 , //shows end of auction data.
