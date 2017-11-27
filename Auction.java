@@ -1,7 +1,4 @@
-
-
 import java.util.Stack;
-
 
 /**
  *
@@ -38,22 +35,8 @@ public class Auction {
                 return artwork.getCreatorName();
         }
         
-        public void placeBid(Bid b) throws AlreadyHighestBidderException,
-                LessThanReservePriceException, LessThanHighestBidException {
+        public void placeBid(Bid b){
                 Bid currenstHighestBid = bids.peek();
-                if (b.getBidder() == currenstHighestBid.getBidder()) {
-                    // if the bidder is already the highest bidder error
-                    throw new AlreadyHighestBidderException();
-                } else if (artwork.getPrice() > b.getAmount()) {
-                    // if the artwork reserve price is greater than the amount then error
-                    throw new LessThanReservePriceException();
-                } else if (currenstHighestBid.getAmount() > b.getAmount()) {
-                    // if the amount of the highest bid is more than the bid error
-                    throw new LessThanHighestBidException();
-                } else {
-                    // accept bid
-                    bids.add(b);
-                }
+                bids.add(b);
         }
-
 }

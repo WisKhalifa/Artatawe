@@ -297,7 +297,7 @@ public class Artatawe extends Application {
 			makeDashboard();
 		});
 		viewProfile.setOnAction( e -> {
-			
+			viewCurrentProfile();
 		});
 		
 		return navigationBar;
@@ -418,11 +418,19 @@ public class Artatawe extends Application {
 		
 		//creates a bid and sends it off to be added to the Auction.
 		sendBid.setOnAction( e -> {
-			//creates a bid.
-			Bid newbid = Bid(currentProfile,auction.getArtwork(),Integer.parseInt(enterBid.getText()));
-			auction.placeBid(newbid,bidErrorMessage);
-			if(bidErrorMessage.equals("")) {
-				//update bid table.
+			int newBidTotal = Integer.parseInt(enterBid.getText());
+			enterBid.setText("");
+			bidErrorMessage.setStyle("-fx-text-fill: red;");
+			if(currentProfile == auction.getHighestBid().getBidder()) {
+				bidErrorMessage.setText("You already have the highest Bid!");
+			}else if(auction.getArtwork().getPrice() > newBidTotal) {
+				bidErrorMessage.setText("You must enter a bid higher than initial price.");
+			}else if(auction.getHighestBid().getAmount() > newBidTotal){
+				bidErrorMessage.setText("Must be higher than current highest bid.");
+			}else {
+				Bid newbid = Bid(currentProfile,auction.getArtwork(),newBidTotal);
+				auction.placeBid(newbid);
+				//update bid table
 			}
 		});
 		
@@ -438,6 +446,14 @@ public class Artatawe extends Application {
 	 * @param profile The profile that is being viewed.
 	 */
 	public void viewProfile(Profile profile) {
+		
+	}
+	
+	/** This method makes the current Profiles page. This allows
+	 * the current user to view their information and make
+	 * changes to their information and also make custom drawings.
+	 */
+	public void viewCurrentProfile() {
 		
 	}
 }
