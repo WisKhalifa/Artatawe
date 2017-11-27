@@ -58,7 +58,15 @@ public class FileWriter {
 		for(int i = 0; i < auctions.size(); i++) {
 			//saves all the information about the artwork in the auction
 			auctionWriter.println(auctions.get(i).getArtwork().getTitle());
-			auctionWriter.println(auctions.get(i).getArtwork().getDescription());
+			
+			//checks whether the description is null, as its optional.
+			if(auctions.get(i).getArtwork().getDescription().equals("") ||
+					auctions.get(i).getArtwork().getDescription() == null) {
+				auctionWriter.println("");
+			}else {
+				auctionWriter.println(auctions.get(i).getArtwork().getDescription());
+			}
+			
 			auctionWriter.println(auctions.get(i).getArtwork().getMainPhoto());
 			auctionWriter.println(auctions.get(i).getArtwork().getCreatorName());
 			auctionWriter.println(auctions.get(i).getArtwork().getCreationYear());
@@ -72,9 +80,17 @@ public class FileWriter {
 				auctionWriter.println(auctions.get(i).getArtwork().getHeight());
 				auctionWriter.println(auctions.get(i).getArtwork().getDepth());
 				auctionWriter.println(auctions.get(i).getArtwork().getMaterial());
-				for(int j = 0; j < auctions.get(i).getArtwork().getAdditionalPhotos.length; j++){
+				
+				//checks to see if additional photos is empty as its optional.
+				if(auctions.get(i).getArtwork().getExtraPhotos() == null || 
+						auctions.get(i).getArtwork().getExtraPhotos().length == 0) {
+					auctionWriter.println("-");
+				}else {
+					for(int j = 0; j < auctions.get(i).getArtwork().getExtraPhotos().length; j++){
 					auctionWriter.println(auctions.get(i).getArtwork().getExtraPhotos()[i]);
+					}
 				}
+				
 				profileWriter.println("."); //shows the end of saving additional photos
 			}else { //if its a painting.
 				auctionWriter.println(auctions.get(i).getArtwork().getWidth());
@@ -82,7 +98,7 @@ public class FileWriter {
 			}
 			
 			//saves all the information about the Auction
-			auctionWriter.println(auctions.get(i).getSeller());
+			auctionWriter.println(auctions.get(i).getArtwork().getCreatorName());
 			auctionWriter.println(auctions.get(i).isComplete());
 			
 			for(int j = 0; j < auctions.get(i).getAllBids().size(); j++){

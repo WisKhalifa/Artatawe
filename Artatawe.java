@@ -1,12 +1,17 @@
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -37,7 +42,7 @@ public class Artatawe extends Application {
 	private Scene artataweScene; //The scene used for the program.
 	private ProfileManager profileManager;
 	private AuctionManager auctionManager;
-	//private Profile mainProfile; //the profile that is being used on the program.
+	private Profile currentProfile; //the profile that is being used on the program.
 	private VBox mainBorderPaneTopVBox;
 	private HBox auctionNavigationBar;
 	private BorderPane mainBorderPane;
@@ -154,11 +159,11 @@ public class Artatawe extends Application {
 				errorLabel.setStyle("-fx-text-fill: red");
 			}else{
 				makeDashboard();
-				//for(int i = 0; i < profileManager.getAllElements().size(); i++) {
-				//	if(usernameTextField.getText().equals(profileManager.getAllElements().get(i).getUsername())) {
-				//		mainProfile = profileManager.getAllElements().get(i);
-				//		makeDashboard();
-				//	}
+				for(int i = 0; i < profileManager.getAllElements().size(); i++) {
+					if(usernameTextField.getText().equals(profileManager.getAllElements().get(i).getUsername())) {
+						currentProfile = profileManager.getAllElements().get(i);
+						makeDashboard();
+					}
 				}
 				errorLabel.setText("Wrong Username!");
 				errorLabel.setStyle("-fx-text-fill: red");
@@ -201,42 +206,7 @@ public class Artatawe extends Application {
 		mainBorderPaneTopVBox.getChildren().addAll(bannerSP, navigationBar, auctionNavigationBar);
 		
 		//creates and displays all the Auction's into the flowPane.
-		//displayAuctions(AuctionFP);
-		//HERE
-		BorderPane auctionItemBox = new BorderPane();
-		auctionItemBox.setId("auctionItemBox");
-		
-		BorderPane auctionItemBoxPicContainer = new BorderPane();
-		ImageView auctionBoxImageView = createImage("test.jpg");
-		auctionBoxImageView.fitWidthProperty().bind(auctionItemBoxPicContainer.widthProperty());
-		auctionBoxImageView.fitHeightProperty().bind(auctionItemBoxPicContainer.heightProperty());
-		auctionItemBoxPicContainer.setCenter(auctionBoxImageView);
-		auctionItemBoxPicContainer.setMaxHeight(AUCTION_BOX_ITEM_PIC_CONTAINER_HEIGHT);
-		auctionItemBoxPicContainer.setMaxWidth(AUCTION_BOX_ITEM_PIC_CONTAINER_WIDTH);
-		auctionItemBoxPicContainer.setMinHeight(AUCTION_BOX_ITEM_PIC_CONTAINER_HEIGHT);
-		auctionItemBoxPicContainer.setMinWidth(AUCTION_BOX_ITEM_PIC_CONTAINER_WIDTH);
-		
-		VBox auctionBoxVBox = new VBox();
-		Label artworkName = new Label("ARTWORK NAME");
-		Label artworkOwner = new Label("USERNAME");
-		artworkName.setId("artworkName");
-		artworkOwner.setId("artworkOwner");
-		auctionBoxVBox.getChildren().addAll(artworkName, artworkOwner);
-		
-		auctionItemBox.setCenter(auctionItemBoxPicContainer);
-		auctionItemBox.setBottom(auctionBoxVBox);
-		auctionItemBox.setMaxHeight(AUCTION_BOX_ITEM_HEIGHT);
-		auctionItemBox.setMaxWidth(AUCTION_BOX_ITEM_WIDTH);
-		auctionItemBox.setMinHeight(AUCTION_BOX_ITEM_HEIGHT);
-		auctionItemBox.setMinWidth(AUCTION_BOX_ITEM_WIDTH);
-		
-		AuctionFP.getChildren().addAll(auctionItemBox);
-		AuctionFP.setMargin(auctionItemBox,new Insets(20,20,20,20));
-		
-		auctionItemBox.setOnMouseClicked( e -> {
-			System.out.println("clicked");
-		});
-		//HERE
+		displayAuctions();
 		
 		borderPaneSP.setContent(AuctionFP);
 		
@@ -277,7 +247,7 @@ public class Artatawe extends Application {
 		auctionNavigationBar.setMargin(searchUserArtwork,new Insets(7,0,0,0));
 		auctionNavigationBar.setMargin(paintingCheckBox,new Insets(10,10,0,0));
 		auctionNavigationBar.setMargin(sculptureCheckBox,new Insets(10,10,0,0));
-		/*
+		
 		//creates the actions for the filter check boxes.
 		paintingCheckBox.setOnAction( e -> {
 			sculptureCheckBox.setSelected(false);
@@ -285,11 +255,11 @@ public class Artatawe extends Application {
 			if(paintingCheckBox.isSelected()) {
 				paintingFilter = 1;
 				mainBorderPane.setCenter(null);
-				displayAuctions(paintingFilter,sculptureFilter);
+				displayAuctions();
 			}else {
 				paintingFilter = 0;
 				mainBorderPane.setCenter(null);
-				displayAuctions(paintingFilter,sculptureFilter);
+				displayAuctions();
 			}
 		});
 		sculptureCheckBox.setOnAction( e -> {
@@ -298,13 +268,13 @@ public class Artatawe extends Application {
 			if(sculptureCheckBox.isSelected()) {
 				sculptureFilter = 1;
 				mainBorderPane.setCenter(null);
-				displayAuctions(paintingFilter,sculptureFilter);
+				displayAuctions();
 			}else {
 				sculptureFilter = 0;
 				mainBorderPane.setCenter(null);
-				displayAuctions(paintingFilter,sculptureFilter);
+				displayAuctions();
 			}
-		});*/
+		});
 		
 		return auctionNavigationBar;
 	}
@@ -339,17 +309,17 @@ public class Artatawe extends Application {
 	 * @param paintingFilter Used to see if the painting filter needs to be applied.
 	 * @param sculptureFilter Used to see if the sculpture filter needs to be applied.
 	 */
-	/*
-	public void displayAuctions(int paintingFilter, int sculptureFilter) {
+	
+	public void displayAuctions() {
 		for(Auction auction : AuctionManager.getAllElements()) {
 		
 			BorderPane auctionItemBox = new BorderPane();
 			
-			//0 means get it. 1 means dont get it.
-			if((object instanceof Painting) && (paintingFilter == 0)){
-				auctionItemBox = createAuctionItem(AuctionFP);
-			}else if((object instanceof Sculpture) && (sculptureFilter == 0)){
-				auctionItemBox = createAuctionItem(AuctionFP);
+			//0 means get it. 1 means don't get it.
+			if((auction.getArtwork() instanceof Painting) && (paintingFilter == 0)){
+				auctionItemBox = createAuctionItem(auctionItemBox,auction);
+			}else if((auction.getArtwork() instanceof Sculpture) && (sculptureFilter == 0)){
+				auctionItemBox = createAuctionItem(auctionItemBox,auction);
 			}
 			
 			auctionItemBox.setId("auctionItemBox");
@@ -361,13 +331,13 @@ public class Artatawe extends Application {
 				createAuctionPage(auction);
 			});
 		}
-	}*/
+	}
 	
 	/**
 	 * This finds all the auction's and creates a GUI for them and then displays them
 	 * in the auction page or dash board.
-	 *//*
-	public void createAuctionItem() {
+	 */
+	public BorderPane createAuctionItem(BorderPane auctionItemBox, Auction auction) {
 		BorderPane auctionItemBoxPicContainer = new BorderPane();
 		ImageView auctionBoxImageView = createImage(auction.getArtwork().getMainPhoto());
 		auctionBoxImageView.fitWidthProperty().bind(auctionItemBoxPicContainer.widthProperty());
@@ -391,7 +361,7 @@ public class Artatawe extends Application {
 		auctionItemBox.setMaxWidth(AUCTION_BOX_ITEM_WIDTH);
 		auctionItemBox.setMinHeight(AUCTION_BOX_ITEM_HEIGHT);
 		auctionItemBox.setMinWidth(AUCTION_BOX_ITEM_WIDTH);
-	}*/
+	}
 	
 	/**
 	 * Creates the Auction page for the particular auction that is clicked.
@@ -399,9 +369,8 @@ public class Artatawe extends Application {
 	 * to bid on the Auction.
 	 * @param auction The auction clicked on by the user.
 	 */
-	/*
 	public void createAuctionPage(Auction auction) {
-		mainBorderPaneTopVBox.remove(auctionNavigationBar);
+		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 		VBox auctionPageVBox = new VBox();
 		
 		//adds the information about the artwork
@@ -411,7 +380,7 @@ public class Artatawe extends Application {
 		Label artworkPrice = new Label("Price: " + auction.getArtwork().getPrice());
 		Label artworkBidTotal = new Label("Total bids: " + auction.getArtwork().getBidTotal());
 		Label artworkDateAndTime = new Label("Time uploaded: " + auction.getArtwork().getDateAndTime());
-		Label artworkDescription = new Label(auction.getArtwork().getDescription());
+		Label artworkDescription = new Label(auction.getArtwork().getDescription()); //this one is Optional, wil just be empty otherwise.
 		
 		//creates a button to view owners profile.
 		Button viewProfile = new Button("View Profile");
@@ -420,8 +389,25 @@ public class Artatawe extends Application {
 		HBox makeBid = new HBox();
 		TextField enterBid = new TextField();
 		Button sendBid = new Button("Make bid");
-		makeBid.getChildren().addAll(enterBid, sendBid);
+		Label bidErrorMessage = new Label("");
+		makeBid.getChildren().addAll(enterBid, sendBid, bidErrorMessage);
 		
+		//if the Auction is complete then the user can't add a bid.
+		if(auction.isComplete()) {
+			makeBid.setDisable(true);
+		}
+		
+		//table of all bids.
+		TableView bidTable = new TableView();
+		bidTable.setEditable(false);
+		TableColumn usernameCol = new TableColumn("Username");
+        TableColumn amountCol = new TableColumn("Amount (£)");
+        TableColumn dateAndTimeCol = new TableColumn("Date and Time");
+        bidTable.getColumns().addAll(usernameCol, amountCol, dateAndTimeCol);
+        
+        //add elements to table.
+		
+		//button to view the auction owners profile.
 		viewProfile.setOnAction( e -> {
 			for(int i = 0; i < profileManager.getAllElements().size(); i++){
 				if(auction.getArtwork().getCreatorName().equals(profileManager.getAllElements().get(i).getUsername())){
@@ -430,13 +416,28 @@ public class Artatawe extends Application {
 			}
 		});
 		
+		//creates a bid and sends it off to be added to the Auction.
 		sendBid.setOnAction( e -> {
-			
+			//creates a bid.
+			Bid newbid = Bid(currentProfile,auction.getArtwork(),Integer.parseInt(enterBid.getText()));
+			auction.placeBid(newbid,bidErrorMessage);
+			if(bidErrorMessage.equals("")) {
+				//update bid table.
+			}
 		});
 		
 		auctionPageVBox.getChildren().addAll(artworkName, artworkOwner, artworkCreationYear, artworkPrice,
-			artworkBidTotal, artworkDateAndTime, artworkDescription, viewProfile, makeBid);
+			artworkBidTotal, artworkDateAndTime, artworkDescription, viewProfile, makeBid, bidTable);
 			
 		mainBorderPane.setCenter(auctionPageVBox);
-	}*/
+	}
+	
+	/**
+	 * This method creates the GUI for viewing a Profile. This profile
+	 * is not the current Users profile but another Users profile.
+	 * @param profile The profile that is being viewed.
+	 */
+	public void viewProfile(Profile profile) {
+		
+	}
 }
