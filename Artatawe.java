@@ -13,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -167,6 +168,7 @@ public class Artatawe extends Application {
 				}
 				errorLabel.setText("Wrong Username!");
 				errorLabel.setStyle("-fx-text-fill: red");
+			}
 		});
 		//create VBox to go in borderPane bottom
 		borderPaneVBox.getChildren().addAll(errorLabel, loginButton);
@@ -398,14 +400,7 @@ public class Artatawe extends Application {
 		}
 		
 		//table of all bids.
-		TableView bidTable = new TableView();
-		bidTable.setEditable(false);
-		TableColumn usernameCol = new TableColumn("Username");
-        TableColumn amountCol = new TableColumn("Amount (£)");
-        TableColumn dateAndTimeCol = new TableColumn("Date and Time");
-        bidTable.getColumns().addAll(usernameCol, amountCol, dateAndTimeCol);
-        
-        //add elements to table.
+		TableView<Bid> bidTable = makeBidTable(auction);
 		
 		//button to view the auction owners profile.
 		viewProfile.setOnAction( e -> {
@@ -430,7 +425,10 @@ public class Artatawe extends Application {
 			}else {
 				Bid newbid = Bid(currentProfile,auction.getArtwork(),newBidTotal);
 				auction.placeBid(newbid);
-				//update bid table
+				//updates the table.
+				auctionPageVBox.getChildren().remove(bidTable);
+				bidTable = makeBidTable(auction);
+				auctionPageVBox.getChildren().add(bidTable);
 			}
 		});
 		
@@ -441,12 +439,59 @@ public class Artatawe extends Application {
 	}
 	
 	/**
+	 * This creates a table containing all the bids that have been created
+	 * for an auction. The table includes the user who made the bid, the amount
+	 * and the time of the bid.
+	 * @param auction The auction used to get the bids.
+	 * @return A table.
+	 */
+	public TableView makeBidTable(Auction auction){
+		TableView<Bid> bidTable = new TableView<>();
+		bidTable.setEditable(false);
+		TableColumn<Bid, String> usernameCol = new TableColumn<>("Username");
+        TableColumn<Bid, String> amountCol = new TableColumn<>("Amount (£)");
+        TableColumn<Bid, String> dateAndTimeCol = new TableColumn<>("Date and Time");
+        usernameCol.setMinWidth(200);
+        amountCol.setMinWidth(200);
+        dateAndTimeCol.setMinWidth(200);
+        //gets the data from the variables in that class
+        usernameCol.setCellValueFactory(new PropertyValueFactory<>("bidder"));
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        dateAndTimeCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        
+        //add elements to table.
+        ObservableList<Bid> allBids = FXCollections.observableArrayList();
+        for(int i = 0; i < auction.getAllBids().size(); i++) {
+        	allBids.add(auction.getAllBids().pop());
+        }
+        
+        bidTable.setItems(allBids);
+		bidTable.getColumns().addAll(usernameCol, amountCol, dateAndTimeCol);
+	}
+	
+	/**
 	 * This method creates the GUI for viewing a Profile. This profile
 	 * is not the current Users profile but another Users profile.
 	 * @param profile The profile that is being viewed.
 	 */
 	public void viewProfile(Profile profile) {
+		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
+		VBox viewProfileVBox = new VBox();
 		
+		HBox profileHeader = new HBox();
+		ImageView profileAvatar = createImage(profile.getImagePath());
+		Label profileUsername = new Label(profile.getUsername());
+		profileHeader.getChildren().addAll(profileAvatar, profileUsername);
+		
+		//list of won artwork's
+		
+		//list of artwork's sold
+		
+		//list of all bids placed
+		
+		//list of bids done on their artwork's.
+		
+		viewProfileVBox.getChildren().addAll(profileHeader);
 	}
 	
 	/** This method makes the current Profiles page. This allows
@@ -454,6 +499,6 @@ public class Artatawe extends Application {
 	 * changes to their information and also make custom drawings.
 	 */
 	public void viewCurrentProfile() {
-		
+		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 	}
 }
