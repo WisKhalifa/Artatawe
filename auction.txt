@@ -1,0 +1,25 @@
+Mona Lisa //artwork title
+This is a painting I created in my in my while at University a couple years ago. //description
+MonaLisa.png //image location
+redneck //creator
+2015/11/16 12:08:43 //time of creation
+500 // price
+12 //number of bids
+2017/11/27 14:50:22 //time of upload
+30 //width (its a painting)
+60 //height (its a painting)
+redneck //seller
+false //is complete
+620.99 //list of bids, highest and most recent at the top
+615
+610.99
+605
+604
+600
+580
+550
+540
+520
+510
+500
+, //shows end of auction data.
