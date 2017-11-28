@@ -514,7 +514,7 @@ public class Artatawe extends Application {
 	 * @return A table of won artwork's.
 	 */
 	public TableView getWonArtworksTable(Profile profile) {
-		TableView<Bid> wonArtworksTable = new TableView<>();
+		TableView<Artwork> wonArtworksTable = new TableView<>();
 		wonArtworksTable.setEditable(false);
 		TableColumn<Artwork, String> artworkTitleCol = new TableColumn<>("Artwork Title");
         TableColumn<Artwork, String> priceCol = new TableColumn<>("Price (£)");
@@ -528,7 +528,7 @@ public class Artatawe extends Application {
         previousOwnerCol.setCellValueFactory(new PropertyValueFactory<>("creatorsName"));
         
         //add elements to table.
-        ObservableList<Bid> allWonArtworks = FXCollections.observableArrayList();
+        ObservableList<Artwork> allWonArtworks = FXCollections.observableArrayList();
         for(int i = 0; i < auctionManager.getAllElements().size(); i++) {
         	if(auctionManager.getAllElements().get(i).isComplete()){
         		if(auctionManager.getAllElements().get(i).getHighestBid().getBidder() == profile){
@@ -547,7 +547,7 @@ public class Artatawe extends Application {
 	 * @return A table of all sold artwork's.
 	 */
 	public TableView getArtworksSold(Profile profile) {
-		TableView<Bid> artworksSoldTable = new TableView<>();
+		TableView<Artwork> artworksSoldTable = new TableView<>();
 		artworksSoldTable.setEditable(false);
 		TableColumn<Artwork, String> artworkTitleCol = new TableColumn<>("Artwork Title");
         TableColumn<Artwork, String> priceSoldCol = new TableColumn<>("Price Sold (£)");
@@ -561,7 +561,7 @@ public class Artatawe extends Application {
         WinningBidderCol.setCellValueFactory(new PropertyValueFactory<>("creatorsName"));
         
         //add elements to table.
-        ObservableList<Bid> allWonArtworks = FXCollections.observableArrayList();
+        ObservableList<Artwork> allWonArtworks = FXCollections.observableArrayList();
         for(int i = 0; i < auctionManager.getAllElements().size(); i++) {
         	//artwork class should hold winning bidder, as variable.
         }
@@ -609,7 +609,7 @@ public class Artatawe extends Application {
 	
 	/**
 	 * A method that returns a table of all the bids that have been made of a
-	 * Profiles auctions.
+	 * Profiles auction's.
 	 * @param profile
 	 * @return A table of bids placed on the profiles Auction's.
 	 */
