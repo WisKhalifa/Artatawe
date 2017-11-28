@@ -87,8 +87,8 @@ public class Profile{
 			  "\n First name: " + firstName +
 			  "\n Last name: " + lastName +
 			  "\n Telephone number: " + telephone +
-			  "\ nAddress: " + address +
-			  "\ nPostcode: " + postcode;
+			  "\n Address: " + address +
+			  "\n Postcode: " + postcode;
 	  return result;
   }
   
