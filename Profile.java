@@ -83,12 +83,12 @@ public class Profile{
    */
   public String toString(){
 	  String result = "";
-	  result += "Username: " + username +"/n" +
-			  "First name: " + firstName + "/n" +
-			  "Last name: " + lastName + "/n" +
-			  "Telephone number: " + telephone + "/n" +
-			  "Address: " + address + "/n" +
-			  "Postcode: " + postcode + "/n";
+	  result += "\n Username: " + username +
+			  "\n First name: " + firstName +
+			  "\n Last name: " + lastName +
+			  "\n Telephone number: " + telephone +
+			  "\ nAddress: " + address +
+			  "\ nPostcode: " + postcode;
 	  return result;
   }
   
