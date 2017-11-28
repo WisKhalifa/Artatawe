@@ -22,6 +22,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Artatawe extends Application {
@@ -37,6 +38,7 @@ public class Artatawe extends Application {
 	public final int AUCTION_BOX_ITEM_WIDTH = 200;
 	public final int AUCTION_BOX_ITEM_HEIGHT = 200;
 	public final int AUCTION_NAVIGATION_BAR_HEIGHT = 40;
+	public final int PROFILE_NAVIGATION_BAR_HEIGHT = 40;
 	public final int AUCTION_FLOWPANE_H_GAP = 4; //to fit 4 auction boxes on a line
 	public final int AUCTION_FLOWPANE_LENGTH = 1000;
 	
@@ -46,6 +48,7 @@ public class Artatawe extends Application {
 	private Profile currentProfile; //the profile that is being used on the program.
 	private VBox mainBorderPaneTopVBox;
 	private HBox auctionNavigationBar;
+	private HBox profileNavigationBar;
 	private BorderPane mainBorderPane;
 	private FlowPane AuctionFP;
 	private int paintingFilter;
@@ -311,7 +314,6 @@ public class Artatawe extends Application {
 	 * @param paintingFilter Used to see if the painting filter needs to be applied.
 	 * @param sculptureFilter Used to see if the sculpture filter needs to be applied.
 	 */
-	
 	public void displayAuctions() {
 		for(Auction auction : AuctionManager.getAllElements()) {
 		
@@ -400,6 +402,7 @@ public class Artatawe extends Application {
 		}
 		
 		//table of all bids.
+		Label bidTableLabel = new Label("All Bids");
 		TableView<Bid> bidTable = makeBidTable(auction);
 		
 		//button to view the auction owners profile.
@@ -423,7 +426,7 @@ public class Artatawe extends Application {
 			}else if(auction.getHighestBid().getAmount() > newBidTotal){
 				bidErrorMessage.setText("Must be higher than current highest bid.");
 			}else {
-				Bid newbid = Bid(currentProfile,auction.getArtwork(),newBidTotal);
+				Bid newbid = new Bid(currentProfile,auction.getArtwork(),newBidTotal);
 				auction.placeBid(newbid);
 				//updates the table.
 				auctionPageVBox.getChildren().remove(bidTable);
@@ -433,7 +436,7 @@ public class Artatawe extends Application {
 		});
 		
 		auctionPageVBox.getChildren().addAll(artworkName, artworkOwner, artworkCreationYear, artworkPrice,
-			artworkBidTotal, artworkDateAndTime, artworkDescription, viewProfile, makeBid, bidTable);
+			artworkBidTotal, artworkDateAndTime, artworkDescription, viewProfile, makeBid, bidTableLabel, bidTable);
 			
 		mainBorderPane.setCenter(auctionPageVBox);
 	}
@@ -484,14 +487,161 @@ public class Artatawe extends Application {
 		profileHeader.getChildren().addAll(profileAvatar, profileUsername);
 		
 		//list of won artwork's
+		Label wonArtworksLabel = new Label("All Won Artworks");
+		TableView<Artwork> wonArtworksTable = getWonArtworksTable(profile);
 		
 		//list of artwork's sold
+		Label artworksSoldLabel = new Label("All Artworks Sold");
+		TableView<Artwork> artworksSoldTable = getArtworksSold(profile);
 		
 		//list of all bids placed
+		Label allPlacedBidsLabel = new Label("All Bids Placed");
+		TableView<Bid> allBidsPlacedTable = getBidsPlaced(profile);
 		
 		//list of bids done on their artwork's.
+		Label bidsOnOwnersArtworksLabel = new Label("All bids on " + profile.getUsername() + "'s Artworks");
+		TableView<Bid> bidsOnOwnersArtworkTable = getBidsOnOwnersArtwork(profile);
 		
 		viewProfileVBox.getChildren().addAll(profileHeader);
+		
+		mainBorderPane.setCenter(viewProfileVBox);
+	}
+	
+	/**
+	 * This method creates a table containing all the artwork won by a particular
+	 * profile.
+	 * @param profile
+	 * @return A table of won artwork's.
+	 */
+	public TableView getWonArtworksTable(Profile profile) {
+		TableView<Bid> wonArtworksTable = new TableView<>();
+		wonArtworksTable.setEditable(false);
+		TableColumn<Artwork, String> artworkTitleCol = new TableColumn<>("Artwork Title");
+        TableColumn<Artwork, String> priceCol = new TableColumn<>("Price (£)");
+        TableColumn<Artwork, String> previousOwnerCol = new TableColumn<>("Previous Owner");
+        artworkTitleCol.setMinWidth(200);
+        priceCol.setMinWidth(200);
+        previousOwnerCol.setMinWidth(200);
+        //gets the data from the variables in that class
+        artworkTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        previousOwnerCol.setCellValueFactory(new PropertyValueFactory<>("creatorsName"));
+        
+        //add elements to table.
+        ObservableList<Bid> allWonArtworks = FXCollections.observableArrayList();
+        for(int i = 0; i < auctionManager.getAllElements().size(); i++) {
+        	if(auctionManager.getAllElements().get(i).isComplete()){
+        		if(auctionManager.getAllElements().get(i).getHighestBid().getBidder() == profile){
+        			allWonArtworks.add(auctionManager.getAllElements().get(i).getArtwork());
+        		}
+        	}
+        }
+        
+        wonArtworksTable.setItems(allWonArtworks);
+        wonArtworksTable.getColumns().addAll(artworkTitleCol, priceCol, previousOwnerCol);
+	}
+	
+	/**
+	 * This method creates a table of all the artwork's sold by a profile.
+	 * @param profile
+	 * @return A table of all sold artwork's.
+	 */
+	public TableView getArtworksSold(Profile profile) {
+		TableView<Bid> artworksSoldTable = new TableView<>();
+		artworksSoldTable.setEditable(false);
+		TableColumn<Artwork, String> artworkTitleCol = new TableColumn<>("Artwork Title");
+        TableColumn<Artwork, String> priceSoldCol = new TableColumn<>("Price Sold (£)");
+        TableColumn<Artwork, String> WinningBidderCol = new TableColumn<>("Winning Bidder");
+        artworkTitleCol.setMinWidth(200);
+        priceSoldCol.setMinWidth(200);
+        WinningBidderCol.setMinWidth(200);
+        //gets the data from the variables in that class
+        artworkTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        priceSoldCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        WinningBidderCol.setCellValueFactory(new PropertyValueFactory<>("creatorsName"));
+        
+        //add elements to table.
+        ObservableList<Bid> allWonArtworks = FXCollections.observableArrayList();
+        for(int i = 0; i < auctionManager.getAllElements().size(); i++) {
+        	//artwork class should hold winning bidder, as variable.
+        }
+        
+        artworksSoldTable.setItems(allWonArtworks);
+        artworksSoldTable.getColumns().addAll(artworkTitleCol, priceSoldCol, WinningBidderCol);
+	}
+	
+	/**
+	 * A method that returns a table of all the bids a profile has 
+	 * ever placed.
+	 * @param profile
+	 * @return A table of bids placed.
+	 */
+	public TableView getBidsPlaced(Profile profile) {
+		TableView<Bid> bidsPlacedTable = new TableView<>();
+		bidsPlacedTable.setEditable(false);
+		TableColumn<Bid, String> artworkTitleCol = new TableColumn<>("Artwork Title"); 
+        TableColumn<Bid, String> amountCol = new TableColumn<>("Amount (£)");
+        TableColumn<Bid, String> dateOfBidCol = new TableColumn<>("Date of Bid");
+        artworkTitleCol.setMinWidth(200);
+        amountCol.setMinWidth(200);
+        dateOfBidCol.setMinWidth(200);
+        //gets the data from the variables in that class
+        artworkTitleCol.setCellValueFactory(new PropertyValueFactory<>("")); //make variable in bid.??
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        dateOfBidCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        
+        //add elements to table.
+        ObservableList<Bid> allBidsPlaced = FXCollections.observableArrayList();
+        for(int i = 0; i < auctionManager.getAllElements().size(); i++) {
+        	
+        	for(int j = 0; j < auctionManager.getAllElements().get(i).getAllBids().size(); j++) {
+        		Bid tempBid = auctionManager.getAllElements().get(j).getAllBids().pop();
+        	
+	        	if(tempBid.getBidder().getUsername().equals(profile.getUsername())){
+	        		allBidsPlaced.add(tempBid);
+	        	}
+        	}
+        }
+        
+        bidsPlacedTable.setItems(allBidsPlaced);
+        bidsPlacedTable.getColumns().addAll(artworkTitleCol, amountCol, dateOfBidCol);
+	}
+	
+	/**
+	 * A method that returns a table of all the bids that have been made of a
+	 * Profiles auctions.
+	 * @param profile
+	 * @return A table of bids placed on the profiles Auction's.
+	 */
+	public TableView getBidsOnOwnersArtwork(Profile profile) {
+		TableView<Bid> bidsOnOwnersArtworkTable = new TableView<>();
+		bidsOnOwnersArtworkTable.setEditable(false);
+		TableColumn<Bid, String> artworkTitleCol = new TableColumn<>("Artwork Title"); 
+        TableColumn<Bid, String> amountCol = new TableColumn<>("Amount (£)");
+        TableColumn<Bid, String> bidderCol = new TableColumn<>("Bidder");
+        TableColumn<Bid, String> dateOfBidCol = new TableColumn<>("Date of Bid");
+        artworkTitleCol.setMinWidth(150);
+        amountCol.setMinWidth(150);
+        bidderCol.setMinWidth(150);
+        dateOfBidCol.setMinWidth(150);
+        //gets the data from the variables in that class
+        artworkTitleCol.setCellValueFactory(new PropertyValueFactory<>("")); //make artwork title in bid??
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        bidderCol.setCellValueFactory(new PropertyValueFactory<>("")); //make bidder name in bid
+        dateOfBidCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        
+        //add elements to table.
+        ObservableList<Bid> bidsOnOwnersArtwork = FXCollections.observableArrayList();
+        for(int i = 0; i < auctionManager.getAllElements().size(); i++) {
+        	if(auctionManager.getAllElements().get(i).getSeller().equals(profile.getUsername())) {
+        		for(int j = 0; j < auctionManager.getAllElements().get(i).getAllBids().size(); j++) {
+        			bidsOnOwnersArtwork.add(auctionManager.getAllElements().get(i).getAllBids().get(j));
+        		}
+        	}
+        }
+        
+        bidsOnOwnersArtworkTable.setItems(bidsOnOwnersArtwork);
+        bidsOnOwnersArtworkTable.getColumns().addAll(artworkTitleCol, amountCol, bidderCol, dateOfBidCol);
 	}
 	
 	/** This method makes the current Profiles page. This allows
@@ -500,5 +650,142 @@ public class Artatawe extends Application {
 	 */
 	public void viewCurrentProfile() {
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
+		
+		//creates a profile Navigation bar
+		HBox profileNavigationBar = createProfileNavigationBar();
+		mainBorderPaneTopVBox.getChildren().add(profileNavigationBar);
+		
+		VBox currentProfilePageVBox = new VBox();
+		
+		HBox profileHeader = new HBox();
+		ImageView profileAvatar = createImage(currentProfile.getImagePath());
+		Label profileUsername = new Label(currentProfile.getUsername());
+		profileHeader.getChildren().addAll(profileAvatar, profileUsername);
+		
+		//adds the information about the artwork
+		Label profileFirstName = new Label("First Name: " + currentProfile.getFirstName());
+		Label profileLastName = new Label("Last Name: " + currentProfile.getLastName());
+		Label profileTelephone = new Label("Telephone: " + currentProfile.getTelephone());
+		Label profileAddress = new Label("Address: " + currentProfile.getFirstAddress());
+		Label profilePostCode = new Label("PostCode: " + currentProfile.getPostcode());
+		
+		//list of won artwork's
+		Label wonArtworksLabel = new Label("All Won Artworks");
+		TableView<Artwork> wonArtworksTable = getWonArtworksTable(currentProfile);
+				
+		//list of artwork's sold
+		Label artworksSoldLabel = new Label("All Artworks Sold");
+		TableView<Artwork> artworksSoldTable = getArtworksSold(currentProfile);
+				
+		//list of all bids placed
+		Label allPlacedBidsLabel = new Label("All Bids Placed");
+		TableView<Bid> allBidsPlacedTable = getBidsPlaced(currentProfile);
+				
+		//list of bids done on their artwork's.
+		Label bidsOnOwnersArtworksLabel = new Label("All bids on " + currentProfile.getUsername() + "'s Artworks");
+		TableView<Bid> bidsOnOwnersArtworkTable = getBidsOnOwnersArtwork(currentProfile);
+		
+		currentProfilePageVBox.getChildren().addAll(profileHeader,profileFirstName,profileLastName,profileTelephone,profileAddress,profilePostCode,
+				wonArtworksLabel,wonArtworksTable,artworksSoldLabel,artworksSoldTable,allPlacedBidsLabel,allBidsPlacedTable,bidsOnOwnersArtworksLabel,
+				bidsOnOwnersArtworkTable);
+		
+		mainBorderPane.setCenter(currentProfilePageVBox);
+	}
+	
+	/**
+	 * Creates a profile Naviagation Bar. This is a bar that will appear underneath the main
+	 * navigation bar once the user views their own profile.
+	 * @return A profile Navigation bar in a HBox container.
+	 */
+	public HBox createProfileNavigationBar() {
+		profileNavigationBar.setId("profileNavigationBar");
+		profileNavigationBar.setMaxHeight(PROFILE_NAVIGATION_BAR_HEIGHT);
+		profileNavigationBar.setMinHeight(PROFILE_NAVIGATION_BAR_HEIGHT);
+		
+		Label filterlabel = new Label("Settings");
+		
+		filterlabel.setId("settingslabel");
+		
+		profileNavigationBar.getChildren().add(filterlabel);
+		
+		//opens settings page on click.
+		filterlabel.setOnMouseClicked( e -> {
+			makeSettingsWindow();
+		});
+		
+		return profileNavigationBar;
+	}
+	
+	/**
+	 * This method creates a settings window which allows the user to edit
+	 * their information such as name, address or telephone number.
+	 */
+	public void makeSettingsWindow() {
+		Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Make Changes");
+        window.getIcons().add(new Image("applicationIcon.png"));
+        
+        VBox settingsVBox = new VBox();
+        
+        //displays the information that can be changed.
+        Label changeFirstName = new Label("Edit FirstName");
+        HBox changeFirstNameHBox = new HBox();
+        TextField firstNameField = new TextField();
+        firstNameField.setText(currentProfile.getFirstName());
+        Button makeFNChanges = new Button("Make Changes");
+        changeFirstNameHBox.getChildren().addAll(firstNameField,makeFNChanges);
+        
+        Label changeLastName = new Label("Edit LastName");
+        HBox changeLastNameHBox = new HBox();
+        TextField lastNameField = new TextField();
+        lastNameField.setText(currentProfile.getLastName());
+        Button makeLNChanges = new Button("Make Changes");
+        changeLastNameHBox.getChildren().addAll(lastNameField,makeLNChanges);
+        
+        Label changeTelephone = new Label("Edit Telephone Number");
+        HBox changeTelephoneNameHBox = new HBox();
+        TextField telephoneField = new TextField();
+        telephoneField.setText(currentProfile.getTelephone());
+        Button makeTChanges = new Button("Make Changes");
+        changeTelephoneNameHBox.getChildren().addAll(telephoneField,makeTChanges);
+        
+        Label changeAddress = new Label("Edit Address");
+        HBox changeAddressNameHBox = new HBox();
+        TextField addressField = new TextField();
+        addressField.setText(currentProfile.getFirstAddress());
+        Button makeAChanges = new Button("Make Changes");
+        changeAddressNameHBox.getChildren().addAll(addressField,makeAChanges);
+        
+        Label changePostCode = new Label("Edit PostCode");
+        HBox changePostCodeNameHBox = new HBox();
+        TextField postCodeField = new TextField();
+        postCodeField.setText(currentProfile.getPostcode());
+        Button makePCChanges = new Button("Make Changes");
+        changePostCodeNameHBox.getChildren().addAll(postCodeField,makePCChanges);
+        
+        settingsVBox.getChildren().addAll(changeFirstName,changeFirstNameHBox,changeLastName,changeLastNameHBox,changeTelephone,changeTelephoneNameHBox,
+        		changeAddress,changeAddressNameHBox,changePostCode,changePostCodeNameHBox);
+        
+        //adds logic to the buttons.
+        makeFNChanges.setOnAction( e -> {
+			currentProfile.setFirstName(firstNameField.getText());
+		});
+        makeLNChanges.setOnAction( e -> {
+        	currentProfile.setLastName(lastNameField.getText());
+		});
+        makeTChanges.setOnAction( e -> {
+        	currentProfile.setTelephone(telephoneField.getText());
+		});
+        makeAChanges.setOnAction( e -> {
+        	currentProfile.setFirstAddress(addressField.getText());
+		});
+        makePCChanges.setOnAction( e -> {
+        	currentProfile.setPostcode(postCodeField.getText());
+		});
+
+		Scene scene = new Scene(settingsVBox, 600, 900);
+        window.setScene(scene);
+        window.showAndWait();
 	}
 }

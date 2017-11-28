@@ -56,25 +56,25 @@ public class Profile{
 	  return imagePath;
   }
   
-  public void setUsername(){
+  public void setUsername(String username){
 	  this.username = username;
   }
-  public void setFirstName(){
+  public void setFirstName(String firstName){
 	  this.firstName = firstName;
   }
-  public void setLastName(){
+  public void setLastName(String lastName){
 	  this.lastName = lastName;
   }
-  public void setTelephone(){
-	  this.telephone = telpehone;
+  public void setTelephone(String telephone){
+	  this.telephone = telephone;
   }
-  public void setFirstAddress(){
+  public void setFirstAddress(String address){
 	  this.address = address;
   }
-  public void setPostcode(){
+  public void setPostcode(String postcode){
 	  this.postcode = postcode;
   }
-  public void setImagepPath(){
+  public void setImagePath(String imagePath){
 	  this.imagePath = imagePath;
   }
   
@@ -83,11 +83,11 @@ public class Profile{
    */
   public String toString(){
 	  String result = "";
-	  result += "Username: " + username +"/n"
-			  "First name: " + firstName + "/n"
-			  "Last name: " + lastName + "/n"
-			  "Telephone number: " + telephone + "/n"
-			  "Address: " + address + "/n"
+	  result += "Username: " + username +"/n" +
+			  "First name: " + firstName + "/n" +
+			  "Last name: " + lastName + "/n" +
+			  "Telephone number: " + telephone + "/n" +
+			  "Address: " + address + "/n" +
 			  "Postcode: " + postcode + "/n";
 	  return result;
   }
