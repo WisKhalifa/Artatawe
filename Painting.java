@@ -7,7 +7,7 @@ public class Painting extends Artwork {
   private int height;
 
   public Painting(String title, String description, String photo, String creatorsName,
-    int creationYear, int price, int bidTotal, int dateTime, int width, int height) {
+    int creationYear, double price, int bidTotal, int width, int height) {
 
     super(title, description, photo, creatorsName, creationYear, price, bidTotal);
     this.width = width;

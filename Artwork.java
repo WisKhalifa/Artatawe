@@ -1,6 +1,10 @@
 /**
  * @author Liam Cooper - 916153
  */
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public abstract class Artwork {
 
   private String title;
@@ -8,12 +12,12 @@ public abstract class Artwork {
   private String photo;
   private String creatorsName;
   private int creationYear;
-  private int price;
+  private double price;
   private int bidTotal;
-  //private  dateTime; need to implement this
+  private Date dateTime;
 
   public Artwork(String title, String description, String photo, String creatorsName,
-    int creationYear, int price, int bidTotal) {
+    int creationYear, double price, int bidTotal) {
 
       this.title = title;
       this.description = description;
@@ -22,7 +26,14 @@ public abstract class Artwork {
       this.creationYear = creationYear;
       this.price = price;
       this.bidTotal = bidTotal;
+      DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+      dateTime = new Date();
+      dateFormat.format(dateTime);
 
+  }
+
+  public Date getDateTime() {
+          return dateTime;
   }
 
   public String getTitle() {
@@ -45,7 +56,7 @@ public abstract class Artwork {
     return creationYear;
   }
 
-  public int getPrice() {
+  public double getPrice() {
     return price;
   }
 
@@ -73,7 +84,7 @@ public abstract class Artwork {
     this.creationYear = creationYear;
   }
 
-  public void setPrice(int price) {
+  public void setPrice(double price) {
     this.price = price;
   }
 

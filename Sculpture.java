@@ -11,7 +11,7 @@ public class Sculpture extends Artwork {
   private String[] extraPhotos;
 
   public Sculpture(String title, String description, String photo, String creatorsName,
-    int creationYear, int price, int bidTotal, int dateTime, int width, int height,
+    int creationYear, double price, int bidTotal, int width, int height,
       int depth, String material, String[] extraPhotos) {
 
     super(title, description, photo, creatorsName, creationYear, price, bidTotal);
