@@ -5,7 +5,7 @@ import java.util.ArrayList;
  *
  * @author Anderson
  */
-public class AuctionManager extends Manager {
+public class AuctionManager {
         private ArrayList<Auction> auctions;
         
         /**
@@ -13,6 +13,39 @@ public class AuctionManager extends Manager {
          */
         public AuctionManager() {
                 auctions = new ArrayList<>();
+        }
+        
+        /**
+         * @return the array list of auctions 
+         */
+        public ArrayList<Auction> getAuctions() {
+                return auctions;
+        }
+        
+        /**
+         * @return the array list of auctions that are completed 
+         */
+        public ArrayList<Auction> getCompletedAuctions() {
+                ArrayList<Auction> completedAuctions = new ArrayList<>();
+                for (Auction elem: auctions) {
+                    if (elem.isComplete() == true) {
+                        completedAuctions.add(elem);
+                    }
+                } 
+                return completedAuctions;
+        }
+
+        /**
+         * @return the array list of auctions that are not completed
+         */
+        public ArrayList<Auction> getNonCompletedAuctions() {
+                ArrayList<Auction> nonCompletedAuctions = new ArrayList<>();
+                for (Auction elem: auctions) {
+                    if (elem.isComplete() == false) {
+                        nonCompletedAuctions.add(elem);
+                    }
+                } 
+                return nonCompletedAuctions;
         }
         
         /**
@@ -28,7 +61,7 @@ public class AuctionManager extends Manager {
          * @param a the auction to be removed
          */
         public void deleteAuction(Auction a) {
-                super.getAllElements().remove(a);
+                auctions.remove(a);
         }
         
 }

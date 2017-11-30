@@ -4,7 +4,7 @@ import java.util.ArrayList;
  *
  * @author Cormac Anderson
  */
-public class ProfileManager extends Manager {
+public class ProfileManager {
         private ArrayList<Profile> profiles;
         
         /**
@@ -15,18 +15,26 @@ public class ProfileManager extends Manager {
         }
         
         /**
-         * Adds a profile to the profile manager.
-         * @param a 
+         * @return the array list of profiles 
          */
-        public void addProfile(Profile a) {
-                profiles.getAllElements().add(a);
+        public ArrayList<Profile> getProfiles() {
+                return profiles;
         }
         
         /**
+         * Adds a profile to the profile manager.
+         * @param a 
+         */
+        public void addProfile(Profile p) {
+                profiles.add(p);
+        }
+
+        /**
          * Removes a profile from the profile manager.
          * @param a the auction to be removed
-         */        public void deleteProfile(Profile a) {
-                profiles.getAllElements().remove(a);
+         */        
+        public void deleteProfile(Profile p) {
+                profiles.remove(p);
         }
         
 }
