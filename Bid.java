@@ -1,4 +1,6 @@
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -8,14 +10,17 @@ import java.util.Date;
 public class Bid {
         private Profile bidder;
         private Artwork artwork;
-        private int amount;
+        private double amount;
+        
         private Date date;
         
-        public Bid(Profile p, Artwork a, int amount) {
+        public Bid(Profile p, Artwork a, double amount) {
                 this.bidder = p;
                 this.artwork = a;
                 this.amount = amount;
-                // need to add date
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                date = new Date();
+                dateFormat.format(date);
         }
         
         public Profile getBidder() {
@@ -26,7 +31,7 @@ public class Bid {
                 return artwork;
         }
         
-        public int getAmount() {
+        public double getAmount() {
                 return amount;
         }
         

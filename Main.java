@@ -10,9 +10,12 @@ public class Main {
                 
                 Auction a = new Auction(art);
                 
-                am.addElement(a);
+                am.addAuction(a);
                 
-                System.out.println(am.getAllElements().get(0));
-                     
+                System.out.println(am.getAuctions().get(0));
+                
+                Bid b = new Bid(new Profile("","","","","","",""), art, 100);
+                
+                System.out.println(b.getDate());
         }
 }
