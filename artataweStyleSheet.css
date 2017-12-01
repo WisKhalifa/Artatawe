@@ -50,10 +50,19 @@
 	-fx-font-weight: bold;
 	-fx-text-fill: white;
 }
+#logOutButton{
+	-fx-background-color: transparent;
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-text-fill: white;
+}
 #viewAuctionsButton:hover{
 	-fx-opacity: 0.5;
 }
 #viewProfileButton:hover{
+	-fx-opacity: 0.5;
+}
+#logOutButton:hover{
 	-fx-opacity: 0.5;
 }
 /* Auction Navigation bar */

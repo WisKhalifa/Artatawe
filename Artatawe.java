@@ -35,7 +35,6 @@ public class Artatawe extends Application {
 	public final int AUCTION_NAVIGATION_BAR_HEIGHT = 40;
 	public final int PROFILE_NAVIGATION_BAR_HEIGHT = 40;
 	public final int AUCTION_FLOWPANE_H_GAP = 4; //to fit 4 auction boxes on a line
-	public final int AUCTION_FLOWPANE_LENGTH = 1000;
 	
 	private Scene artataweScene; //The scene used for the program.
 	private ProfileManager profileManager;
@@ -115,7 +114,7 @@ public class Artatawe extends Application {
 		primaryStage.setTitle("Artatawe");
 		primaryStage.getIcons().add(new Image("applicationIcon.png"));
 		
-		artataweScene = makeLoginPage();
+		artataweScene = new Scene(makeLoginPage(), SCENE_WIDTH, SCENE_HEIGHT);
 		artataweScene.getStylesheets().add("artataweStyleSheet.css");
 		
 		primaryStage.setScene(artataweScene);
@@ -124,9 +123,9 @@ public class Artatawe extends Application {
 	
 	/**
 	 * Creates the Login page for Artatawe.
-	 * @return A scene containing the Login page
+	 * @return A Container containing the login page.
 	 */
-	public Scene makeLoginPage(){
+	public StackPane makeLoginPage(){
 		//The root pane everything will be attached to.
 		StackPane loginStackPane = new StackPane();
 		
@@ -168,10 +167,9 @@ public class Artatawe extends Application {
 		loginVBox.getChildren().addAll(titleLabel, loginItems); //adds borderPane to VBox
 		loginStackPane.getChildren().add(loginVBox); //add items to stackPane.
 		
-		Scene scene = new Scene(loginStackPane, SCENE_WIDTH, SCENE_HEIGHT);
 		//removes focus from the text Field, placed after scene implementation.
 		loginVBox.requestFocus();
-		return scene;
+		return loginStackPane;
 	}
 	
 	/**
@@ -242,7 +240,8 @@ public class Artatawe extends Application {
 		borderPaneSP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		AuctionFP = new FlowPane(Orientation.HORIZONTAL);
 		AuctionFP.setHgap(AUCTION_FLOWPANE_H_GAP);
-		AuctionFP.setPrefWrapLength(AUCTION_FLOWPANE_LENGTH);
+		AuctionFP.prefWidthProperty().bind(borderPaneSP.widthProperty());
+		AuctionFP.prefHeightProperty().bind(borderPaneSP.heightProperty());
 		
 		ImageView bannerImageView = createImage("bannerImage.png");
 		bannerImageView.fitWidthProperty().bind(bannerSP.widthProperty()); 
@@ -349,11 +348,14 @@ public class Artatawe extends Application {
 	public HBox createNavigationBar() {
 		HBox navigationBar = new HBox();
 		navigationBar.setId("navigationBar");
+		
 		Button viewAuctions = new Button("Auctions");
 		Button viewProfile = new Button("My Account");
+		Button logOutButton = new Button("Log Out");
 		viewAuctions.setId("viewAuctionsButton");
 		viewProfile.setId("viewProfileButton");
-		navigationBar.getChildren().addAll(viewAuctions, viewProfile);
+		logOutButton.setId("logOutButton");
+		navigationBar.getChildren().addAll(viewAuctions, viewProfile, logOutButton);
 		
 		//sets the actions for the buttons on the Navigation bar.
 		viewAuctions.setOnAction( e -> {
@@ -361,6 +363,11 @@ public class Artatawe extends Application {
 		});
 		viewProfile.setOnAction( e -> {
 			viewCurrentProfile();
+		});
+		//logs out of the system.
+		logOutButton.setOnAction( e -> {
+			artataweScene.setRoot(makeLoginPage());
+			currentProfile = null;
 		});
 		
 		return navigationBar;
