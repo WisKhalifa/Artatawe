@@ -1,26 +1,27 @@
+import java.util.ArrayList;
+
 /**
  * @author Liam Cooper - 916153
  */
-import java.util.Arrays;
+
 public class Sculpture extends Artwork {
 
   private int width;
   private int height;
   private int depth;
   private String material;
-  private String[] extraPhotos;
+  private ArrayList<String> extraPhotos;
 
   public Sculpture(String title, String description, String photo, String creatorsName,
     int creationYear, double price, int bidTotal, int width, int height,
-      int depth, String material, String[] extraPhotos) {
+      int depth, String material) {
 
     super(title, description, photo, creatorsName, creationYear, price, bidTotal);
     this.width = width;
     this.height = height;
     this.depth = depth;
     this.material = material;
-    this.extraPhotos = extraPhotos;
-
+    extraPhotos = new ArrayList<>();
   }
 
   public int getWidth() {
@@ -39,7 +40,7 @@ public class Sculpture extends Artwork {
     return material;
   }
 
-  public String[] getExtraPhotos() {
+  public ArrayList<String> getExtraPhotos() {
     return extraPhotos;
   }
 
@@ -59,7 +60,7 @@ public class Sculpture extends Artwork {
     this.material = material;
   }
 
-  public void setExtraPhotos (String[] extraPhotos) {
+  public void setExtraPhotos (ArrayList<String> extraPhotos) {
     this.extraPhotos = extraPhotos;
   }
 

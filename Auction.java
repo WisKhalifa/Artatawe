@@ -1,4 +1,4 @@
-import java.util.Stack;
+import java.util.ArrayList;
 
 /**
  *
@@ -6,13 +6,13 @@ import java.util.Stack;
  */
 public class Auction {
         private final Artwork artwork;
-        private Stack<Bid> bids;
+        private ArrayList<Bid> bids;
         private Boolean isComplete;
         
-        public Auction(Artwork a) {
+        public Auction(Artwork a, Boolean isComplete) {
                 this.artwork = a;
-                bids = new Stack<>();
-                isComplete = false;
+                this.isComplete = isComplete;
+                bids = new ArrayList<>();
         }
         
         public Artwork getArtwork() {
@@ -20,10 +20,10 @@ public class Auction {
         }
         
         public Bid getHighestBid() {
-                return bids.peek();
+                return bids.get(bids.size() -1);
         }
         
-        public Stack<Bid> getAllBids() {
+        public ArrayList<Bid> getAllBids() {
                 return bids;
         }
         
@@ -36,7 +36,6 @@ public class Auction {
         }
         
         public void placeBid(Bid b){
-                Bid currenstHighestBid = bids.peek();
                 bids.add(b);
         }
 }

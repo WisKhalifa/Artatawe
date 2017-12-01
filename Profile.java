@@ -82,13 +82,7 @@ public class Profile{
    * prints out the details of a profile object
    */
   public String toString(){
-	  String result = "";
-	  result += "\n Username: " + username +
-			  "\n First name: " + firstName +
-			  "\n Last name: " + lastName +
-			  "\n Telephone number: " + telephone +
-			  "\n Address: " + address +
-			  "\n Postcode: " + postcode;
+	  String result = username;
 	  return result;
   }
   
