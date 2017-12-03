@@ -63,6 +63,7 @@ public class Artatawe extends Application {
 	private int paintingFilter;
 	private int sculptureFilter;
 	private HBox bidTable;
+	private ScrollPane profileScrollPane;
 	
 	/**
 	 * This is the method that is called when the program launches.
@@ -402,7 +403,11 @@ public class Artatawe extends Application {
 			makeDashboard();
 		});
 		viewProfile.setOnAction( e -> {
-			viewCurrentProfile();
+			if (mainBorderPane.getCenter() == profileScrollPane) {
+				System.out.println("Account already open");
+			} else {
+				viewCurrentProfile();
+			}
 		});
 		//logs out of the system.
 		logOutButton.setOnAction( e -> {
@@ -726,7 +731,7 @@ public class Artatawe extends Application {
 	public void viewProfile(Profile profile) {
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 		
-		ScrollPane profileScrollPane = new ScrollPane();
+		profileScrollPane = new ScrollPane();
 		profileScrollPane.setFitToHeight(true);
 		profileScrollPane.setFitToWidth(true);
 		VBox viewProfileVBox = new VBox();
