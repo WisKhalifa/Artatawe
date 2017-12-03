@@ -72,30 +72,34 @@ public class FileWriter {
 			auctionWriter.println(auctions.get(i).getArtwork().getCreationYear());
 			auctionWriter.println(auctions.get(i).getArtwork().getPrice());
 			auctionWriter.println(auctions.get(i).getArtwork().getBidTotal());
+<<<<<<< HEAD:src/FileWriter.java
 			//auctionWriter.println(auctions.get(i).getArtwork().getDateAndTime());
+=======
+			auctionWriter.println(auctions.get(i).getArtwork().getDateTime());
+>>>>>>> cae6f214aec388e936a547f7c0fd08da581209ce:FileWriter.java
 			
 			//saves details if it is a Sculpture.
                         /*
 			if(auctions.get(i).getArtwork() instanceof Sculpture) {
-				auctionWriter.println(auctions.get(i).getArtwork().getWidth());
-				auctionWriter.println(auctions.get(i).getArtwork().getHeight());
-				auctionWriter.println(auctions.get(i).getArtwork().getDepth());
-				auctionWriter.println(auctions.get(i).getArtwork().getMaterial());
+				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getWidth());
+				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getHeight());
+				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getDepth());
+				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getMaterial());
 				
 				//checks to see if additional photos is empty as its optional.
-				if(auctions.get(i).getArtwork().getExtraPhotos() == null || 
-						auctions.get(i).getArtwork().getExtraPhotos().length == 0) {
+				if(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos() == null || 
+						((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size() == 0) {
 					auctionWriter.println("-");
 				}else {
-					for(int j = 0; j < auctions.get(i).getArtwork().getExtraPhotos().length; j++){
-					auctionWriter.println(auctions.get(i).getArtwork().getExtraPhotos()[i]);
+					for(int j = 0; j < ((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size(); j++){
+					auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().get(i));
 					}
 				}
 				
 				profileWriter.println("."); //shows the end of saving additional photos
 			}else { //if its a painting.
-				auctionWriter.println(auctions.get(i).getArtwork().getWidth());
-				auctionWriter.println(auctions.get(i).getArtwork().getHeight());
+				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getWidth());
+				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getHeight());
 			}
 			
 			//saves all the information about the Auction

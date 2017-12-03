@@ -50,6 +50,12 @@
 	-fx-font-weight: bold;
 	-fx-text-fill: white;
 }
+#viewAllProfiles{
+	-fx-background-color: transparent;
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-text-fill: white;
+}
 #logOutButton{
 	-fx-background-color: transparent;
 	-fx-font-size: 15px;
@@ -60,6 +66,9 @@
 	-fx-opacity: 0.5;
 }
 #viewProfileButton:hover{
+	-fx-opacity: 0.5;
+}
+#viewAllProfiles:hover{
 	-fx-opacity: 0.5;
 }
 #logOutButton:hover{
@@ -100,6 +109,15 @@
 	-fx-text-fill: white;
 }
 #startSearchLabel:hover{
+	-fx-opacity: 0.5;
+}
+#viewCompletedAuctionsLabel{
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-padding: 10 10 0 40;
+	-fx-text-fill: white;
+}
+#viewCompletedAuctionsLabel:hover{
 	-fx-opacity: 0.5;
 }
 /* Auction Item Box */
@@ -161,6 +179,11 @@
 	-fx-font-size: 15px;
 	-fx-padding: 0 0 5 10;
 }
+#auctionImportantDetails{
+	-fx-font-size: 30px;
+	-fx-padding: 0 0 5 10;
+	-fx-font-weight: bold;
+}
 /* Table Style */
 #Table{
 	-fx-font-size: 15px;
@@ -172,4 +195,23 @@
 	-fx-border-width: 0 1 0 0;
 	-fx-border-color: grey;
 	-fx-padding: 0 20 0 20;
+}
+#finalColumn{
+	-fx-padding: 0 20 0 20;
+}
+/* view all profiles page */
+#profileHBox{
+	-fx-border-width: 0 1 1 0;
+	-fx-border-color: black;
+	-fx-background-color: white;
+}
+#profileHBox:hover{
+	-fx-border-width: 0 1 1 0;
+	-fx-border-color: black;
+	-fx-background-color: grey;
+}
+#profileUsername{
+	-fx-font-weight: bold;
+	-fx-font-size: 25px;
+	-fx-padding: 15 0 0 50;
 }
