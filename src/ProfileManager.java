@@ -11,7 +11,8 @@ public class ProfileManager {
          * Creates an instance of a profile manager.
          */
         public ProfileManager() {
-            profiles = new ArrayList<>();
+            FileLoader fileLoader = new FileLoader();
+            profiles = fileLoader.loadProfile();
         }
         
         /**
@@ -35,6 +36,14 @@ public class ProfileManager {
          */        
         public void deleteProfile(Profile p) {
                 profiles.remove(p);
+        }
+        
+        /**
+         * 
+         * @param fw 
+         */
+        public void saveProfiles(FileWriter fw) {
+                fw.writeProfileToFile(profiles);
         }
         
 }

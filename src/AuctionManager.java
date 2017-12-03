@@ -12,7 +12,8 @@ public class AuctionManager {
          * Creates an instance of an auction manager.
          */
         public AuctionManager() {
-                auctions = new ArrayList<>();
+                FileLoader fileLoader = new FileLoader();
+                auctions = fileLoader.loadAuction();
         }
         
         /**
@@ -62,6 +63,14 @@ public class AuctionManager {
          */
         public void deleteAuction(Auction a) {
                 auctions.remove(a);
+        }
+        
+        /**
+         * 
+         * @param fw 
+         */
+        public void saveAuctions(FileWriter fw) {
+                fw.writeAuctionToFile(auctions);
         }
         
 }
