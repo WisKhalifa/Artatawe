@@ -14,10 +14,10 @@ public abstract class Artwork {
   private int creationYear;
   private double price;
   private int bidTotal;
-  private Date dateTime;
+  private String dateTime;
 
   public Artwork(String title, String description, String photo, String creatorsName,
-    int creationYear, double price, int bidTotal) {
+    int creationYear, double price, int bidTotal, String dateTime) {
 
       this.title = title;
       this.description = description;
@@ -26,14 +26,12 @@ public abstract class Artwork {
       this.creationYear = creationYear;
       this.price = price;
       this.bidTotal = bidTotal;
-      DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-      dateTime = new Date();
-      dateFormat.format(dateTime);
+      this.dateTime = dateTime;
 
   }
 
-  public Date getDateTime() {
-          return dateTime;
+  public String getDateTime() {
+    return dateTime;
   }
 
   public String getTitle() {
@@ -62,6 +60,10 @@ public abstract class Artwork {
 
   public int getBidTotal() {
     return bidTotal;
+  }
+
+  public void setDateTime(String dateTime) {
+    this.dateTime = dateTime;
   }
 
   public void setTitle(String title) {
