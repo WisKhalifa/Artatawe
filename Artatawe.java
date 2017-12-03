@@ -20,22 +20,37 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * This class contains all the GUI for the Artatawe program.
+ * @author Bradley Tenuta
+ */
 public class Artatawe extends Application {
 	
 	//Constant values.
-	public final int SCENE_WIDTH = 1200;
-	public final int SCENE_HEIGHT = 700;
-	public final int LOGIN_BOX_HEIGHT = 100;
-	public final int LOGIN_BOX_WIDTH = 300;
-	public final int LOGIN_BUTTON_WIDTH = 300;
-	public final int AUCTION_BOX_ITEM_PIC_CONTAINER_HEIGHT = 160;
-	public final int AUCTION_BOX_ITEM_PIC_CONTAINER_WIDTH = 200;
-	public final int AUCTION_BOX_ITEM_WIDTH = 200;
-	public final int AUCTION_BOX_ITEM_HEIGHT = 200;
-	public final int AUCTION_NAVIGATION_BAR_HEIGHT = 40;
-	public final int PROFILE_NAVIGATION_BAR_HEIGHT = 40;
-	public final int AUCTION_FLOWPANE_H_GAP = 4; //to fit 4 auction boxes on a line
+	private final int SCENE_WIDTH = 1200;
+	private final int SCENE_HEIGHT = 700;
+	private final int LOGIN_BOX_HEIGHT = 100;
+	private final int LOGIN_BOX_WIDTH = 300;
+	private final int LOGIN_BUTTON_WIDTH = 300;
+	private final int AUCTION_BOX_ITEM_PIC_CONTAINER_HEIGHT = 160;
+	private final int AUCTION_BOX_ITEM_PIC_CONTAINER_WIDTH = 200;
+	private final int AUCTION_BOX_ITEM_WIDTH = 200;
+	private final int AUCTION_BOX_ITEM_HEIGHT = 200;
+	private final int AUCTION_NAVIGATION_BAR_HEIGHT = 40;
+	private final int PROFILE_NAVIGATION_BAR_HEIGHT = 40;
+	private final int AUCTION_FLOWPANE_H_GAP = 4; //to fit 4 auction boxes on a line
+	private final int NORMAL_MARGIN = 10;
+	private final int SMALL_MARGIN = 5;
+	private final int LARGE_MARGIN = 20;
+	private final int EXTRA_LARGE_MARGIN = 30;
+	private final int SETTINGS_SCENE_WIDTH = 300;
+	private final int SETTINGS_SCENE_HEIGHT = 320;
+	private final int PROFILE_HEADER_HEIGHT = 200;
+	private final int AVATAR_WIDTH = 200;
+	private final int AUCTION_IMAGE_CONTAINER = 200;
+	private final int TEXT_FIELD_MARGIN = 7;
 	
+	//instance variables
 	private Scene artataweScene; //The scene used for the program.
 	private ProfileManager profileManager;
 	private AuctionManager auctionManager;
@@ -47,13 +62,23 @@ public class Artatawe extends Application {
 	private FlowPane AuctionFP;
 	private int paintingFilter;
 	private int sculptureFilter;
+	private HBox bidTable;
 	
+	/**
+	 * This is the method that is called when the program launches.
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
+	/**
+	 * This method is how the java GUI loads the program and
+	 * displays all the data.
+	 * @param Stage This is the main stage that the java FX will use
+	 * for the program.
+	 */
 	@Override
-	public void start(Stage primaryStage) throws Exception{
+	public void start(Stage primaryStage) {
 		//creates the profile and auction managers.
 		profileManager = new ProfileManager();
 		auctionManager = new AuctionManager();
@@ -117,6 +142,9 @@ public class Artatawe extends Application {
 		artataweScene = new Scene(makeLoginPage(), SCENE_WIDTH, SCENE_HEIGHT);
 		artataweScene.getStylesheets().add("artataweStyleSheet.css");
 		
+		//calls this method when user closes the program (red x).
+		primaryStage.setOnCloseRequest(e -> closeProgram());
+		
 		primaryStage.setScene(artataweScene);
 		primaryStage.show();
 	}
@@ -155,7 +183,8 @@ public class Artatawe extends Application {
 		TextField usernameTextField = new TextField();
 		usernameTextField.setId("username-TextField");
 		usernameTextField.setPromptText("Username");
-		loginItems.setMargin(usernameTextField,new Insets(5,5,5,5));
+		loginItems.setMargin(usernameTextField,new Insets(SMALL_MARGIN,
+				SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
 		
 		//creates the login box.
 		VBox borderPaneVBox = createLoginButton(usernameTextField);
@@ -164,10 +193,12 @@ public class Artatawe extends Application {
 		loginItems.setCenter(usernameTextField);
 		loginItems.setBottom(borderPaneVBox);
 		
-		loginVBox.getChildren().addAll(titleLabel, loginItems); //adds borderPane to VBox
-		loginStackPane.getChildren().add(loginVBox); //add items to stackPane.
+		//adds borderPane to VBox
+		loginVBox.getChildren().addAll(titleLabel, loginItems); 
+		//add items to stackPane.
+		loginStackPane.getChildren().add(loginVBox); 
 		
-		//removes focus from the text Field, placed after scene implementation.
+		//removes focus, place after scene implementation.
 		loginVBox.requestFocus();
 		return loginStackPane;
 	}
@@ -192,23 +223,24 @@ public class Artatawe extends Application {
 	 */
 	public VBox createLoginButton(TextField usernameTextField) {
 		VBox borderPaneVBox = new VBox();
-		//Edit errorLabel
+		//Edit errorLabel.
 		Label errorLabel = new Label("");
 		errorLabel.setId("errorLabel");
 				
-		//Login Button
+		//Login Button.
 		Button loginButton = new Button("Connect");
 		loginButton.setMinWidth(LOGIN_BUTTON_WIDTH);
 		loginButton.setId("loginButton");
 		
-		//When you click the Login Button
+		//When you click the Login Button.
 		loginButton.setOnAction( e -> {
-			if(usernameTextField.getText().equals("")) { 
+			if (usernameTextField.getText().equals("")) { 
 				errorLabel.setText("Wrong Username!");
 				errorLabel.setStyle("-fx-text-fill: red");
 			}else{
-				for(int i = 0; i < profileManager.getProfiles().size(); i++) {
-					if(usernameTextField.getText().equals(profileManager.getProfiles().get(i).getUsername())) {
+				for (int i = 0; i < profileManager.getProfiles().size(); i++) {
+					if (usernameTextField.getText().
+							equals(profileManager.getProfiles().get(i).getUsername())) {
 						currentProfile = profileManager.getProfiles().get(i);
 						makeDashboard();
 					}
@@ -217,9 +249,10 @@ public class Artatawe extends Application {
 				errorLabel.setStyle("-fx-text-fill: red");
 			}
 		});
-		//create VBox to go in borderPane bottom
+		//create VBox to go in borderPane bottom.
 		borderPaneVBox.getChildren().addAll(errorLabel, loginButton);
-		borderPaneVBox.setMargin(errorLabel,new Insets(5,5,5,6));
+		borderPaneVBox.setMargin(errorLabel,new Insets(SMALL_MARGIN,
+				SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN + 1));
 		return borderPaneVBox;
 	}
 	
@@ -231,11 +264,11 @@ public class Artatawe extends Application {
 		mainBorderPane = new BorderPane();
 		mainBorderPane.setId("mainBorderPane");
 		
-		//Creation of containers in the top BorderPane
+		//Creation of containers in the top BorderPane.
 		mainBorderPaneTopVBox = new VBox();
 		StackPane bannerSP = new StackPane();
 		
-		//Creation of containers in the center BorderPane
+		//Creation of containers in the centre BorderPane.
 		ScrollPane borderPaneSP = new ScrollPane();
 		borderPaneSP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		AuctionFP = new FlowPane(Orientation.HORIZONTAL);
@@ -251,7 +284,8 @@ public class Artatawe extends Application {
 		HBox navigationBar = createNavigationBar();
 		HBox auctionNavigationBar = createAuctionNavigationBar();
 		
-		mainBorderPaneTopVBox.getChildren().addAll(bannerSP, navigationBar, auctionNavigationBar);
+		mainBorderPaneTopVBox.getChildren().addAll(bannerSP,
+				navigationBar, auctionNavigationBar);
 		
 		//creates and displays all the Auction's into the flowPane.
 		displayAuctions();
@@ -284,6 +318,7 @@ public class Artatawe extends Application {
 
 		Label searchLabel = new Label("Search:");
 		TextField searchUserArtwork = new TextField();
+		searchUserArtwork.setId("inputField");
 		searchUserArtwork.setPromptText("Username");
 		
 		Label startSearchLabel = new Label("Start Search");
@@ -295,20 +330,25 @@ public class Artatawe extends Application {
 		sculptureCheckBox.setId("filterSculptureCheckBox");
 		startSearchLabel.setId("startSearchLabel");
 		
-		auctionNavigationBar.getChildren().addAll(filterlabel, paintingCheckBox, sculptureCheckBox, searchLabel, searchUserArtwork, startSearchLabel);
-		auctionNavigationBar.setMargin(searchUserArtwork,new Insets(7,0,0,0));
-		auctionNavigationBar.setMargin(paintingCheckBox,new Insets(10,10,0,0));
-		auctionNavigationBar.setMargin(sculptureCheckBox,new Insets(10,10,0,0));
+		auctionNavigationBar.getChildren().addAll(filterlabel,
+				paintingCheckBox, sculptureCheckBox, searchLabel,
+				searchUserArtwork, startSearchLabel);
+		auctionNavigationBar.setMargin(searchUserArtwork,
+				new Insets(TEXT_FIELD_MARGIN,0,0,0));
+		auctionNavigationBar.setMargin(paintingCheckBox,
+				new Insets(NORMAL_MARGIN,NORMAL_MARGIN,0,0));
+		auctionNavigationBar.setMargin(sculptureCheckBox,
+				new Insets(NORMAL_MARGIN,NORMAL_MARGIN,0,0));
 		
 		//creates the actions for the filter check boxes.
 		paintingCheckBox.setOnAction( e -> {
 			sculptureCheckBox.setSelected(false);
 			paintingFilter = 0;
-			if(paintingCheckBox.isSelected()) {
+			if (paintingCheckBox.isSelected()) {
 				sculptureFilter = 1;
 				AuctionFP.getChildren().clear();
 				displayAuctions();
-			}else {
+			} else {
 				sculptureFilter = 0;
 				AuctionFP.getChildren().clear();
 				displayAuctions();
@@ -317,11 +357,11 @@ public class Artatawe extends Application {
 		sculptureCheckBox.setOnAction( e -> {
 			paintingCheckBox.setSelected(false);
 			sculptureFilter = 0;
-			if(sculptureCheckBox.isSelected()) {
+			if (sculptureCheckBox.isSelected()) {
 				paintingFilter = 1;
 				AuctionFP.getChildren().clear();
 				displayAuctions();
-			}else {
+			} else {
 				paintingFilter = 0;
 				AuctionFP.getChildren().clear();
 				displayAuctions();
@@ -385,15 +425,16 @@ public class Artatawe extends Application {
 			BorderPane auctionItemBox = new BorderPane();
 			
 			//0 means get it. 1 means don't get it.
-			if((auction.getArtwork() instanceof Painting) && (paintingFilter == 0)){
-				auctionItemBox = createAuctionItem(auctionItemBox,auction);
-			}else if((auction.getArtwork() instanceof Sculpture) && (sculptureFilter == 0)){
-				auctionItemBox = createAuctionItem(auctionItemBox,auction);
+			if ((auction.getArtwork() instanceof Painting) && (paintingFilter == 0)){
+				auctionItemBox = createAuctionItem(auctionItemBox, auction);
+			} else if ((auction.getArtwork() instanceof Sculpture) && (sculptureFilter == 0)){
+				auctionItemBox = createAuctionItem(auctionItemBox, auction);
 			}
 			
 			auctionItemBox.setId("auctionItemBox");
 			AuctionFP.getChildren().add(auctionItemBox);
-			AuctionFP.setMargin(auctionItemBox,new Insets(20,20,20,20));
+			AuctionFP.setMargin(auctionItemBox,new Insets(LARGE_MARGIN,
+					LARGE_MARGIN, LARGE_MARGIN, LARGE_MARGIN));
 			
 			//opens up the Auction page 
 			auctionItemBox.setOnMouseClicked( e -> {
@@ -409,17 +450,18 @@ public class Artatawe extends Application {
 	 * @param username The input from the user.
 	 */
 	public void searchAuction(String username) {
-		for(Auction auction : auctionManager.getAuctions()) {
+		for (Auction auction : auctionManager.getAuctions()) {
 			
 			BorderPane auctionItemBox = new BorderPane();
 			
-			if(auction.getSeller().equalsIgnoreCase(username)) {
-				auctionItemBox = createAuctionItem(auctionItemBox,auction);
+			if (auction.getSeller().equalsIgnoreCase(username)) {
+				auctionItemBox = createAuctionItem(auctionItemBox, auction);
 			}
 			
 			auctionItemBox.setId("auctionItemBox");
 			AuctionFP.getChildren().add(auctionItemBox);
-			AuctionFP.setMargin(auctionItemBox,new Insets(20,20,20,20));
+			AuctionFP.setMargin(auctionItemBox,new Insets(LARGE_MARGIN,
+					LARGE_MARGIN, LARGE_MARGIN, LARGE_MARGIN));
 			
 			//opens up the Auction page 
 			auctionItemBox.setOnMouseClicked( e -> {
@@ -435,8 +477,13 @@ public class Artatawe extends Application {
 	public BorderPane createAuctionItem(BorderPane auctionItemBox, Auction auction) {
 		BorderPane auctionItemBoxPicContainer = new BorderPane();
 		ImageView auctionBoxImageView = createImage(auction.getArtwork().getMainPhoto());
-		auctionBoxImageView.fitWidthProperty().bind(auctionItemBoxPicContainer.widthProperty());
-		auctionBoxImageView.fitHeightProperty().bind(auctionItemBoxPicContainer.heightProperty());
+		
+		//sets width and height of the image to fit the container.
+		auctionBoxImageView.fitWidthProperty().
+			bind(auctionItemBoxPicContainer.widthProperty());
+		auctionBoxImageView.fitHeightProperty().
+			bind(auctionItemBoxPicContainer.heightProperty());
+		
 		auctionItemBoxPicContainer.setCenter(auctionBoxImageView);
 		auctionItemBoxPicContainer.setMaxHeight(AUCTION_BOX_ITEM_PIC_CONTAINER_HEIGHT);
 		auctionItemBoxPicContainer.setMaxWidth(AUCTION_BOX_ITEM_PIC_CONTAINER_WIDTH);
@@ -475,31 +522,38 @@ public class Artatawe extends Application {
 		VBox auctionPageVBox = new VBox();
 		
 		HBox imageContainer = new HBox();
+		imageContainer.setId("imageContainer");
 		ImageView artworkImage = createImage(auction.getArtwork().getMainPhoto());
 		imageContainer.getChildren().add(artworkImage);
 		imageContainer.setAlignment(Pos.CENTER);
-		imageContainer.setMaxHeight(200);
-		imageContainer.setMinHeight(200);
+		imageContainer.setMaxHeight(AUCTION_IMAGE_CONTAINER);
+		imageContainer.setMinHeight(AUCTION_IMAGE_CONTAINER);
 		artworkImage.fitHeightProperty().bind(imageContainer.heightProperty());
-		artworkImage.setFitWidth(200);
+		artworkImage.setFitWidth(AUCTION_IMAGE_CONTAINER);
 		auctionPageVBox.getChildren().add(imageContainer);
 		
 		//add buttons for more pictures if artwork is a sculpture.
-		if(auction.getArtwork() instanceof Sculpture) {
+		if (auction.getArtwork() instanceof Sculpture) {
 			HBox containerOfExtraPhotos = new HBox();
 			Button mainPicButton = new Button("Picture 1");
+			mainPicButton.setId("auctionButtons");
 			containerOfExtraPhotos.getChildren().add(mainPicButton);
-			containerOfExtraPhotos.setMargin(mainPicButton,new Insets(10,10,10,10));
+			containerOfExtraPhotos.setMargin(mainPicButton,
+					new Insets(NORMAL_MARGIN, NORMAL_MARGIN,
+							NORMAL_MARGIN, NORMAL_MARGIN));
 			
 			mainPicButton.setOnAction( e -> {
 				Image newPic = new Image(auction.getArtwork().getMainPhoto());
 				artworkImage.setImage(newPic);
 			});
 			
-			for(int i = 0; i < ((Sculpture) auction.getArtwork()).getExtraPhotos().size(); i++) {
+			for (int i = 0; i < ((Sculpture) auction.getArtwork()).getExtraPhotos().size(); i++) {
 				Button picButton = new Button("Picture " + (i + 2));
+				picButton.setId("auctionButtons");
 				containerOfExtraPhotos.getChildren().add(picButton);
-				containerOfExtraPhotos.setMargin(picButton,new Insets(10,10,10,10));
+				containerOfExtraPhotos.setMargin(picButton,
+						new Insets(NORMAL_MARGIN, NORMAL_MARGIN,
+								NORMAL_MARGIN, NORMAL_MARGIN));
 				String source = ((Sculpture) auction.getArtwork()).getExtraPhotos().get(i);
 				
 				picButton.setOnAction( e -> {
@@ -512,49 +566,75 @@ public class Artatawe extends Application {
 		
 		//adds the information about the artwork
 		Label artworkName = new Label(auction.getArtwork().getTitle());
-		artworkName.setId("auctionDetails");
-		Label artworkOwner = new Label("Creator: " + auction.getArtwork().getCreatorName());
+		artworkName.setId("auctionImportantDetails");
+		
+		Label artworkComplete = new Label("");
+		artworkComplete.setId("auctionImportantDetails");
+		if (auction.isComplete()) {
+			artworkComplete.setText("Auction Complete");
+		} else {
+			artworkComplete.setText("Auction Open");
+		}
+		
+		//creates labels to show information about the auction.
+		Label artworkOwner = new Label("Creator: " +
+				auction.getArtwork().getCreatorName());
 		artworkOwner.setId("auctionDetails");
-		Label artworkCreationYear = new Label("Creation year: " + auction.getArtwork().getCreationYear());
+		Label artworkCreationYear = new Label("Creation year: " +
+				auction.getArtwork().getCreationYear());
 		artworkCreationYear.setId("auctionDetails");
-		Label artworkPrice = new Label("Price: £" + auction.getArtwork().getPrice());
+		Label artworkPrice = new Label("Price: £" +
+				auction.getArtwork().getPrice());
 		artworkPrice.setId("auctionDetails");
-		Label artworkBidTotal = new Label("Total bids: " + auction.getArtwork().getBidTotal());
+		Label artworkBidTotal = new Label("Total bids: " +
+				auction.getArtwork().getBidTotal());
 		artworkBidTotal.setId("auctionDetails");
-		Label artworkDateAndTime = new Label("Time uploaded: "); // + auction.getArtwork().getDateAndTime());
+		Label artworkDateAndTime = new Label("Time uploaded: " +
+				auction.getArtwork().getDateTime());
 		artworkDateAndTime.setId("auctionDetails");
-		Label artworkDescription = new Label(auction.getArtwork().getDescription()); //this one is Optional, will just be empty otherwise.
+		
+		//this one is Optional, will just be empty otherwise.
+		Label artworkDescription = new Label(auction.getArtwork().getDescription());
 		artworkDescription.setId("auctionDetails");
 		
 		//creates a button to view owners profile.
 		Button viewProfile = new Button("View Profile");
-		auctionPageVBox.setMargin(viewProfile,new Insets(10,10,10,10));
+		viewProfile.setId("auctionButtons");
+		auctionPageVBox.setMargin(viewProfile,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
 		
 		//creates the input to make a bid.
 		HBox makeBid = new HBox();
 		TextField enterBid = new TextField();
 		Button sendBid = new Button("Make bid");
+		sendBid.setId("auctionButtons");
 		Label bidErrorMessage = new Label("");
-		makeBid.setMargin(enterBid,new Insets(10,10,10,10));
-		makeBid.setMargin(sendBid,new Insets(10,10,10,10));
-		makeBid.setMargin(bidErrorMessage,new Insets(10,10,10,10));
+		enterBid.setId("inputField");
+		bidErrorMessage.setId("auctionDetails");
+		makeBid.setMargin(enterBid,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		makeBid.setMargin(sendBid,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		makeBid.setMargin(bidErrorMessage,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
 		makeBid.getChildren().addAll(enterBid, sendBid, bidErrorMessage);
 		
 		//if the Auction is complete then the user can't add a bid.
-		if(auction.isComplete()) {
+		if (auction.isComplete()) {
 			makeBid.setDisable(true);
 		}
 		
 		//Creates a table of all the bids for an auction using containers and labels.
 		Label bidTableLabel = new Label("All Bids");
 		bidTableLabel.setId("auctionDetails");
-		HBox bidTable = makeBidTable(auction);
+		bidTable = makeBidTable(auction);
 		auctionPageVBox.setMargin(bidTable,new Insets(0,30,20,30));
 		
 		//button to view the auction owners profile.
 		viewProfile.setOnAction( e -> {
-			for(int i = 0; i < profileManager.getProfiles().size(); i++){
-				if(auction.getArtwork().getCreatorName().equals(profileManager.getProfiles().get(i).getUsername())){
+			for (int i = 0; i < profileManager.getProfiles().size(); i++){
+				if (auction.getArtwork().getCreatorName().
+						equals(profileManager.getProfiles().get(i).getUsername())){
 					viewProfile(profileManager.getProfiles().get(i));
 				}
 			}
@@ -562,23 +642,40 @@ public class Artatawe extends Application {
 		
 		//creates a bid and sends it off to be added to the Auction.
 		sendBid.setOnAction( e -> {
-			double newBidTotal = Double.parseDouble(enterBid.getText());
-			enterBid.setText("");
 			bidErrorMessage.setStyle("-fx-text-fill: red;");
-			if(currentProfile.getUsername().equals(auction.getHighestBid().getBidder().getUsername())) {
+			double newBidTotal = 0;
+			//checks to make sure no characters are entered.
+			try {
+				newBidTotal = Double.parseDouble(enterBid.getText());
+			} catch(NumberFormatException e1) {
+				bidErrorMessage.setText("You Must Enter a Number");
+				return; //breaks from the button click.
+			}
+			
+			enterBid.setText("");
+			if (currentProfile.getUsername().equals(auction.getHighestBid().
+					getBidder().getUsername())) {
 				bidErrorMessage.setText("You already have the highest Bid!");
-			}else if(auction.getArtwork().getPrice() > newBidTotal) {
+			} else if (auction.getArtwork().getPrice() > newBidTotal) {
 				bidErrorMessage.setText("You must enter a bid higher than initial price.");
-			}else if(auction.getHighestBid().getAmount() > newBidTotal){
+			} else if (auction.getHighestBid().getAmount() > newBidTotal){
 				bidErrorMessage.setText("Must be higher than current highest bid.");
-			}else {
+			} else {
 				Bid newbid = new Bid(currentProfile,auction.getArtwork(),newBidTotal);
 				auction.placeBid(newbid);
-			}
+				bidErrorMessage.setText("");
+				auctionPageVBox.getChildren().remove(bidTable);
+				bidTable = makeBidTable(auction);
+				auctionPageVBox.getChildren().add(bidTable);
+				auctionPageVBox.setMargin(bidTable,new Insets(0,30,20,30));
+			}  
 		});
 		
-		auctionPageVBox.getChildren().addAll(artworkName, artworkOwner, artworkCreationYear, artworkPrice,
-			artworkBidTotal, artworkDateAndTime, artworkDescription, viewProfile, makeBid, bidTableLabel, bidTable);
+		auctionPageVBox.getChildren().addAll(artworkName,
+				artworkComplete, artworkOwner, artworkCreationYear,
+				artworkPrice,artworkBidTotal, artworkDateAndTime,
+				artworkDescription, viewProfile, makeBid, 
+				bidTableLabel, bidTable);
 		
 		auctionScrollPane.setContent(auctionPageVBox);
 		mainBorderPane.setCenter(auctionScrollPane);
@@ -598,7 +695,7 @@ public class Artatawe extends Application {
 		VBox col2 = new VBox();
 		col2.setId("Column");
 		VBox col3 = new VBox(); 
-		col3.setStyle("-fx-padding: 0 20 0 20;");
+		col3.setId("finalColumn");
 		Label col1Header = new Label("Username");
 		Label col2Header = new Label("Amount (£)");
 		Label col3Header = new Label("Date");
@@ -607,7 +704,7 @@ public class Artatawe extends Application {
 		col3.getChildren().add(col3Header);
 		
 		//loops backwards so the highest bid is at the top.
-		for(int i = auction.getAllBids().size() - 1; i >= 0; i--) {
+		for (int i = auction.getAllBids().size() - 1; i >= 0; i--) {
 			Bid tempbid = auction.getAllBids().get(i);
 			Label col1Label = new Label(tempbid.getBidder().getUsername());
 			Label col2Label = new Label(Double.toString(tempbid.getAmount()));
@@ -616,9 +713,7 @@ public class Artatawe extends Application {
 			col2.getChildren().add(col2Label);
 			col3.getChildren().add(col3Label);
 		}
-		bidTable.getChildren().addAll(col1,col2,col3);
-		
-
+		bidTable.getChildren().addAll(col1, col2, col3);
 		
 		return bidTable;
 	}
@@ -643,28 +738,35 @@ public class Artatawe extends Application {
 		Label wonArtworksLabel = new Label("All Won Artworks");
 		wonArtworksLabel.setId("profileDetails");
 		HBox wonArtworksTable = getWonArtworksTable(profile);
-		viewProfileVBox.setMargin(wonArtworksTable,new Insets(0,30,20,30));
+		viewProfileVBox.setMargin(wonArtworksTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
 		//list of artwork's sold
 		Label artworksSoldLabel = new Label("All Artworks Sold");
 		artworksSoldLabel.setId("profileDetails");
 		HBox artworksSoldTable = getArtworksSold(profile);
-		viewProfileVBox.setMargin(artworksSoldTable,new Insets(0,30,20,30));
+		viewProfileVBox.setMargin(artworksSoldTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
 		//list of all bids placed
 		Label allPlacedBidsLabel = new Label("All Bids Placed");
 		allPlacedBidsLabel.setId("profileDetails");
 		HBox allPlacedBidsTable = getBidsPlaced(profile);
-		viewProfileVBox.setMargin(allPlacedBidsTable,new Insets(0,30,20,30));
+		viewProfileVBox.setMargin(allPlacedBidsTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
 		//list of bids done on their artwork's.
-		Label bidsOnOwnersArtworksLabel = new Label("All bids on " + profile.getUsername() + "'s Artworks");
+		Label bidsOnOwnersArtworksLabel = new Label("All bids on " +
+				profile.getUsername() + "'s Artworks");
 		bidsOnOwnersArtworksLabel.setId("profileDetails");
 		HBox bidsOnOwnersArtworksTable = getBidsOnOwnersArtwork(profile);
-		viewProfileVBox.setMargin(bidsOnOwnersArtworksTable,new Insets(0,30,20,30));
+		viewProfileVBox.setMargin(bidsOnOwnersArtworksTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
-		viewProfileVBox.getChildren().addAll(profileHeader,wonArtworksLabel,wonArtworksTable,artworksSoldLabel,
-				artworksSoldTable,allPlacedBidsLabel,allPlacedBidsTable,bidsOnOwnersArtworksLabel,bidsOnOwnersArtworksTable);
+		viewProfileVBox.getChildren().addAll(profileHeader, wonArtworksLabel,
+				wonArtworksTable, artworksSoldLabel, artworksSoldTable,
+				allPlacedBidsLabel, allPlacedBidsTable, bidsOnOwnersArtworksLabel,
+				bidsOnOwnersArtworksTable);
 		
 		profileScrollPane.setContent(viewProfileVBox);
 		mainBorderPane.setCenter(profileScrollPane);
@@ -684,26 +786,30 @@ public class Artatawe extends Application {
 		VBox col2 = new VBox();
 		col2.setId("Column");
 		VBox col3 = new VBox();
-		col3.setStyle("-fx-padding: 0 20 0 20;");
+		col3.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
 		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Previous Owner");
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
 		col3.getChildren().add(col3Header);
-		for(int i = 0; i < auctionManager.getAuctions().size(); i++) {
-        	if(auctionManager.getAuctions().get(i).isComplete()){
-        		if(auctionManager.getAuctions().get(i).getHighestBid().getBidder().getUsername().equals(profile.getUsername())){
-        			Label col1Label = new Label(auctionManager.getAuctions().get(i).getArtwork().getTitle());
-        			Label col2Label = new Label(Double.toString(auctionManager.getAuctions().get(i).getHighestBid().getAmount()));
-        			Label col3Label = new Label(auctionManager.getAuctions().get(i).getArtwork().getCreatorName());
+		for (int i = 0; i < auctionManager.getAuctions().size(); i++) {
+        	if (auctionManager.getAuctions().get(i).isComplete()){
+        		if (auctionManager.getAuctions().get(i).getHighestBid().
+        				getBidder().getUsername().equals(profile.getUsername())){
+        			Label col1Label = new Label(auctionManager.getAuctions().
+        					get(i).getArtwork().getTitle());
+        			Label col2Label = new Label(Double.toString(auctionManager.
+        					getAuctions().get(i).getHighestBid().getAmount()));
+        			Label col3Label = new Label(auctionManager.getAuctions().
+        					get(i).getArtwork().getCreatorName());
         			col1.getChildren().add(col1Label);
         			col2.getChildren().add(col2Label);
         			col3.getChildren().add(col3Label);
         		}
         	}
         }
-		wonArtworksTable.getChildren().addAll(col1,col2,col3);
+		wonArtworksTable.getChildren().addAll(col1, col2, col3);
         
         return wonArtworksTable;
 	}
@@ -721,26 +827,30 @@ public class Artatawe extends Application {
 		VBox col2 = new VBox();
 		col2.setId("Column");
 		VBox col3 = new VBox();
-		col3.setStyle("-fx-padding: 0 20 0 20;");
+		col3.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
 		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Winning Bidder");
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
 		col3.getChildren().add(col3Header);
-		for(int i = 0; i < auctionManager.getAuctions().size(); i++) {
-			if(auctionManager.getAuctions().get(i).isComplete()) {
-				if(auctionManager.getAuctions().get(i).getSeller().equals(profile.getUsername())) {
-					Label col1Label = new Label(auctionManager.getAuctions().get(i).getArtwork().getTitle());
-        			Label col2Label = new Label(Double.toString(auctionManager.getAuctions().get(i).getHighestBid().getAmount()));
-        			Label col3Label = new Label(auctionManager.getAuctions().get(i).getHighestBid().getBidder().getUsername());
+		for (int i = 0; i < auctionManager.getAuctions().size(); i++) {
+			if (auctionManager.getAuctions().get(i).isComplete()) {
+				if (auctionManager.getAuctions().get(i).
+						getSeller().equals(profile.getUsername())) {
+					Label col1Label = new Label(auctionManager.getAuctions().
+							get(i).getArtwork().getTitle());
+        			Label col2Label = new Label(Double.toString(auctionManager.
+        					getAuctions().get(i).getHighestBid().getAmount()));
+        			Label col3Label = new Label(auctionManager.getAuctions().
+        					get(i).getHighestBid().getBidder().getUsername());
         			col1.getChildren().add(col1Label);
         			col2.getChildren().add(col2Label);
         			col3.getChildren().add(col3Label);
 				}
 			}
         }
-		artworksSoldTable.getChildren().addAll(col1,col2,col3);
+		artworksSoldTable.getChildren().addAll(col1, col2, col3);
 		
         return artworksSoldTable;
 	}
@@ -759,19 +869,20 @@ public class Artatawe extends Application {
 		VBox col2 = new VBox();
 		col2.setId("Column");
 		VBox col3 = new VBox();
-		col3.setStyle("-fx-padding: 0 20 0 20;");
+		col3.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
 		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Date of Bid");
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
 		col3.getChildren().add(col3Header);
-		for(int i = 0; i < auctionManager.getAuctions().size(); i++) {
+		for (int i = 0; i < auctionManager.getAuctions().size(); i++) {
 			ArrayList<Bid> tempArray = auctionManager.getAuctions().get(i).getAllBids();
-			for(int j = 0; j < tempArray.size(); j++) {
+			for (int j = 0; j < tempArray.size(); j++) {
 				Bid temp = tempArray.get(j);
-				if(temp.getBidder().getUsername().equals(profile.getUsername())) {
-					Label col1Label = new Label(auctionManager.getAuctions().get(i).getArtwork().getTitle());
+				if (temp.getBidder().getUsername().equals(profile.getUsername())) {
+					Label col1Label = new Label(auctionManager.getAuctions().
+							get(i).getArtwork().getTitle());
         			Label col2Label = new Label(Double.toString(temp.getAmount()));
         			Label col3Label = new Label(temp.getDate());
         			col1.getChildren().add(col1Label);
@@ -780,7 +891,7 @@ public class Artatawe extends Application {
 				}
 			}
         }
-		bidsPlacedTable.getChildren().addAll(col1,col2,col3);
+		bidsPlacedTable.getChildren().addAll(col1, col2, col3);
         
         return bidsPlacedTable;
 	}
@@ -801,7 +912,7 @@ public class Artatawe extends Application {
 		VBox col3 = new VBox();
 		col3.setId("Column");
 		VBox col4 = new VBox();
-		col4.setStyle("-fx-padding: 0 20 0 20;");
+		col4.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
 		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Bidder");
@@ -810,13 +921,15 @@ public class Artatawe extends Application {
 		col2.getChildren().add(col2Header);
 		col3.getChildren().add(col3Header);
 		col4.getChildren().add(col4Header);
-		for(int i = 0; i < auctionManager.getAuctions().size(); i++) {
-			if(auctionManager.getAuctions().get(i).getSeller().equals(profile.getUsername())) {
+		for (int i = 0; i < auctionManager.getAuctions().size(); i++) {
+			if (auctionManager.getAuctions().get(i).getSeller().
+					equals(profile.getUsername())) {
 				ArrayList<Bid> tempArray = auctionManager.getAuctions().get(i).getAllBids();
-				for(int j = 0; j < tempArray.size(); j++) {
+				for (int j = 0; j < tempArray.size(); j++) {
 					Bid temp = tempArray.get(j);
-					if(temp.getBidder().getUsername().equals(profile.getUsername())) {
-						Label col1Label = new Label(auctionManager.getAuctions().get(i).getArtwork().getTitle());
+					if (temp.getBidder().getUsername().equals(profile.getUsername())) {
+						Label col1Label = new Label(auctionManager.
+								getAuctions().get(i).getArtwork().getTitle());
 	        			Label col2Label = new Label(Double.toString(temp.getAmount()));
 	        			Label col3Label = new Label(temp.getBidder().getUsername());
 	        			Label col4Label = new Label(temp.getDate());
@@ -828,7 +941,7 @@ public class Artatawe extends Application {
 				}
 			}
         }
-		bidsOnOwnersArtworkTable.getChildren().addAll(col1,col2,col3,col4);
+		bidsOnOwnersArtworkTable.getChildren().addAll(col1, col2, col3, col4);
         
         return bidsOnOwnersArtworkTable;
 	}
@@ -864,39 +977,43 @@ public class Artatawe extends Application {
 		Label profilePostCode = new Label("PostCode: " + currentProfile.getPostcode());
 		profilePostCode.setId("profileDetails");
 		//adds some margin to the last label.
-		currentProfilePageVBox.setMargin(profilePostCode,new Insets(0,0,20,0));
+		currentProfilePageVBox.setMargin(profilePostCode,new Insets(0,
+				0, LARGE_MARGIN, 0));
 		
 		//list of won artwork's
 		Label wonArtworksLabel = new Label("All Won Artworks");
 		wonArtworksLabel.setId("profileDetails");
 		HBox wonArtworksTable = getWonArtworksTable(currentProfile);
-		currentProfilePageVBox.setMargin(wonArtworksTable,new Insets(0,30,20,30));
+		currentProfilePageVBox.setMargin(wonArtworksTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
-				
 		//list of artwork's sold
 		Label artworksSoldLabel = new Label("All Artworks Sold");
 		artworksSoldLabel.setId("profileDetails");
 		HBox artworksSoldTable = getArtworksSold(currentProfile);
-		currentProfilePageVBox.setMargin(artworksSoldTable,new Insets(0,30,20,30));
-		
+		currentProfilePageVBox.setMargin(artworksSoldTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
 		//list of all bids placed
 		Label allPlacedBidsLabel = new Label("All Bids Placed");
 		allPlacedBidsLabel.setId("profileDetails");
 		HBox allPlacedBidsTable = getBidsPlaced(currentProfile);
-		currentProfilePageVBox.setMargin(allPlacedBidsTable,new Insets(0,30,20,30));
-		
+		currentProfilePageVBox.setMargin(allPlacedBidsTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
 		//list of bids done on their artwork's.
-		Label bidsOnOwnersArtworksLabel = new Label("All bids on " + currentProfile.getUsername() + "'s Artworks");
+		Label bidsOnOwnersArtworksLabel = new Label("All bids on " +
+				currentProfile.getUsername() + "'s Artworks");
 		bidsOnOwnersArtworksLabel.setId("profileDetails");
 		HBox bidsOnOwnersArtworksTable = getBidsOnOwnersArtwork(currentProfile);
-		currentProfilePageVBox.setMargin(bidsOnOwnersArtworksTable,new Insets(0,30,20,30));
+		currentProfilePageVBox.setMargin(bidsOnOwnersArtworksTable,new Insets(0,
+				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
-		
-		currentProfilePageVBox.getChildren().addAll(profileHeader,profileFirstName,profileLastName,profileTelephone,profileAddress,profilePostCode,
-				wonArtworksLabel,wonArtworksTable,artworksSoldLabel,artworksSoldTable,allPlacedBidsLabel,allPlacedBidsTable,bidsOnOwnersArtworksLabel,
-				bidsOnOwnersArtworksTable);
+		currentProfilePageVBox.getChildren().addAll(profileHeader, profileFirstName,
+				profileLastName, profileTelephone, profileAddress, profilePostCode,
+				wonArtworksLabel, wonArtworksTable, artworksSoldLabel,
+				artworksSoldTable, allPlacedBidsLabel, allPlacedBidsTable,
+				bidsOnOwnersArtworksLabel, bidsOnOwnersArtworksTable);
 		
 		profileScrollPane.setContent(currentProfilePageVBox);
 		mainBorderPane.setCenter(profileScrollPane);
@@ -914,13 +1031,13 @@ public class Artatawe extends Application {
 		profileHeader.setId("profileHeader");
 		ImageView profileAvatar = createImage(profile.getImagePath());
 		profileAvatar.fitHeightProperty().bind(profileHeader.heightProperty());
-		profileAvatar.setFitWidth(200);
+		profileAvatar.setFitWidth(AVATAR_WIDTH);
 		
 		Label profileUsername = new Label(profile.getUsername());
 		profileUsername.setId("profileUserName");
 		profileHeader.getChildren().addAll(profileAvatar, profileUsername);
-		profileHeader.setMaxHeight(200);
-		profileHeader.setMinHeight(200);
+		profileHeader.setMaxHeight(PROFILE_HEADER_HEIGHT);
+		profileHeader.setMinHeight(PROFILE_HEADER_HEIGHT);
 		
 		return profileHeader;
 	}
@@ -976,49 +1093,61 @@ public class Artatawe extends Application {
         TextField firstNameField = new TextField();
         firstNameField.setText(currentProfile.getFirstName());
         Button makeFNChanges = new Button("Make Changes");
-        changeFirstNameHBox.getChildren().addAll(firstNameField,makeFNChanges);
+        changeFirstNameHBox.getChildren().addAll(firstNameField, makeFNChanges);
         
         Label changeLastName = new Label("Edit LastName");
         HBox changeLastNameHBox = new HBox();
         TextField lastNameField = new TextField();
         lastNameField.setText(currentProfile.getLastName());
         Button makeLNChanges = new Button("Make Changes");
-        changeLastNameHBox.getChildren().addAll(lastNameField,makeLNChanges);
+        changeLastNameHBox.getChildren().addAll(lastNameField, makeLNChanges);
         
         Label changeTelephone = new Label("Edit Telephone Number");
         HBox changeTelephoneNameHBox = new HBox();
         TextField telephoneField = new TextField();
         telephoneField.setText(currentProfile.getTelephone());
         Button makeTChanges = new Button("Make Changes");
-        changeTelephoneNameHBox.getChildren().addAll(telephoneField,makeTChanges);
+        changeTelephoneNameHBox.getChildren().addAll(telephoneField, makeTChanges);
         
         Label changeAddress = new Label("Edit Address");
         HBox changeAddressNameHBox = new HBox();
         TextField addressField = new TextField();
         addressField.setText(currentProfile.getFirstAddress());
         Button makeAChanges = new Button("Make Changes");
-        changeAddressNameHBox.getChildren().addAll(addressField,makeAChanges);
+        changeAddressNameHBox.getChildren().addAll(addressField, makeAChanges);
         
         Label changePostCode = new Label("Edit PostCode");
         HBox changePostCodeNameHBox = new HBox();
         TextField postCodeField = new TextField();
         postCodeField.setText(currentProfile.getPostcode());
         Button makePCChanges = new Button("Make Changes");
-        changePostCodeNameHBox.getChildren().addAll(postCodeField,makePCChanges);
+        changePostCodeNameHBox.getChildren().addAll(postCodeField, makePCChanges);
         
-        settingsVBox.getChildren().addAll(changeFirstName,changeFirstNameHBox,changeLastName,changeLastNameHBox,changeTelephone,changeTelephoneNameHBox,
-        		changeAddress,changeAddressNameHBox,changePostCode,changePostCodeNameHBox);
+        settingsVBox.getChildren().addAll(changeFirstName, changeFirstNameHBox,
+        		changeLastName, changeLastNameHBox, changeTelephone,
+        		changeTelephoneNameHBox, changeAddress, changeAddressNameHBox,
+        		changePostCode, changePostCodeNameHBox);
         
-        settingsVBox.setMargin(changeFirstName,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changeFirstNameHBox,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changeLastName,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changeLastNameHBox,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changeTelephone,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changeTelephoneNameHBox,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changeAddress,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changeAddressNameHBox,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changePostCode,new Insets(5,5,5,5));
-        settingsVBox.setMargin(changePostCodeNameHBox,new Insets(5,5,5,5));
+        settingsVBox.setMargin(changeFirstName,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changeFirstNameHBox,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changeLastName,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changeLastNameHBox,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changeTelephone,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changeTelephoneNameHBox,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changeAddress,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changeAddressNameHBox,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changePostCode,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        settingsVBox.setMargin(changePostCodeNameHBox,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
         
         //adds logic to the buttons.
         makeFNChanges.setOnAction( e -> {
@@ -1037,8 +1166,17 @@ public class Artatawe extends Application {
         	currentProfile.setPostcode(postCodeField.getText());
 		});
 
-		Scene scene = new Scene(settingsVBox, 300, 320);
+		Scene scene = new Scene(settingsVBox, SETTINGS_SCENE_WIDTH, SETTINGS_SCENE_HEIGHT);
         window.setScene(scene);
         window.showAndWait();
+	}
+	
+	/**
+	 * This method is called when the user wants to close the program
+	 * by clicking the red x in the top right corner. This method will close the
+	 * program but first it saves all the data, so changes are not lost.
+	 */
+	public void closeProgram() {
+		
 	}
 }
