@@ -875,7 +875,6 @@ public class Artatawe extends Application {
 		//creates the header for the profile.
 		HBox profileHeader = makeProfileHeader(profile);
 		
-		//creates an add to favourites button.
 		//creates a button to add the owner to the profile favourite list.
 		Button addFav = new Button("Add to Favourites");
 		addFav.setId("auctionButtons");
@@ -1358,16 +1357,41 @@ public class Artatawe extends Application {
 				profileHBox.setMaxHeight(50);
 				profileHBox.setMinHeight(50);
 				
+				//creates profile image
 				ImageView profileImage = createImage(tempProfile.getImagePath());
 				profileImage.fitHeightProperty().bind(profileHBox.heightProperty());
 				profileImage.setFitWidth(50);
 				
+				//creates label
 				Label profileUsername = new Label(tempProfile.getUsername());
 				profileUsername.setId("profileUsername");
 				
 				profileList.setMargin(profileHBox,new Insets(0, 100, 0, 100));
 				
-				profileHBox.getChildren().addAll(profileImage, profileUsername);
+				//creates the add to fav button
+				Button addFav = new Button("Add to Favourites");
+				addFav.setId("auctionButtons");
+				profileHBox.setMargin(addFav,new Insets(LARGE_MARGIN,
+						NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+						
+				//if the seller is already in the favourites list then disable add to fav button.
+				for (int j = 0; j < profileManager.getProfiles().size(); j++) {
+					if (profileManager.getProfiles().get(j).getUsername().equals(tempProfile.getUsername())) {
+						for (int k = 0; k < currentProfile.getFavourites().size(); k++) {
+							if (tempProfile.getUsername().equals(currentProfile.getFavourites().get(k))) {
+								addFav.setDisable(true);
+							}
+						}
+					}
+				}
+				
+				//this adds the seller to the users favourites.
+				addFav.setOnAction( e -> {
+					currentProfile.addFavourite(tempProfile.getUsername());
+					addFav.setDisable(true);
+				});
+				
+				profileHBox.getChildren().addAll(profileImage, profileUsername, addFav);
 				profileList.getChildren().add(profileHBox);
 				
 				//opens up the profile page for that particular profile.
