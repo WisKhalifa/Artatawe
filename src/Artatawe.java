@@ -67,6 +67,7 @@ public class Artatawe extends Application {
 	private int sculptureFilter;
 	private HBox bidTable;
 	private ScrollPane profileScrollPane;
+	private ScrollPane currentProfileScrollPane;
 	private ScrollPane viewAllProfilesScrollPane;
 	
 	/**
@@ -330,6 +331,8 @@ public class Artatawe extends Application {
 		
 		Label viewCompletedAuctionsLabel = new Label("View Completed Auctions");
 		
+		Label showFavouritesAuctions = new Label("Show Auctions by Favourites");
+		
 		filterlabel.setId("filterlabel");
 		searchLabel.setId("searchLabel");
 		searchUserArtwork.setId("searchUserArtwork");
@@ -337,10 +340,12 @@ public class Artatawe extends Application {
 		sculptureCheckBox.setId("filterSculptureCheckBox");
 		startSearchLabel.setId("startSearchLabel");
 		viewCompletedAuctionsLabel.setId("viewCompletedAuctionsLabel");
+		showFavouritesAuctions.setId("showFavouritesAuctions");
 		
 		auctionNavigationBar.getChildren().addAll(filterlabel,
 				paintingCheckBox, sculptureCheckBox, searchLabel,
-				searchUserArtwork, startSearchLabel, viewCompletedAuctionsLabel);
+				searchUserArtwork, startSearchLabel, viewCompletedAuctionsLabel,
+				showFavouritesAuctions);
 		
 		auctionNavigationBar.setMargin(searchUserArtwork,
 				new Insets(TEXT_FIELD_MARGIN,0,0,0));
@@ -387,7 +392,7 @@ public class Artatawe extends Application {
 			searchAuction(searchUserArtwork.getText());
 		});
 		
-		//views just completed Auctions
+		//views just completed Auction's
 		viewCompletedAuctionsLabel.setOnMouseClicked( e -> {
 			sculptureCheckBox.setSelected(false);
 			paintingCheckBox.setSelected(false);
@@ -395,6 +400,16 @@ public class Artatawe extends Application {
 			paintingFilter = 0;
 			AuctionFP.getChildren().clear();
 			showCompletedAuctions();
+		});
+		
+		//when clicked it displays favourites auction's.
+		showFavouritesAuctions.setOnMouseClicked( e -> {
+			sculptureCheckBox.setSelected(false);
+			paintingCheckBox.setSelected(false);
+			sculptureFilter = 0;
+			paintingFilter = 0;
+			AuctionFP.getChildren().clear();
+			showFavourites();
 		});
 		
 		return auctionNavigationBar;
@@ -423,7 +438,7 @@ public class Artatawe extends Application {
 			makeDashboard();
 		});
 		viewProfile.setOnAction( e -> {
-			if (mainBorderPane.getCenter() == profileScrollPane) {
+			if (mainBorderPane.getCenter() == currentProfileScrollPane) {
 				System.out.println("Account already open");
 			} else {
 				viewCurrentProfile();
@@ -514,6 +529,33 @@ public class Artatawe extends Application {
 			
 			if (auction.isComplete()) {
 				auctionItemBox = createAuctionItem(auctionItemBox, auction);
+			}
+			
+			auctionItemBox.setId("auctionItemBox");
+			AuctionFP.getChildren().add(auctionItemBox);
+			AuctionFP.setMargin(auctionItemBox,new Insets(LARGE_MARGIN,
+					LARGE_MARGIN, LARGE_MARGIN, LARGE_MARGIN));
+			
+			//opens up the Auction page 
+			auctionItemBox.setOnMouseClicked( e -> {
+				createAuctionPage(auction);
+			});
+		}
+	}
+	
+	/**
+	 * This method finds and displays all the favourites auction's of the user.
+	 */
+	public void showFavourites() {
+		for (Auction auction : auctionManager.getAuctions()) {
+			
+			BorderPane auctionItemBox = new BorderPane();
+			
+			//if the seller is in the fav list then display.
+			for (int i = 0; i < currentProfile.getFavourites().size(); i++) {
+				if (auction.getSeller().equals(currentProfile.getFavourites().get(i))) {
+					auctionItemBox = createAuctionItem(auctionItemBox, auction);
+				}
 			}
 			
 			auctionItemBox.setId("auctionItemBox");
@@ -1078,9 +1120,9 @@ public class Artatawe extends Application {
 		HBox profileNavigationBar = createProfileNavigationBar();
 		mainBorderPaneTopVBox.getChildren().add(profileNavigationBar);
 		
-		profileScrollPane = new ScrollPane();
-		profileScrollPane.setFitToHeight(true);
-		profileScrollPane.setFitToWidth(true);
+		currentProfileScrollPane = new ScrollPane();
+		currentProfileScrollPane.setFitToHeight(true);
+		currentProfileScrollPane.setFitToWidth(true);
 		VBox currentProfilePageVBox = new VBox();
 		
 		//creates the header for the profile.
@@ -1136,8 +1178,8 @@ public class Artatawe extends Application {
 				artworksSoldTable, allPlacedBidsLabel, allPlacedBidsTable,
 				bidsOnOwnersArtworksLabel, bidsOnOwnersArtworksTable);
 		
-		profileScrollPane.setContent(currentProfilePageVBox);
-		mainBorderPane.setCenter(profileScrollPane);
+		currentProfileScrollPane.setContent(currentProfilePageVBox);
+		mainBorderPane.setCenter(currentProfileScrollPane);
 	}
 	
 	/**

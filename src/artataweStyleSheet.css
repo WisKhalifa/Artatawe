@@ -120,6 +120,15 @@
 #viewCompletedAuctionsLabel:hover{
 	-fx-opacity: 0.5;
 }
+#showFavouritesAuctions{
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-padding: 10 10 0 40;
+	-fx-text-fill: white;
+}
+#showFavouritesAuctions:hover{
+	-fx-opacity: 0.5;
+}
 /* Auction Item Box */
 #auctionItemBox{
 	-fx-background-color: white;
