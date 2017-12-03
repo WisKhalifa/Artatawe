@@ -11,7 +11,8 @@ public class Auction {
         private Boolean isComplete;
         private int bidsLeft;
         
-        final int MAX_NO_OF_BIDS = 5;
+        final int MAX_NO_OF_BIDS = 10;
+        final int MIN_NO_OF_BIDS = 5;
         
         /**
          * 
@@ -23,7 +24,8 @@ public class Auction {
                 this.isComplete = isComplete;
                 bids = new ArrayList<>();
                 Random rand = new Random();
-                bidsLeft = rand.nextInt(MAX_NO_OF_BIDS) + 1;
+                // sets bidsLeft to a random int between the min and max constants.
+                bidsLeft = rand.nextInt((MAX_NO_OF_BIDS - MIN_NO_OF_BIDS) + 1) + MIN_NO_OF_BIDS;
         }
         
         /**
