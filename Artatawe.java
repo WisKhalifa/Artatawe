@@ -64,6 +64,7 @@ public class Artatawe extends Application {
 	private int sculptureFilter;
 	private HBox bidTable;
 	private ScrollPane profileScrollPane;
+	private ScrollPane viewAllProfilesScrollPane;
 	
 	/**
 	 * This is the method that is called when the program launches.
@@ -90,10 +91,10 @@ public class Artatawe extends Application {
 		Profile p3 = new Profile("roker","Caroline","Whitmore","07825764382","56 Wellington Street", "WE1 5ST", "artworks/Son_Of_A_Man.png");
 		Profile p4 = new Profile("some_username","John","Stone","07825786273","10 Wild Green West", "WG2 5WE", "artworks/Son_Of_A_Man.png");
 		
-		Painting ap1 = new Painting("Son Of A Man", "This is a painting I created in my in my while at University a couple years ago.", "artworks/Son_Of_A_Man.png", "redneck", 2015, 500.0, 2, 30, 60);
-		Painting ap2 = new Painting("American Gothic", "This is a painting of a two americans.", "artworks/American_Gothic.png", "chrome", 2000, 1000.0, 3, 40, 80);
-		Sculpture as1 = new Sculpture("The Thinker", "A greek man thinking.", "artworks/The_Thinker.png", "roker", 1050, 2500.99, 1, 40, 80, 20, "Marble");
-		Sculpture as2 = new Sculpture("Discobolus", "A greek man with a Disc.", "artworks/Discobolus.png", "some_username", 980, 99.99, 2, 100, 200, 40, "Marble");
+		Painting ap1 = new Painting("Son Of A Man", "This is a painting I created in my in my while at University a couple years ago.", "artworks/Son_Of_A_Man.png", "redneck", 2015, 500.0, 2, "yyyy/MM/dd HH:mm:ss", 30, 60);
+		Painting ap2 = new Painting("American Gothic", "This is a painting of a two americans.", "artworks/American_Gothic.png", "chrome", 2000, 1000.0, 3,"yyyy/MM/dd HH:mm:ss", 40, 80);
+		Sculpture as1 = new Sculpture("The Thinker", "A greek man thinking.", "artworks/The_Thinker.png", "roker", 1050, 2500.99, 1,"yyyy/MM/dd HH:mm:ss", 40, 80, 20, "Marble");
+		Sculpture as2 = new Sculpture("Discobolus", "A greek man with a Disc.", "artworks/Discobolus.png", "some_username", 980, 99.99, 2,"yyyy/MM/dd HH:mm:ss", 100, 200, 40, "Marble");
 		
 		ArrayList<String> photos = new ArrayList<>();
 		photos.add("artworks/The_Thinker2.png");
@@ -324,16 +325,20 @@ public class Artatawe extends Application {
 		
 		Label startSearchLabel = new Label("Start Search");
 		
+		Label viewCompletedAuctionsLabel = new Label("View Completed Auctions");
+		
 		filterlabel.setId("filterlabel");
 		searchLabel.setId("searchLabel");
 		searchUserArtwork.setId("searchUserArtwork");
 		paintingCheckBox.setId("filterPaintingCheckBox");
 		sculptureCheckBox.setId("filterSculptureCheckBox");
 		startSearchLabel.setId("startSearchLabel");
+		viewCompletedAuctionsLabel.setId("viewCompletedAuctionsLabel");
 		
 		auctionNavigationBar.getChildren().addAll(filterlabel,
 				paintingCheckBox, sculptureCheckBox, searchLabel,
-				searchUserArtwork, startSearchLabel);
+				searchUserArtwork, startSearchLabel, viewCompletedAuctionsLabel);
+		
 		auctionNavigationBar.setMargin(searchUserArtwork,
 				new Insets(TEXT_FIELD_MARGIN,0,0,0));
 		auctionNavigationBar.setMargin(paintingCheckBox,
@@ -379,6 +384,16 @@ public class Artatawe extends Application {
 			searchAuction(searchUserArtwork.getText());
 		});
 		
+		//views just completed Auctions
+		viewCompletedAuctionsLabel.setOnMouseClicked( e -> {
+			sculptureCheckBox.setSelected(false);
+			paintingCheckBox.setSelected(false);
+			sculptureFilter = 0;
+			paintingFilter = 0;
+			AuctionFP.getChildren().clear();
+			showCompletedAuctions();
+		});
+		
 		return auctionNavigationBar;
 	}
 	
@@ -392,11 +407,13 @@ public class Artatawe extends Application {
 		
 		Button viewAuctions = new Button("Auctions");
 		Button viewProfile = new Button("My Account");
+		Button viewAllProfiles = new Button("View All Profiles");
 		Button logOutButton = new Button("Log Out");
 		viewAuctions.setId("viewAuctionsButton");
 		viewProfile.setId("viewProfileButton");
+		viewAllProfiles.setId("viewAllProfiles");
 		logOutButton.setId("logOutButton");
-		navigationBar.getChildren().addAll(viewAuctions, viewProfile, logOutButton);
+		navigationBar.getChildren().addAll(viewAuctions, viewProfile, viewAllProfiles, logOutButton);
 		
 		//sets the actions for the buttons on the Navigation bar.
 		viewAuctions.setOnAction( e -> {
@@ -409,6 +426,15 @@ public class Artatawe extends Application {
 				viewCurrentProfile();
 			}
 		});
+		
+		viewAllProfiles.setOnAction( e -> {
+			if (mainBorderPane.getCenter() == viewAllProfilesScrollPane) {
+				System.out.println("Account already open");
+			} else {
+				viewAllCurrentProfiles();
+			}
+		});
+		
 		//logs out of the system.
 		logOutButton.setOnAction( e -> {
 			artataweScene.setRoot(makeLoginPage());
@@ -460,6 +486,30 @@ public class Artatawe extends Application {
 			BorderPane auctionItemBox = new BorderPane();
 			
 			if (auction.getSeller().equalsIgnoreCase(username)) {
+				auctionItemBox = createAuctionItem(auctionItemBox, auction);
+			}
+			
+			auctionItemBox.setId("auctionItemBox");
+			AuctionFP.getChildren().add(auctionItemBox);
+			AuctionFP.setMargin(auctionItemBox,new Insets(LARGE_MARGIN,
+					LARGE_MARGIN, LARGE_MARGIN, LARGE_MARGIN));
+			
+			//opens up the Auction page 
+			auctionItemBox.setOnMouseClicked( e -> {
+				createAuctionPage(auction);
+			});
+		}
+	}
+	
+	/**
+	 * This method finds and displays all the completed auction's.
+	 */
+	public void showCompletedAuctions() {
+		for (Auction auction : auctionManager.getAuctions()) {
+			
+			BorderPane auctionItemBox = new BorderPane();
+			
+			if (auction.isComplete()) {
 				auctionItemBox = createAuctionItem(auctionItemBox, auction);
 			}
 			
@@ -657,7 +707,6 @@ public class Artatawe extends Application {
 				return; //breaks from the button click.
 			}
 			
-			enterBid.setText("");
 			if (currentProfile.getUsername().equals(auction.getHighestBid().
 					getBidder().getUsername())) {
 				bidErrorMessage.setText("You already have the highest Bid!");
@@ -665,9 +714,12 @@ public class Artatawe extends Application {
 				bidErrorMessage.setText("You must enter a bid higher than initial price.");
 			} else if (auction.getHighestBid().getAmount() > newBidTotal){
 				bidErrorMessage.setText("Must be higher than current highest bid.");
+			} else if (auction.getSeller().equals(currentProfile.getUsername())){
+				bidErrorMessage.setText("You can't bid on your own Auction!");
 			} else {
 				Bid newbid = new Bid(currentProfile,auction.getArtwork(),newBidTotal);
 				auction.placeBid(newbid);
+				enterBid.setText("");
 				bidErrorMessage.setText("");
 				auctionPageVBox.getChildren().remove(bidTable);
 				bidTable = makeBidTable(auction);
@@ -932,17 +984,15 @@ public class Artatawe extends Application {
 				ArrayList<Bid> tempArray = auctionManager.getAuctions().get(i).getAllBids();
 				for (int j = 0; j < tempArray.size(); j++) {
 					Bid temp = tempArray.get(j);
-					if (temp.getBidder().getUsername().equals(profile.getUsername())) {
-						Label col1Label = new Label(auctionManager.
-								getAuctions().get(i).getArtwork().getTitle());
-	        			Label col2Label = new Label(Double.toString(temp.getAmount()));
-	        			Label col3Label = new Label(temp.getBidder().getUsername());
-	        			Label col4Label = new Label(temp.getDate());
-	        			col1.getChildren().add(col1Label);
-	        			col2.getChildren().add(col2Label);
-	        			col3.getChildren().add(col3Label);
-	        			col4.getChildren().add(col4Label);
-					}
+					Label col1Label = new Label(auctionManager.
+							getAuctions().get(i).getArtwork().getTitle());
+	        		Label col2Label = new Label(Double.toString(temp.getAmount()));
+	        		Label col3Label = new Label(temp.getBidder().getUsername());
+	        		Label col4Label = new Label(temp.getDate());
+	        		col1.getChildren().add(col1Label);
+	        		col2.getChildren().add(col2Label);
+	        		col3.getChildren().add(col3Label);
+	        		col4.getChildren().add(col4Label);
 				}
 			}
         }
@@ -962,7 +1012,7 @@ public class Artatawe extends Application {
 		HBox profileNavigationBar = createProfileNavigationBar();
 		mainBorderPaneTopVBox.getChildren().add(profileNavigationBar);
 		
-		ScrollPane profileScrollPane = new ScrollPane();
+		profileScrollPane = new ScrollPane();
 		profileScrollPane.setFitToHeight(true);
 		profileScrollPane.setFitToWidth(true);
 		VBox currentProfilePageVBox = new VBox();
@@ -1174,6 +1224,50 @@ public class Artatawe extends Application {
 		Scene scene = new Scene(settingsVBox, SETTINGS_SCENE_WIDTH, SETTINGS_SCENE_HEIGHT);
         window.setScene(scene);
         window.showAndWait();
+	}
+	
+	/**
+	 * This method creates the GUI that shows all the profiles that have
+	 * an account on Artatawe and allows you to visit their Account page.
+	 */
+	public void viewAllCurrentProfiles() {
+		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
+		
+		viewAllProfilesScrollPane = new ScrollPane();
+		viewAllProfilesScrollPane.setFitToHeight(true);
+		viewAllProfilesScrollPane.setFitToWidth(true);
+		
+		VBox profileList = new VBox();
+		
+		for (int i = 0; i < profileManager.getProfiles().size(); i++) {
+			//makes sure you don't add the current profile to the list of profiles.
+			if (!(currentProfile.getUsername().equals(profileManager.getProfiles().get(i).getUsername()))) {
+				Profile tempProfile = profileManager.getProfiles().get(i);
+				HBox profileHBox = new HBox();
+				profileHBox.setId("profileHBox");
+				profileHBox.setMaxHeight(50);
+				profileHBox.setMinHeight(50);
+				
+				ImageView profileImage = createImage(tempProfile.getImagePath());
+				profileImage.fitHeightProperty().bind(profileHBox.heightProperty());
+				profileImage.setFitWidth(50);
+				
+				Label profileUsername = new Label(tempProfile.getUsername());
+				profileUsername.setId("profileUsername");
+				
+				profileList.setMargin(profileHBox,new Insets(0, 200, 0, 200));
+				
+				profileHBox.getChildren().addAll(profileImage, profileUsername);
+				profileList.getChildren().add(profileHBox);
+				
+				//opens up the profile page for that particular profile.
+				profileHBox.setOnMouseClicked( e -> {
+					viewProfile(tempProfile);
+				});
+			}
+		}
+		viewAllProfilesScrollPane.setContent(profileList);
+		mainBorderPane.setCenter(viewAllProfilesScrollPane);
 	}
 	
 	/**
