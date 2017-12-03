@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Profile - creates profile objects
  * @author Wisam Halawi - 903666
@@ -9,7 +11,8 @@ public class Profile{
   private String telephone; //stores telephone number
   private String address; //stores first line of address
   private String postcode; //stores postcode
-  private static String imagePath = "ImageDefault.png"; //stores profile image path, test.jpg is default
+  private String imagePath; //stores profile image path, test.jpg is default
+  private ArrayList<String> favourites;
   
   /**
    * creates a profile object by taking in a:
@@ -32,6 +35,7 @@ public class Profile{
 	  this.address = address;
 	  this.postcode = postcode;
 	  this.imagePath = imagePath;
+	  favourites = new ArrayList<String>();
   }
   
   public String getUsername(){
@@ -56,6 +60,10 @@ public class Profile{
 	  return imagePath;
   }
   
+  public ArrayList<String> getFavourites(){
+	  return favourites;
+  }
+  
   public void setUsername(String username){
 	  this.username = username;
   }
@@ -76,6 +84,14 @@ public class Profile{
   }
   public void setImagePath(String imagePath){
 	  this.imagePath = imagePath;
+  }
+  
+  public void addFavourite(String username) {
+	  favourites.add(username);
+  }
+  
+  public void removeFavourite(String username) {
+	  favourites.remove(username);
   }
   
   /**

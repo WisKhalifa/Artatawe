@@ -1,4 +1,7 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -35,7 +38,7 @@ public class Artatawe extends Application {
 	private final int AUCTION_BOX_ITEM_PIC_CONTAINER_HEIGHT = 160;
 	private final int AUCTION_BOX_ITEM_PIC_CONTAINER_WIDTH = 200;
 	private final int AUCTION_BOX_ITEM_WIDTH = 200;
-	private final int AUCTION_BOX_ITEM_HEIGHT = 200;
+	private final int AUCTION_BOX_ITEM_HEIGHT = 220;
 	private final int AUCTION_NAVIGATION_BAR_HEIGHT = 40;
 	private final int PROFILE_NAVIGATION_BAR_HEIGHT = 40;
 	private final int AUCTION_FLOWPANE_H_GAP = 4; //to fit 4 auction boxes on a line
@@ -85,58 +88,44 @@ public class Artatawe extends Application {
 		profileManager = new ProfileManager();
 		auctionManager = new AuctionManager();
 		
-                
 		//HARD CODED OBJECTS DELETE AFTER TESTING--------------------------------------------------------------------------
-<<<<<<< HEAD:src/Artatawe.java
-		Profile p1 = new Profile("redneck","Wesly","Kenny","07831432809","10 Hillary Street", "SP3 8NT", ProfilePicture.getImageDirectory());
-		Profile p2 = new Profile("chrome","Gia","Searle","07825753891","22 Bank Street", "BS2 4NK", ProfilePicture.getImageDirectory());
-		Profile p3 = new Profile("roker","Caroline","Whitmore","07825764382","56 Wellington Street", "WE1 5ST", ProfilePicture.getImageDirectory());
-		Profile p4 = new Profile("some_username","John","Stone","07825786273","10 Wild Green West", "WG2 5WE", ProfilePicture.getImageDirectory());
-		/*
-		Painting ap1 = new Painting("Son Of A Man", "This is a painting I created in my in my while at University a couple years ago.", "artworks/Son_Of_A_Man.png", "redneck", 2015, 500.0, 2, 30, 60);
-		Painting ap2 = new Painting("American Gothic", "This is a painting of a two americans.", "artworks/American_Gothic.png", "chrome", 2000, 1000.0, 3, 40, 80);
-		Sculpture as1 = new Sculpture("The Thinker", "A greek man thinking.", "artworks/The_Thinker.png", "roker", 1050, 2500.99, 1, 40, 80, 20, "Marble");
-		Sculpture as2 = new Sculpture("Discobolus", "A greek man with a Disc.", "artworks/Discobolus.png", "some_username", 980, 99.99, 2, 100, 200, 40, "Marble");
-		*/
-=======
-		Profile p1 = new Profile("redneck","Wesly","Kenny","07831432809","10 Hillary Street", "SP3 8NT", "artworks/Son_Of_A_Man.png");
-		Profile p2 = new Profile("chrome","Gia","Searle","07825753891","22 Bank Street", "BS2 4NK", "artworks/Son_Of_A_Man.png");
-		Profile p3 = new Profile("roker","Caroline","Whitmore","07825764382","56 Wellington Street", "WE1 5ST", "artworks/Son_Of_A_Man.png");
-		Profile p4 = new Profile("some_username","John","Stone","07825786273","10 Wild Green West", "WG2 5WE", "artworks/Son_Of_A_Man.png");
+		Profile p1 = new Profile("redneck","Wesly","Kenny","07831432809","10 Hillary Street", "SP3 8NT", "Image2.png");
+		Profile p2 = new Profile("chrome","Gia","Searle","07825753891","22 Bank Street", "BS2 4NK", "Image3.png");
+		Profile p3 = new Profile("roker","Caroline","Whitmore","07825764382","56 Wellington Street", "WE1 5ST", "Image4.png");
+		Profile p4 = new Profile("some_username","John","Stone","07825786273","10 Wild Green West", "WG2 5WE", "ImageDefault.png");
 		
 		Painting ap1 = new Painting("Son Of A Man", "This is a painting I created in my in my while at University a couple years ago.", "artworks/Son_Of_A_Man.png", "redneck", 2015, 500.0, 2, "yyyy/MM/dd HH:mm:ss", 30, 60);
 		Painting ap2 = new Painting("American Gothic", "This is a painting of a two americans.", "artworks/American_Gothic.png", "chrome", 2000, 1000.0, 3,"yyyy/MM/dd HH:mm:ss", 40, 80);
 		Sculpture as1 = new Sculpture("The Thinker", "A greek man thinking.", "artworks/The_Thinker.png", "roker", 1050, 2500.99, 1,"yyyy/MM/dd HH:mm:ss", 40, 80, 20, "Marble");
 		Sculpture as2 = new Sculpture("Discobolus", "A greek man with a Disc.", "artworks/Discobolus.png", "some_username", 980, 99.99, 2,"yyyy/MM/dd HH:mm:ss", 100, 200, 40, "Marble");
 		
->>>>>>> cae6f214aec388e936a547f7c0fd08da581209ce:Artatawe.java
 		ArrayList<String> photos = new ArrayList<>();
 		photos.add("artworks/The_Thinker2.png");
 		photos.add("artworks/The_Thinker3.png");
-		//as1.setExtraPhotos(photos);
-		/*
+		as1.setExtraPhotos(photos);
+		
 		Auction a1 = new Auction(ap1, false);
 		Auction a2 = new Auction(ap2, true);
 		Auction a3 = new Auction(as1, false);
 		Auction a4 = new Auction(as2, false);
 		
-		Bid b1 = new Bid(p2,ap1,600.0);
-		Bid b2 = new Bid(p3,ap1,650.0);
+		Bid b1 = new Bid(p2,ap1,600.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b2 = new Bid(p3,ap1,650.0,"yyyy/MM/dd HH:mm:ss");
 		a1.placeBid(b1);
 		a1.placeBid(b2);
 		
-		Bid b3 = new Bid(p1,ap2,1200.0);
-		Bid b4 = new Bid(p3,ap2,1250.0);
-		Bid b5 = new Bid(p4,ap2,1400.0);
+		Bid b3 = new Bid(p1,ap2,1200.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b4 = new Bid(p3,ap2,1250.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b5 = new Bid(p4,ap2,1400.0,"yyyy/MM/dd HH:mm:ss");
 		a2.placeBid(b3);
 		a2.placeBid(b4);
 		a2.placeBid(b5);
 		
-		Bid b6 = new Bid(p4,as1,3000.0);
+		Bid b6 = new Bid(p4,as1,3000.0,"yyyy/MM/dd HH:mm:ss");
 		a3.placeBid(b6);
 		
-		Bid b7 = new Bid(p1,as2,110.0);
-		Bid b8 = new Bid(p2,as2,120.0);
+		Bid b7 = new Bid(p1,as2,110.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b8 = new Bid(p2,as2,120.0,"yyyy/MM/dd HH:mm:ss");
 		a4.placeBid(b7);
 		a4.placeBid(b8);
 		
@@ -144,7 +133,7 @@ public class Artatawe extends Application {
 		auctionManager.addAuction(a2);
 		auctionManager.addAuction(a3);
 		auctionManager.addAuction(a4);
-		*/
+		
 		profileManager.addProfile(p1);
 		profileManager.addProfile(p2);
 		profileManager.addProfile(p3);
@@ -562,9 +551,20 @@ public class Artatawe extends Application {
 		VBox auctionBoxVBox = new VBox();
 		Label artworkName = new Label(auction.getArtwork().getTitle());
 		Label artworkOwner = new Label(auction.getArtwork().getCreatorName());
+		
+		//this takes the description and makes a substring and only shows a part of it.
+		String description = auction.getArtwork().getDescription();
+		if (description.length() >= 20) {
+			description = description.substring(0, 20);
+		}
+		description += "...";
+		Label artworkDescription = new Label(description);
+		
+		
 		artworkName.setId("artworkName");
 		artworkOwner.setId("artworkOwner");
-		auctionBoxVBox.getChildren().addAll(artworkName, artworkOwner);
+		artworkDescription.setId("artworkDescription");
+		auctionBoxVBox.getChildren().addAll(artworkName, artworkOwner, artworkDescription);
 		
 		auctionItemBox.setCenter(auctionItemBoxPicContainer);
 		auctionItemBox.setBottom(auctionBoxVBox);
@@ -652,12 +652,8 @@ public class Artatawe extends Application {
 		Label artworkCreationYear = new Label("Creation year: " +
 				auction.getArtwork().getCreationYear());
 		artworkCreationYear.setId("auctionDetails");
-<<<<<<< HEAD:src/Artatawe.java
-		Label artworkPrice = new Label("Price: ï¿½" + auction.getArtwork().getPrice());
-=======
 		Label artworkPrice = new Label("Price: £" +
 				auction.getArtwork().getPrice());
->>>>>>> cae6f214aec388e936a547f7c0fd08da581209ce:Artatawe.java
 		artworkPrice.setId("auctionDetails");
 		Label artworkBidTotal = new Label("Total bids: " +
 				auction.getArtwork().getBidTotal());
@@ -675,6 +671,23 @@ public class Artatawe extends Application {
 		viewProfile.setId("auctionButtons");
 		auctionPageVBox.setMargin(viewProfile,new Insets(NORMAL_MARGIN,
 				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		
+		//creates a button to add the owner to the profile favourite list.
+		Button addFav = new Button("Add to Favourites");
+		addFav.setId("auctionButtons");
+		auctionPageVBox.setMargin(addFav,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		
+		//if the seller is already in the favourites list then disable add to fav button.
+		for (int i = 0; i < profileManager.getProfiles().size(); i++) {
+			if (profileManager.getProfiles().get(i).getUsername().equals(auction.getSeller())) {
+				for (int j = 0; j < currentProfile.getFavourites().size(); j++) {
+					if (auction.getSeller().equals(currentProfile.getFavourites().get(j))) {
+						addFav.setDisable(true);
+					}
+				}
+			}
+		}
 		
 		//creates the input to make a bid.
 		HBox makeBid = new HBox();
@@ -713,6 +726,12 @@ public class Artatawe extends Application {
 			}
 		});
 		
+		//this adds the seller to the users favourites.
+		addFav.setOnAction( e -> {
+			currentProfile.addFavourite(auction.getSeller());
+			addFav.setDisable(true);
+		});
+		
 		//creates a bid and sends it off to be added to the Auction.
 		sendBid.setOnAction( e -> {
 			bidErrorMessage.setStyle("-fx-text-fill: red;");
@@ -735,7 +754,12 @@ public class Artatawe extends Application {
 			} else if (auction.getSeller().equals(currentProfile.getUsername())){
 				bidErrorMessage.setText("You can't bid on your own Auction!");
 			} else {
-				Bid newbid = new Bid(currentProfile,auction.getArtwork(),newBidTotal);
+				//creates the time and date of the bid.
+				Date date = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String dateStr = sdf.format(date);
+				
+				Bid newbid = new Bid(currentProfile,auction.getArtwork(),newBidTotal,dateStr);
 				auction.placeBid(newbid);
 				enterBid.setText("");
 				bidErrorMessage.setText("");
@@ -749,7 +773,7 @@ public class Artatawe extends Application {
 		auctionPageVBox.getChildren().addAll(artworkName,
 				artworkComplete, artworkOwner, artworkCreationYear,
 				artworkPrice,artworkBidTotal, artworkDateAndTime,
-				artworkDescription, viewProfile, makeBid, 
+				artworkDescription, viewProfile, addFav, makeBid, 
 				bidTableLabel, bidTable);
 		
 		auctionScrollPane.setContent(auctionPageVBox);
@@ -772,7 +796,7 @@ public class Artatawe extends Application {
 		VBox col3 = new VBox(); 
 		col3.setId("finalColumn");
 		Label col1Header = new Label("Username");
-		Label col2Header = new Label("Amount (ï¿½)");
+		Label col2Header = new Label("Amount (£)");
 		Label col3Header = new Label("Date");
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
@@ -809,6 +833,30 @@ public class Artatawe extends Application {
 		//creates the header for the profile.
 		HBox profileHeader = makeProfileHeader(profile);
 		
+		//creates an add to favourites button.
+		//creates a button to add the owner to the profile favourite list.
+		Button addFav = new Button("Add to Favourites");
+		addFav.setId("auctionButtons");
+		viewProfileVBox.setMargin(addFav,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+				
+		//if the seller is already in the favourites list then disable add to fav button.
+		for (int i = 0; i < profileManager.getProfiles().size(); i++) {
+			if (profileManager.getProfiles().get(i).getUsername().equals(profile.getUsername())) {
+				for (int j = 0; j < currentProfile.getFavourites().size(); j++) {
+					if (profile.getUsername().equals(currentProfile.getFavourites().get(j))) {
+						addFav.setDisable(true);
+					}
+				}
+			}
+		}
+		
+		//this adds the seller to the users favourites.
+		addFav.setOnAction( e -> {
+			currentProfile.addFavourite(profile.getUsername());
+			addFav.setDisable(true);
+		});
+		
 		//list of won artwork's
 		Label wonArtworksLabel = new Label("All Won Artworks");
 		wonArtworksLabel.setId("profileDetails");
@@ -838,7 +886,7 @@ public class Artatawe extends Application {
 		viewProfileVBox.setMargin(bidsOnOwnersArtworksTable,new Insets(0,
 				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
-		viewProfileVBox.getChildren().addAll(profileHeader, wonArtworksLabel,
+		viewProfileVBox.getChildren().addAll(profileHeader, addFav, wonArtworksLabel,
 				wonArtworksTable, artworksSoldLabel, artworksSoldTable,
 				allPlacedBidsLabel, allPlacedBidsTable, bidsOnOwnersArtworksLabel,
 				bidsOnOwnersArtworksTable);
@@ -863,7 +911,7 @@ public class Artatawe extends Application {
 		VBox col3 = new VBox();
 		col3.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
-		Label col2Header = new Label("Price (ï¿½)");
+		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Previous Owner");
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
@@ -904,7 +952,7 @@ public class Artatawe extends Application {
 		VBox col3 = new VBox();
 		col3.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
-		Label col2Header = new Label("Price (ï¿½)");
+		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Winning Bidder");
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
@@ -946,7 +994,7 @@ public class Artatawe extends Application {
 		VBox col3 = new VBox();
 		col3.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
-		Label col2Header = new Label("Price (ï¿½)");
+		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Date of Bid");
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
@@ -989,7 +1037,7 @@ public class Artatawe extends Application {
 		VBox col4 = new VBox();
 		col4.setId("finalColumn");
 		Label col1Header = new Label("Artwork Title");
-		Label col2Header = new Label("Price (ï¿½)");
+		Label col2Header = new Label("Price (£)");
 		Label col3Header = new Label("Bidder");
 		Label col4Header = new Label("Date of Bid");
 		col1.getChildren().add(col1Header);
@@ -1102,8 +1150,7 @@ public class Artatawe extends Application {
 		HBox profileHeader = new HBox();
 		
 		profileHeader.setId("profileHeader");
-		//ImageView profileAvatar = createImage(profile.getImagePath());
-                ImageView profileAvatar = createImage(ProfilePicture.imageDirectory);
+		ImageView profileAvatar = createImage(profile.getImagePath());
 		profileAvatar.fitHeightProperty().bind(profileHeader.heightProperty());
 		profileAvatar.setFitWidth(AVATAR_WIDTH);
 		
@@ -1142,9 +1189,9 @@ public class Artatawe extends Application {
 		
 		//opens the customDrawing window.
 		customDrawingLabel.setOnMouseClicked( e -> {
-                    ProfilePicture run = new ProfilePicture();
-                    Stage primaryStage = new Stage();
-                    run.start(primaryStage);
+			ProfilePicture run = new ProfilePicture();
+            Stage primaryStage = new Stage();
+            run.start(primaryStage);
 		});
 		
 		return profileNavigationBar;
@@ -1276,7 +1323,7 @@ public class Artatawe extends Application {
 				Label profileUsername = new Label(tempProfile.getUsername());
 				profileUsername.setId("profileUsername");
 				
-				profileList.setMargin(profileHBox,new Insets(0, 200, 0, 200));
+				profileList.setMargin(profileHBox,new Insets(0, 100, 0, 100));
 				
 				profileHBox.getChildren().addAll(profileImage, profileUsername);
 				profileList.getChildren().add(profileHBox);

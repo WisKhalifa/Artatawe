@@ -93,7 +93,7 @@ public class CustomDrawing extends Application implements EventHandler{
                 eraser, slider, saveBtn);
         holdFunctions.setAlignment(Pos.CENTER);
         
-        
+
         
         root.setTop(holdFunctions);
         root.setLeft(backButtonBox);

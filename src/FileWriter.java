@@ -72,14 +72,9 @@ public class FileWriter {
 			auctionWriter.println(auctions.get(i).getArtwork().getCreationYear());
 			auctionWriter.println(auctions.get(i).getArtwork().getPrice());
 			auctionWriter.println(auctions.get(i).getArtwork().getBidTotal());
-<<<<<<< HEAD:src/FileWriter.java
-			//auctionWriter.println(auctions.get(i).getArtwork().getDateAndTime());
-=======
 			auctionWriter.println(auctions.get(i).getArtwork().getDateTime());
->>>>>>> cae6f214aec388e936a547f7c0fd08da581209ce:FileWriter.java
 			
 			//saves details if it is a Sculpture.
-                        /*
 			if(auctions.get(i).getArtwork() instanceof Sculpture) {
 				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getWidth());
 				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getHeight());
@@ -113,7 +108,6 @@ public class FileWriter {
 				auctionWriter.println(".");
 			}
 			profileWriter.println(","); //shows the end of an Auction save
-*/
 		}
 	}
 }
