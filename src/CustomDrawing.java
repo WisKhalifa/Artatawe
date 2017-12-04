@@ -1,7 +1,6 @@
 import java.awt.image.RenderedImage;
 import java.io.File;
 import javafx.scene.canvas.*;
-import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -32,14 +31,13 @@ import javax.imageio.ImageIO;
  */
 public class CustomDrawing implements EventHandler {
 
-    private final static int sceneWidth = 700;
-    private final static int sceneHeight = 400;
-    private final static int canvasWidth = 700;
-    private final static int canvasHeight = 400;
-    private static String imageDirectory;
-    Profile currentProfile = new Profile();
+    private final int sceneWidth = 700;
+    private final int sceneHeight = 400;
+    private final int canvasWidth = 700;
+    private final int canvasHeight = 400;
+    private String imageDirectory;
     
-    public static void makeCustomDrawing(Stage primaryStage, Profile currentProfile) {
+    public void makeCustomDrawing(Stage primaryStage, Profile currentProfile) {
         BorderPane root = new BorderPane();
         StackPane holdCanvas = new StackPane();
         TilePane holdFunctions = new TilePane();
@@ -97,7 +95,10 @@ public class CustomDrawing implements EventHandler {
         });
         backButton.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Back To Homepage");
-            ProfilePicture.runProgram(primaryStage, currentProfile);
+            ProfilePicture run = new ProfilePicture();
+            Stage backStage = new Stage();
+            run.runProgram(backStage, currentProfile);
+            primaryStage.close();
         });   
         eraser.setOnAction((ActionEvent event) -> { 
             brush.setStroke(Color.WHITE);
@@ -111,9 +112,10 @@ public class CustomDrawing implements EventHandler {
 
         saveBtn.setOnAction((ActionEvent event)-> {
             System.out.println("Abertawe: Saving...");
-            File file = new File("Artatawe\\src\\artworks\\CustomDrawing.png");
-            imageDirectory = currentProfile.getFirstName() + file.toString();
-            System.out.println("Directory saved at: "+ imageDirectory);
+            String endExtension = "_CustomDrawing.png";
+            imageDirectory = currentProfile.getUsername() + endExtension;
+            File file = new File(imageDirectory);
+            System.out.println("Directory saved at: " + imageDirectory);
             currentProfile.setImagePath(imageDirectory);
             try {
                 
@@ -135,10 +137,6 @@ public class CustomDrawing implements EventHandler {
         primaryStage.show();
         
     }
-    /*    
-    public static void main(String[] args) {
-        launch(args);
-    }*/
 
     @Override
     public void handle(Event event) {
@@ -150,7 +148,7 @@ public class CustomDrawing implements EventHandler {
     * has been set and saved.
     * @author Elias Nemr, 961625
     */
-    public static void setImageAlert() {
+    public void setImageAlert() {
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Profile Picture.");
@@ -167,7 +165,7 @@ public class CustomDrawing implements EventHandler {
      * With Color which is set by the default Color chooser/
      * @author Elias Nemr, 961625
      */
-    public static void fillDraw(GraphicsContext gc, ColorPicker cp) {
+    public void fillDraw(GraphicsContext gc, ColorPicker cp) {
         
         gc.setFill(cp.getValue());//text color
         gc.setStroke(cp.getValue());//text color

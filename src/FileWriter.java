@@ -37,16 +37,27 @@ public class FileWriter {
 	 * @param profiles The list of profiles being saved.
 	 */
 	public void writeProfileToFile(ArrayList<Profile> profiles) {
-		for(int i = 0; i < profiles.size(); i++) {
-			profileWriter.println(profiles.get(i).getUsername());
-			profileWriter.println(profiles.get(i).getFirstName());
-			profileWriter.println(profiles.get(i).getLastName());
-			profileWriter.println(profiles.get(i).getTelephone());
-			profileWriter.println(profiles.get(i).getFirstAddress());
-			profileWriter.println(profiles.get(i).getPostcode());
-			profileWriter.println(profiles.get(i).getImagePath());
+		for (int i = 0; i < profiles.size(); i++) {
+			Profile temp = profiles.get(i);
+			profileWriter.println(temp.getUsername());
+			profileWriter.println(temp.getFirstName());
+			profileWriter.println(temp.getLastName());
+			profileWriter.println(temp.getTelephone());
+			profileWriter.println(temp.getFirstAddress());
+			profileWriter.println(temp.getPostcode());
+			profileWriter.println(temp.getImagePath());
+			
+			//saves all the favourites a profile has.
+			if (temp.getFavourites().isEmpty()) {
+				profileWriter.println("-");
+			} else {
+				for (int j = 0; j < temp.getFavourites().size(); j++) {
+					profileWriter.println(temp.getFavourites().get(j));
+				}
+			}
 			profileWriter.println(","); //shows the end of saving a profile.
 		}
+		profileWriter.close();
 	}
 	
 	/**
@@ -56,58 +67,70 @@ public class FileWriter {
 	 */
 	public void writeAuctionToFile(ArrayList<Auction> auctions){
 		for(int i = 0; i < auctions.size(); i++) {
-			//saves all the information about the artwork in the auction
-			auctionWriter.println(auctions.get(i).getArtwork().getTitle());
 			
-			//checks whether the description is null, as its optional.
-			if(auctions.get(i).getArtwork().getDescription().equals("") ||
-					auctions.get(i).getArtwork().getDescription() == null) {
-				auctionWriter.println("");
-			}else {
-				auctionWriter.println(auctions.get(i).getArtwork().getDescription());
-			}
-			
-			auctionWriter.println(auctions.get(i).getArtwork().getMainPhoto());
-			auctionWriter.println(auctions.get(i).getArtwork().getCreatorName());
-			auctionWriter.println(auctions.get(i).getArtwork().getCreationYear());
-			auctionWriter.println(auctions.get(i).getArtwork().getPrice());
-			auctionWriter.println(auctions.get(i).getArtwork().getBidTotal());
-			auctionWriter.println(auctions.get(i).getArtwork().getDateTime());
-			
-			//saves details if it is a Sculpture.
-			if(auctions.get(i).getArtwork() instanceof Sculpture) {
-				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getWidth());
-				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getHeight());
-				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getDepth());
-				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getMaterial());
+			if (auctions.get(i).getArtwork() instanceof Painting) {
+				auctionWriter.print("Painting, ");
+				auctionWriter.print(auctions.get(i).getArtwork().getTitle() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getDescription() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getMainPhoto() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreatorName() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreationYear() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getPrice() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getBidTotal() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getDateTime() + ", ");
+				auctionWriter.print(((Painting) auctions.get(i).getArtwork()).getWidth() + ", ");
+				auctionWriter.print(((Painting) auctions.get(i).getArtwork()).getHeight() + ", ");
+				auctionWriter.print(auctions.get(i).isComplete() + ", ");
 				
-				//checks to see if additional photos is empty as its optional.
-				if(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos() == null || 
-						((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size() == 0) {
-					auctionWriter.println("-");
-				}else {
-					for(int j = 0; j < ((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size(); j++){
-					auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().get(i));
+				for (int j = 0; j < auctions.get(i).getAllBids().size(); j++) {
+					if ( j == auctions.get(i).getAllBids().size() - 1) {
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ", ");
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ", ");
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername() + ",");
+					} else {
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ", ");
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ", ");
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername() + ", ");
 					}
 				}
+				//finishes the first line of data and moves onto the next line.
+				auctionWriter.println(""); 
+			} else {
+				auctionWriter.print("Sculpture, ");
+				auctionWriter.print(auctions.get(i).getArtwork().getTitle() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getDescription() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getMainPhoto() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreatorName() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreationYear() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getPrice() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getBidTotal() + ", ");
+				auctionWriter.print(auctions.get(i).getArtwork().getDateTime() + ", ");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getWidth() + ", ");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getHeight() + ", ");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getDepth() + ", ");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getMaterial() + ", ");
 				
-				profileWriter.println("."); //shows the end of saving additional photos
-			}else { //if its a painting.
-				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getWidth());
-				auctionWriter.println(((Sculpture) auctions.get(i).getArtwork()).getHeight());
+				//writes the extra photos to file.
+				for (int j = 0; j < ((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size(); j++) {
+					if (j == ((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size() - 1) {
+						auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().get(j) + ",");
+					}else {
+						auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().get(j) + ", ");
+					}
+				}
+				auctionWriter.print("!");
+				
+				auctionWriter.print(auctions.get(i).isComplete() + ", ");
+				
+				for (int j = 0;j < auctions.get(i).getAllBids().size(); j++) {
+					auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ", ");
+					auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ", ");
+					auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername());
+				}
+				//finishes the first line of data and moves onto the next line.
+				auctionWriter.println(""); 
 			}
-			
-			//saves all the information about the Auction
-			auctionWriter.println(auctions.get(i).getArtwork().getCreatorName());
-			auctionWriter.println(auctions.get(i).isComplete());
-			
-			for(int j = 0; j < auctions.get(i).getAllBids().size(); j++){
-				auctionWriter.println(auctions.get(i).getAllBids().get(i).getAmount());
-				auctionWriter.println(auctions.get(i).getAllBids().get(i).getDate());
-				auctionWriter.println(auctions.get(i).getAllBids().get(i).getBidder().getUsername());
-				auctionWriter.println(".");
-			}
-			profileWriter.println(","); //shows the end of an Auction save
 		}
+		auctionWriter.close();
 	}
 }

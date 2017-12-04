@@ -223,7 +223,7 @@
 #profileHBox:hover{
 	-fx-border-width: 0 1 1 0;
 	-fx-border-color: black;
-	-fx-background-color: grey;
+	-fx-background-color: lightgrey;
 }
 #profileUsername{
 	-fx-font-weight: bold;

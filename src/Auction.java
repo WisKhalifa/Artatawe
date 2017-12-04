@@ -82,6 +82,7 @@ public class Auction {
          */
         public void placeBid(Bid b){
                 bidsLeft -= 1;
+                artwork.setBidTotal(artwork.getBidTotal() + 1);
                 bids.add(b);
                 if (bidsLeft == 0) {
                     isComplete = true;

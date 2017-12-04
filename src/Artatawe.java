@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,10 +97,10 @@ public class Artatawe extends Application {
 		Profile p3 = new Profile("roker","Caroline","Whitmore","07825764382","56 Wellington Street", "WE1 5ST", "Image4.png");
 		Profile p4 = new Profile("some_username","John","Stone","07825786273","10 Wild Green West", "WG2 5WE", "ImageDefault.png");
 		
-		Painting ap1 = new Painting("Son Of A Man", "This is a painting I created in my in my while at University a couple years ago.", "artworks/Son_Of_A_Man.png", "redneck", 2015, 500.0, 2, "yyyy/MM/dd HH:mm:ss", 30, 60);
-		Painting ap2 = new Painting("American Gothic", "This is a painting of a two americans.", "artworks/American_Gothic.png", "chrome", 2000, 1000.0, 3,"yyyy/MM/dd HH:mm:ss", 40, 80);
-		Sculpture as1 = new Sculpture("The Thinker", "A greek man thinking.", "artworks/The_Thinker.png", "roker", 1050, 2500.99, 1,"yyyy/MM/dd HH:mm:ss", 40, 80, 20, "Marble");
-		Sculpture as2 = new Sculpture("Discobolus", "A greek man with a Disc.", "artworks/Discobolus.png", "some_username", 980, 99.99, 2,"yyyy/MM/dd HH:mm:ss", 100, 200, 40, "Marble");
+		Painting ap1 = new Painting("Son Of A Man", "This is a painting I created in my in my while at University a couple years ago.", "artworks/Son_Of_A_Man.png", "redneck", 2015, 500.0, 0, "2007/07/12 11:34:25", 30, 60);
+		Painting ap2 = new Painting("American Gothic", "This is a painting of a two americans.", "artworks/American_Gothic.png", "chrome", 2000, 1000.0, 0,"2009/05/04 06:22:34", 40, 80);
+		Sculpture as1 = new Sculpture("The Thinker", "A greek man thinking.", "artworks/The_Thinker.png", "roker", 1050, 2500.99, 0,"1999/06/24 18:45:37", 40, 80, 20, "Marble");
+		Sculpture as2 = new Sculpture("Discobolus", "A greek man with a Disc.", "artworks/Discobolus.png", "some_username", 980, 99.99, 0,"2003/08/01 03:22:56", 100, 200, 40, "Marble");
 		
 		ArrayList<String> photos = new ArrayList<>();
 		photos.add("artworks/The_Thinker2.png");
@@ -110,23 +112,23 @@ public class Artatawe extends Application {
 		Auction a3 = new Auction(as1, false);
 		Auction a4 = new Auction(as2, false);
 		
-		Bid b1 = new Bid(p2,ap1,600.0,"yyyy/MM/dd HH:mm:ss");
-		Bid b2 = new Bid(p3,ap1,650.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b1 = new Bid(p2,ap1,600.0,"2007/08/22 12:34:25");
+		Bid b2 = new Bid(p3,ap1,650.0,"2007/09/12 17:34:44");
 		a1.placeBid(b1);
 		a1.placeBid(b2);
 		
-		Bid b3 = new Bid(p1,ap2,1200.0,"yyyy/MM/dd HH:mm:ss");
-		Bid b4 = new Bid(p3,ap2,1250.0,"yyyy/MM/dd HH:mm:ss");
-		Bid b5 = new Bid(p4,ap2,1400.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b3 = new Bid(p1,ap2,1200.0,"2009/06/04 04:17:34");
+		Bid b4 = new Bid(p3,ap2,1250.0,"2009/06/08 09:22:55");
+		Bid b5 = new Bid(p4,ap2,1400.0,"2009/05/10 12:22:34");
 		a2.placeBid(b3);
 		a2.placeBid(b4);
 		a2.placeBid(b5);
 		
-		Bid b6 = new Bid(p4,as1,3000.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b6 = new Bid(p4,as1,3000.0,"2003/06/13 12:45:22");
 		a3.placeBid(b6);
 		
-		Bid b7 = new Bid(p1,as2,110.0,"yyyy/MM/dd HH:mm:ss");
-		Bid b8 = new Bid(p2,as2,120.0,"yyyy/MM/dd HH:mm:ss");
+		Bid b7 = new Bid(p1,as2,110.0,"2003/09/01 08:44:56");
+		Bid b8 = new Bid(p2,as2,120.0,"2003/10/03 06:21:36");
 		a4.placeBid(b7);
 		a4.placeBid(b8);
 		
@@ -457,6 +459,7 @@ public class Artatawe extends Application {
 		logOutButton.setOnAction( e -> {
 			artataweScene.setRoot(makeLoginPage());
 			currentProfile = null;
+			saveData(); //saves data before log out
 		});
 		
 		return navigationBar;
@@ -807,6 +810,7 @@ public class Artatawe extends Application {
 				bidErrorMessage.setText("");
 				auctionPageVBox.getChildren().remove(bidTable);
 				bidTable = makeBidTable(auction);
+				artworkBidTotal.setText("Total bids: " + auction.getArtwork().getBidTotal());
 				auctionPageVBox.getChildren().add(bidTable);
 				auctionPageVBox.setMargin(bidTable,new Insets(0,30,20,30));
 			}  
@@ -1113,10 +1117,11 @@ public class Artatawe extends Application {
 	 * changes to their information and also make custom drawings.
 	 */
 	public void viewCurrentProfile() {
+		//checks if the scene already has a 
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 		
 		//creates a profile Navigation bar
-		HBox profileNavigationBar = createProfileNavigationBar();
+		profileNavigationBar = createProfileNavigationBar();
 		mainBorderPaneTopVBox.getChildren().add(profileNavigationBar);
 		
 		currentProfileScrollPane = new ScrollPane();
@@ -1230,10 +1235,9 @@ public class Artatawe extends Application {
 		
 		//opens the customDrawing window.
 		customDrawingLabel.setOnMouseClicked( e -> {
-			//ProfilePicture run = new ProfilePicture();
+			ProfilePicture run = new ProfilePicture();
             Stage primaryStage = new Stage();
-            ProfilePicture.runProgram(primaryStage, currentProfile);
-            //run.start(primaryStage, currentProfile);
+            run.runProgram(primaryStage, currentProfile);
 		});
 		
 		return profileNavigationBar;
@@ -1342,6 +1346,7 @@ public class Artatawe extends Application {
 	 */
 	public void viewAllCurrentProfiles() {
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
+		mainBorderPaneTopVBox.getChildren().remove(profileNavigationBar);
 		
 		viewAllProfilesScrollPane = new ScrollPane();
 		viewAllProfilesScrollPane.setFitToHeight(true);
@@ -1411,6 +1416,22 @@ public class Artatawe extends Application {
 	 * program but first it saves all the data, so changes are not lost.
 	 */
 	public void closeProgram() {
-		
+		saveData();
+	}
+	
+	/**
+	 * This method saves the data.
+	 */
+	public void saveData() {
+		FileWriter filewriter1 = null;
+		try {
+			filewriter1 = new FileWriter("profile.txt", "auction.txt");
+		} catch (FileNotFoundException e) {
+			System.out.println("File not Found.");
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("Wrong encoding used.");
+		}
+		auctionManager.saveAuctions(filewriter1);
+		profileManager.saveProfiles(filewriter1);
 	}
 }

@@ -1,4 +1,3 @@
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -21,17 +20,18 @@ import javafx.stage.Stage;
  */
 public class Avatars implements EventHandler {
     
-    private final static int sceneWidth = 500;
-    private final static int sceneHeight = 400;  
+    private final int sceneWidth = 500;
+    private final int sceneHeight = 400;  
     private final int buttonWidth = 40;
     private final int buttonHeight = 200;
     private final int gridGap = 20;
-    private static String imageDirectory = "ImageDefault.png";  
-    Profile currentProfile = new Profile();
+    private String imageDirectory;
+    private String defaultImage = "ImageDefault.png";
 
     public static Button currentProfilePic = new Button(); //To be implemented in the Profile GUI?
 
-    public static void chooseAvatar(Stage primaryStage, Profile currentProfile) {
+    public void chooseAvatar(Stage primaryStage, Profile currentProfile) {
+    	imageDirectory = currentProfile.getImagePath();
         currentProfilePic.setGraphic(new ImageView(imageDirectory));
         //Creating some buttons so i can put the Avatars in there
         Button imageButtonB = new Button(); // Back Button
@@ -56,7 +56,7 @@ public class Avatars implements EventHandler {
         imageButton3.setGraphic(new ImageView(image3));
         imageButton4.setGraphic(new ImageView(image4));
         imageButton5.setGraphic(new ImageView(image5));
-        imageButtonD.setGraphic(new ImageView(imageDirectory));
+        imageButtonD.setGraphic(new ImageView(defaultImage));
         imageButtonB.setGraphic(new ImageView(imageBack));
         
         //Creating an HBox, VBox, BorderPane to put all my objects inside
@@ -136,7 +136,10 @@ public class Avatars implements EventHandler {
         });   
         imageButtonB.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Back To Homepage");
-            ProfilePicture.runProgram(primaryStage, currentProfile);
+            ProfilePicture run = new ProfilePicture();
+            Stage backStage = new Stage();
+            run.runProgram(backStage, currentProfile);
+            primaryStage.close();
         });   
         
         setAvatar.setOnAction((ActionEvent event) -> {
@@ -150,17 +153,11 @@ public class Avatars implements EventHandler {
 
         //End of EventHandling
         
-        
         Scene scene = new Scene(primaryPane, sceneWidth, sceneHeight);
         primaryStage.setTitle("Abertawe: Choosing an Avatar");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-    /*
-    public static void main(String[] args) {
-        launch(args);
-    }*/
 
     @Override
     public void handle(Event event) {
@@ -172,7 +169,7 @@ public class Avatars implements EventHandler {
      * has been set and saved.
      * @author Elias Nemr, 961625
      */
-    public static void setImageAlert() {
+    public void setImageAlert() {
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Profile Picture.");
@@ -181,7 +178,5 @@ public class Avatars implements EventHandler {
 
         alert.showAndWait();
  
-    }    
-        
+    }       
 }
-

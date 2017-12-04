@@ -1,10 +1,11 @@
-redneck //username
-Wesley //first name
-Kenny // last name
-07831432809 // telephone
-10 Hillary Street //address
-SP3 8NT //postcode
-ImageDefault.png //avatar image
+redneck
+Wesly
+Kenny
+07831432809
+10 Hillary Street
+SP3 8NT
+Image2.png
+-
 ,
 chrome
 Gia
@@ -12,7 +13,8 @@ Searle
 07825753891
 22 Bank Street
 BS2 4NK
-ImageDefault.png
+Image3.png
+-
 ,
 roker
 Caroline
@@ -20,5 +22,15 @@ Whitmore
 07825764382
 56 Wellington Street
 WE1 5ST
+Image4.png
+-
+,
+some_username
+John
+Stone
+07825786273
+10 Wild Green West
+WG2 5WE
 ImageDefault.png
+-
 ,

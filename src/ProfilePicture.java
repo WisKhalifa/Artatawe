@@ -1,4 +1,3 @@
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -16,11 +15,11 @@ import javafx.stage.Stage;
  */
 public class ProfilePicture {
     
-    private final static int sceneWidth = 400;
-    private final static int sceneHeight = 400;
+    private final int sceneWidth = 400;
+    private final int sceneHeight = 400;
     private final int gridGap = 20;
 
-    public static void runProgram(Stage primaryStage, Profile currentProfile) {
+    public void runProgram(Stage primaryStage, Profile currentProfile) {
         BorderPane root = new BorderPane();
         TilePane tileButtons = new TilePane();
         TilePane tileLabel = new TilePane();
@@ -33,17 +32,16 @@ public class ProfilePicture {
         tileLabel.getChildren().add(intro);
         tileLabel.setAlignment(Pos.TOP_CENTER);
         
-        
         root.setTop(tileLabel);
         root.setCenter(tileButtons);
         
-
         //Event handling the buttons
         btnSetAvatar.setOnAction(new EventHandler<ActionEvent>() {     
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Abertawe: Profile Picture");
-                Avatars.chooseAvatar(primaryStage, currentProfile);
+                Avatars a1 = new Avatars();
+                a1.chooseAvatar(primaryStage, currentProfile);
             }
         });
         btnCustomDrawing.setOnAction(new EventHandler<ActionEvent>(){
@@ -51,7 +49,8 @@ public class ProfilePicture {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Abertawe: Custom Drawing");
-                CustomDrawing.makeCustomDrawing(primaryStage, currentProfile);
+                CustomDrawing d1 = new CustomDrawing();
+                d1.makeCustomDrawing(primaryStage, currentProfile);
             }
         });
         //End of Event Handling
@@ -61,14 +60,5 @@ public class ProfilePicture {
         primaryStage.setTitle("Artatawe: Choosing a Profile Picture");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
-
-    }
-
-    /*
-    public static void main(String[] args) {
-        launch(args);
-        
-    }*/
-    
+    }  
 }

@@ -27,6 +27,7 @@ public class FileLoader {
 				String address = in.nextLine();
 				String postcode = in.nextLine();
 				String imagePath = in.nextLine();
+				
 				//used to skip over the line with , 
 				if (in.nextLine() == ",") {
 					continue; 
@@ -136,7 +137,7 @@ public class FileLoader {
 			au.placeBid(b);
 		}
 	line.close();
-}
+	}
 	
 	
 	public ArrayList<Auction> loadAuction(){
