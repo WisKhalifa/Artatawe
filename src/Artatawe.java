@@ -1230,9 +1230,10 @@ public class Artatawe extends Application {
 		
 		//opens the customDrawing window.
 		customDrawingLabel.setOnMouseClicked( e -> {
-			ProfilePicture run = new ProfilePicture();
+			//ProfilePicture run = new ProfilePicture();
             Stage primaryStage = new Stage();
-            run.start(primaryStage);
+            ProfilePicture.runProgram(primaryStage, currentProfile);
+            //run.start(primaryStage, currentProfile);
 		});
 		
 		return profileNavigationBar;

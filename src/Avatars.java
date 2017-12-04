@@ -19,20 +19,19 @@ import javafx.stage.Stage;
  * @author Elias Nemr, 961625
  * 
  */
-public class Avatars extends Application implements EventHandler {
+public class Avatars implements EventHandler {
     
-    private final int sceneWidth = 500;
-    private final int sceneHeight = 400;  
+    private final static int sceneWidth = 500;
+    private final static int sceneHeight = 400;  
     private final int buttonWidth = 40;
     private final int buttonHeight = 200;
     private final int gridGap = 20;
-    private String imageDirectory = "ImageDefault.png";  
+    private static String imageDirectory = "ImageDefault.png";  
     Profile currentProfile = new Profile();
 
     public static Button currentProfilePic = new Button(); //To be implemented in the Profile GUI?
 
-    @Override
-    public void start(Stage primaryStage) {
+    public static void chooseAvatar(Stage primaryStage, Profile currentProfile) {
         currentProfilePic.setGraphic(new ImageView(imageDirectory));
         //Creating some buttons so i can put the Avatars in there
         Button imageButtonB = new Button(); // Back Button
@@ -45,13 +44,12 @@ public class Avatars extends Application implements EventHandler {
         Button setAvatar = new Button("Set Avatar");
         //Create Images
 
-        Image image1 = new Image(getClass().getResourceAsStream("ImageOne."
-                + "png"));
-        Image image2 = new Image(getClass().getResourceAsStream("Image2.png"));
-        Image image3 = new Image(getClass().getResourceAsStream("Image3.png"));
-        Image image4 = new Image(getClass().getResourceAsStream("Image4.png"));
-        Image image5 = new Image(getClass().getResourceAsStream("Image5.png"));
-        Image imageBack = new Image(getClass().getResourceAsStream("back2.png"));
+        Image image1 = new Image("ImageOne.png");
+        Image image2 = new Image("Image2.png");
+        Image image3 = new Image("Image3.png");
+        Image image4 = new Image("Image4.png");
+        Image image5 = new Image("Image5.png");
+        Image imageBack = new Image("back2.png");
         //Inserting the images as a node into my buttons
         imageButton1.setGraphic(new ImageView(image1));
         imageButton2.setGraphic(new ImageView(image2));
@@ -89,7 +87,7 @@ public class Avatars extends Application implements EventHandler {
             
             System.out.println("Abertawe: Choosing an Avatar");
             Image image = 
-                    new Image(getClass().getResourceAsStream("ImageOne.png"));
+                    new Image("ImageOne.png");
             
             currentProfilePic.setGraphic(new ImageView(image)); 
             imageDirectory = "ImageOne.png";
@@ -98,7 +96,7 @@ public class Avatars extends Application implements EventHandler {
         imageButton2.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Choosing an Avatar");
             Image image = 
-                    new Image(getClass().getResourceAsStream("Image2.png"));
+                    new Image("Image2.png");
             
             currentProfilePic.setGraphic(new ImageView(image));
             imageDirectory = "Image2.png";
@@ -107,7 +105,7 @@ public class Avatars extends Application implements EventHandler {
         imageButton3.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Choosing an Avatar");
             Image image = 
-                    new Image(getClass().getResourceAsStream("Image3.png"));
+                    new Image("Image3.png");
             
             currentProfilePic.setGraphic(new ImageView(image)); 
             imageDirectory = "Image3.png";
@@ -115,7 +113,7 @@ public class Avatars extends Application implements EventHandler {
         imageButton4.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Choosing an Avatar");
             Image image = 
-                    new Image(getClass().getResourceAsStream("Image4.png"));
+                    new Image("Image4.png");
             
             currentProfilePic.setGraphic(new ImageView(image)); 
             imageDirectory = "Image4.png";
@@ -123,7 +121,7 @@ public class Avatars extends Application implements EventHandler {
         imageButton5.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Choosing an Avatar");
             Image image = 
-                    new Image(getClass().getResourceAsStream("Image5.png"));
+                    new Image("Image5.png");
             
             currentProfilePic.setGraphic(new ImageView(image)); 
             imageDirectory = "Image5.png";
@@ -131,15 +129,14 @@ public class Avatars extends Application implements EventHandler {
         imageButtonD.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Choosing an Avatar");
             Image image = 
-                    new Image(getClass().getResourceAsStream("ImageDefault.png"));
+                    new Image("ImageDefault.png");
             
             currentProfilePic.setGraphic(new ImageView(image)); 
             imageDirectory = "ImageDefault.png";
         });   
         imageButtonB.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Back To Homepage");
-            ProfilePicture run = new ProfilePicture();
-            run.start(primaryStage);
+            ProfilePicture.runProgram(primaryStage, currentProfile);
         });   
         
         setAvatar.setOnAction((ActionEvent event) -> {
@@ -160,10 +157,10 @@ public class Avatars extends Application implements EventHandler {
         primaryStage.show();
     }
 
-
+    /*
     public static void main(String[] args) {
         launch(args);
-    }
+    }*/
 
     @Override
     public void handle(Event event) {
@@ -175,7 +172,7 @@ public class Avatars extends Application implements EventHandler {
      * has been set and saved.
      * @author Elias Nemr, 961625
      */
-    public void setImageAlert() {
+    public static void setImageAlert() {
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Profile Picture.");

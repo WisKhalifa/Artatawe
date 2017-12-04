@@ -30,18 +30,16 @@ import javax.imageio.ImageIO;
  * Custom Draw your profile picture with a few functionalities of paint.
  * @author Elias Nemr, 961625
  */
-public class CustomDrawing extends Application implements EventHandler {
+public class CustomDrawing implements EventHandler {
 
-    private final int sceneWidth = 700;
-    private final int sceneHeight = 400;
-    private final int canvasWidth = 700;
-    private final int canvasHeight = 400;
-    private String imageDirectory;
+    private final static int sceneWidth = 700;
+    private final static int sceneHeight = 400;
+    private final static int canvasWidth = 700;
+    private final static int canvasHeight = 400;
+    private static String imageDirectory;
     Profile currentProfile = new Profile();
     
-    
-    @Override
-    public void start(Stage primaryStage) {
+    public static void makeCustomDrawing(Stage primaryStage, Profile currentProfile) {
         BorderPane root = new BorderPane();
         StackPane holdCanvas = new StackPane();
         TilePane holdFunctions = new TilePane();
@@ -50,7 +48,7 @@ public class CustomDrawing extends Application implements EventHandler {
         Button fillButton = new Button("Draw N Fill");
         Button drawLine = new Button("Line");
         VBox backButtonBox = new VBox();
-        Image backButtonI = new Image(getClass().getResourceAsStream("back2.png"));
+        Image backButtonI = new Image("back2.png");
         backButton.setGraphic(new ImageView(backButtonI));
         backButtonBox.getChildren().addAll(backButton);
         Button saveBtn = new Button("Set as Profile");
@@ -99,8 +97,7 @@ public class CustomDrawing extends Application implements EventHandler {
         });
         backButton.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Back To Homepage");
-            ProfilePicture run = new ProfilePicture();
-            run.start(primaryStage);
+            ProfilePicture.runProgram(primaryStage, currentProfile);
         });   
         eraser.setOnAction((ActionEvent event) -> { 
             brush.setStroke(Color.WHITE);
@@ -111,7 +108,6 @@ public class CustomDrawing extends Application implements EventHandler {
             fillDraw(brush,cp);
 
         });
-
 
         saveBtn.setOnAction((ActionEvent event)-> {
             System.out.println("Abertawe: Saving...");
@@ -139,10 +135,10 @@ public class CustomDrawing extends Application implements EventHandler {
         primaryStage.show();
         
     }
-        
+    /*    
     public static void main(String[] args) {
         launch(args);
-    }
+    }*/
 
     @Override
     public void handle(Event event) {
@@ -154,7 +150,7 @@ public class CustomDrawing extends Application implements EventHandler {
     * has been set and saved.
     * @author Elias Nemr, 961625
     */
-    public void setImageAlert() {
+    public static void setImageAlert() {
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Profile Picture.");
@@ -171,26 +167,12 @@ public class CustomDrawing extends Application implements EventHandler {
      * With Color which is set by the default Color chooser/
      * @author Elias Nemr, 961625
      */
-    public void fillDraw(GraphicsContext gc, ColorPicker cp) {
+    public static void fillDraw(GraphicsContext gc, ColorPicker cp) {
         
         gc.setFill(cp.getValue());//text color
         gc.setStroke(cp.getValue());//text color
        
         gc.fill();
         gc.stroke();
-    }  
-
-    
+    }
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-

@@ -13,7 +13,8 @@ public class AuctionManager {
          */
         public AuctionManager() {
                 FileLoader fileLoader = new FileLoader();
-                auctions = fileLoader.loadAuction();
+                //auctions = fileLoader.loadAuction();
+                auctions = new ArrayList<>(); //for testing
         }
         
         /**

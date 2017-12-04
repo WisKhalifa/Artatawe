@@ -14,14 +14,13 @@ import javafx.stage.Stage;
  * a Custom Drawing or Avatars
  * @author Elias Nemr, 961625
  */
-public class ProfilePicture extends Application {
+public class ProfilePicture {
     
-    private final int sceneWidth = 400;
-    private final int sceneHeight = 400;
+    private final static int sceneWidth = 400;
+    private final static int sceneHeight = 400;
     private final int gridGap = 20;
 
-    @Override
-    public void start(Stage primaryStage) {
+    public static void runProgram(Stage primaryStage, Profile currentProfile) {
         BorderPane root = new BorderPane();
         TilePane tileButtons = new TilePane();
         TilePane tileLabel = new TilePane();
@@ -44,8 +43,7 @@ public class ProfilePicture extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Abertawe: Profile Picture");
-                Avatars run = new Avatars();
-                run.start(primaryStage);
+                Avatars.chooseAvatar(primaryStage, currentProfile);
             }
         });
         btnCustomDrawing.setOnAction(new EventHandler<ActionEvent>(){
@@ -53,8 +51,7 @@ public class ProfilePicture extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Abertawe: Custom Drawing");
-                CustomDrawing run = new CustomDrawing();
-                run.start(primaryStage);
+                CustomDrawing.makeCustomDrawing(primaryStage, currentProfile);
             }
         });
         //End of Event Handling
@@ -68,9 +65,10 @@ public class ProfilePicture extends Application {
 
     }
 
+    /*
     public static void main(String[] args) {
         launch(args);
         
-    }
+    }*/
     
 }

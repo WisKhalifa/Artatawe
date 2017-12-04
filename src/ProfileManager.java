@@ -12,7 +12,8 @@ public class ProfileManager {
          */
         public ProfileManager() {
             FileLoader fileLoader = new FileLoader();
-            profiles = fileLoader.loadProfile();
+            //profiles = fileLoader.loadProfile();
+            profiles = new ArrayList<>(); //for testing
         }
         
         /**

@@ -6,8 +6,8 @@ import java.io.*;
  *
  */
 public class FileLoader {
-	private final String profilePath = "C:\\Users\\Jay\\eclipse-workspace\\A3Test\\Profiles";
-	private final String auctionPath = "C:\\Users\\Jay\\eclipse-workspace\\A3Test\\Auctions";
+	private final String profilePath = "profile.txt";
+	private final String auctionPath = "auction.txt";
 	private ArrayList<Auction> auctions = new ArrayList<>();
 	private ArrayList<Profile> profiles = new ArrayList<>();
 	
