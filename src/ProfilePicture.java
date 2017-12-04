@@ -1,10 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-//package profilepicture;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,35 +6,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 /**
- *
+ * Main page for the Profile Picture, has two buttons you choose to enter either
+ * a Custom Drawing or Avatars
  * @author Elias Nemr, 961625
- * Avatar pictures GUI, profile picture and a custom drawing GUI
  */
 public class ProfilePicture extends Application {
     
     private final int sceneWidth = 400;
     private final int sceneHeight = 400;
     private final int gridGap = 20;
-    public static String imageDirectory = "ImageDefault.png";
-    
-    
 
-    public static String getImageDirectory() {
-        return imageDirectory;
-    }
-
-    public static void setImageDirectory(String imageDirectory) {
-        ProfilePicture.imageDirectory = imageDirectory;
-    }
-    
-    
-    
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
@@ -89,11 +67,7 @@ public class ProfilePicture extends Application {
         
 
     }
-        
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         launch(args);
         

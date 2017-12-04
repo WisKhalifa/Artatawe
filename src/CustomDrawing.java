@@ -1,42 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-//package profilepicture;
-
-
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.canvas.*;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -46,16 +27,18 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
 /**
- *
- * @author elias
+ * Custom Draw your profile picture with a few functionalities of paint.
+ * @author Elias Nemr, 961625
  */
-public class CustomDrawing extends Application implements EventHandler{
+public class CustomDrawing extends Application implements EventHandler {
 
     private final int sceneWidth = 700;
     private final int sceneHeight = 400;
     private final int canvasWidth = 700;
     private final int canvasHeight = 400;
-    public static String imageDirectory2;
+    private String imageDirectory;
+    Profile currentProfile = new Profile();
+    
     
     @Override
     public void start(Stage primaryStage) {
@@ -70,12 +53,8 @@ public class CustomDrawing extends Application implements EventHandler{
         Image backButtonI = new Image(getClass().getResourceAsStream("back2.png"));
         backButton.setGraphic(new ImageView(backButtonI));
         backButtonBox.getChildren().addAll(backButton);
-        
-
         Button saveBtn = new Button("Set as Profile");
         
-        
-
         Canvas canvas = new Canvas(canvasWidth,canvasHeight);
         GraphicsContext brush = canvas.getGraphicsContext2D();
         ColorPicker cp = new ColorPicker(); 
@@ -92,8 +71,6 @@ public class CustomDrawing extends Application implements EventHandler{
         holdFunctions.getChildren().addAll(cp, fillButton,
                 eraser, slider, saveBtn);
         holdFunctions.setAlignment(Pos.CENTER);
-        
-
         
         root.setTop(holdFunctions);
         root.setLeft(backButtonBox);
@@ -115,7 +92,7 @@ public class CustomDrawing extends Application implements EventHandler{
             brush.stroke();
             
         });
-        
+
         canvas.setOnMouseDragged(e-> { 
             brush.lineTo(e.getSceneX(), e.getSceneY());
             brush.stroke();  
@@ -139,25 +116,20 @@ public class CustomDrawing extends Application implements EventHandler{
         saveBtn.setOnAction((ActionEvent event)-> {
             System.out.println("Abertawe: Saving...");
             File file = new File("Artatawe\\src\\artworks\\CustomDrawing.png");
-            String directoryOfDrawing = file.toString();
-            System.out.println("Directory saved at: "+directoryOfDrawing);
-            
-            ProfilePicture.imageDirectory = "Artatawe\\src\\artworks\\CustomDrawing.png";
-            
-            //+Profile.username 
+            imageDirectory = currentProfile.getFirstName() + file.toString();
+            System.out.println("Directory saved at: "+ imageDirectory);
+            currentProfile.setImagePath(imageDirectory);
             try {
                 
                 WritableImage wim = new WritableImage(canvasWidth, canvasHeight);
                 canvas.snapshot(null, wim);
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(wim, null);
-                
                 ImageIO.write(renderedImage, "png", file);
                 
-                  
-                
             } catch(Exception e){
-                
-            }
+            
+          }
+            setImageAlert();
         });
          
 
@@ -177,7 +149,28 @@ public class CustomDrawing extends Application implements EventHandler{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    /**
+    * This method displays an alert notifying the user that their profile picture
+    * has been set and saved.
+    * @author Elias Nemr, 961625
+    */
+    public void setImageAlert() {
+        
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Profile Picture.");
+        alert.setHeaderText("Profile Picture saved and set!");
+        alert.setContentText("Enjoy your new Profile picture!");
 
+        alert.showAndWait();
+ 
+    }  
+
+    /**
+     * 
+     * This class represents filling up an already brush stroked drawing
+     * With Color which is set by the default Color chooser/
+     * @author Elias Nemr, 961625
+     */
     public void fillDraw(GraphicsContext gc, ColorPicker cp) {
         
         gc.setFill(cp.getValue());//text color

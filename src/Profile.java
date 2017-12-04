@@ -11,7 +11,7 @@ public class Profile{
   private String telephone; //stores telephone number
   private String address; //stores first line of address
   private String postcode; //stores postcode
-  private String imagePath; //stores profile image path, test.jpg is default
+  private String imagePath = "ImageDefault.png"; //stores profile image path, test.jpg is default
   private ArrayList<String> favourites;
   
   /**
@@ -26,6 +26,9 @@ public class Profile{
    * @exception Any exception
    * @return A profile object
    */
+  public Profile(){
+      
+  }
   public Profile (String username, String firstName, String lastName,
 		  String telephone, String address, String postcode, String imagePath){
 	  this.username = username;

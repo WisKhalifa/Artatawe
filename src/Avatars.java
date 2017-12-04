@@ -1,10 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-//package profilepicture;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -17,16 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 /**
- *
- * @author elias
+ * Set an already existing avatar for User profile picture
+ * @author Elias Nemr, 961625
+ * 
  */
 public class Avatars extends Application implements EventHandler {
     
@@ -35,14 +26,11 @@ public class Avatars extends Application implements EventHandler {
     private final int buttonWidth = 40;
     private final int buttonHeight = 200;
     private final int gridGap = 20;
-        
-    public static String imageDirectory = "ImageDefault.png";
+    private String imageDirectory = "ImageDefault.png";  
+    Profile currentProfile = new Profile();
 
-    
     public static Button currentProfilePic = new Button(); //To be implemented in the Profile GUI?
-   
-    
-    
+
     @Override
     public void start(Stage primaryStage) {
         currentProfilePic.setGraphic(new ImageView(imageDirectory));
@@ -72,7 +60,6 @@ public class Avatars extends Application implements EventHandler {
         imageButton5.setGraphic(new ImageView(image5));
         imageButtonD.setGraphic(new ImageView(imageDirectory));
         imageButtonB.setGraphic(new ImageView(imageBack));
-        
         
         //Creating an HBox, VBox, BorderPane to put all my objects inside
         BorderPane primaryPane = new BorderPane();
@@ -160,13 +147,10 @@ public class Avatars extends Application implements EventHandler {
             System.out.println("Abertawe: Avatar set as profile picture.");
             currentProfilePic.setGraphic(currentProfilePic.getGraphic());
             
-            ProfilePicture.imageDirectory = imageDirectory;
+            currentProfile.setImagePath(imageDirectory);
             setImageAlert();
         });
-        
-       
-       
-        
+
         //End of EventHandling
         
         
@@ -186,7 +170,11 @@ public class Avatars extends Application implements EventHandler {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
+    /**
+     * This method displays an alert notifying the user that their profile picture
+     * has been set and saved.
+     * @author Elias Nemr, 961625
+     */
     public void setImageAlert() {
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
