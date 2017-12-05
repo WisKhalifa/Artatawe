@@ -10,10 +10,9 @@ public class ProfileManager {
         /**
          * Creates an instance of a profile manager.
          */
-        public ProfileManager() {
-            FileLoader fileLoader = new FileLoader();
-            //profiles = fileLoader.loadProfile();
-            profiles = new ArrayList<>(); //for testing
+        public ProfileManager(FileLoader f1) {
+            profiles = new ArrayList<>();
+            profiles = f1.loadProfile();
         }
         
         /**

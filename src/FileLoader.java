@@ -6,10 +6,15 @@ import java.io.*;
  *
  */
 public class FileLoader {
-	private final String profilePath = "C:\\Users\\Jay\\eclipse-workspace\\A3Test\\Profiles";
-	private final String auctionPath = "C:\\Users\\Jay\\eclipse-workspace\\A3Test\\Auctions";
-	private ArrayList<Auction> auctions = new ArrayList<>();
-	private ArrayList<Profile> profiles = new ArrayList<>();
+	private final String profilePath = "profile.txt";
+	private final String auctionPath = "auction.txt";
+	private ArrayList<Auction> auctions;
+	private ArrayList<Profile> profiles;
+	
+	public FileLoader() {
+		profiles = new ArrayList<>();
+		auctions = new ArrayList<>();
+	}
 	
 	
 	public ArrayList<Profile> loadProfile(){
@@ -48,7 +53,7 @@ public class FileLoader {
 	}
 	
 	public void loadPainting(Scanner line) {
-		Profile bidder = null;
+		Profile bidder = new Profile();
 		
 		String title = line.next();
 		String description = line.next();
@@ -56,7 +61,6 @@ public class FileLoader {
 		String creatorsName = line.next();
 		int creationYear = line.nextInt();
 		double price = line.nextDouble();
-		int bidTotal = line.nextInt();
 		String dateTime = line.next();
 		int width = line.nextInt();
 		int height = line.nextInt();
@@ -64,7 +68,7 @@ public class FileLoader {
 		boolean complete = line.nextBoolean();
 			
 		Painting pnt = new Painting(title, description, photo, creatorsName, creationYear, 
-				price, bidTotal, dateTime, width, height);
+				price, dateTime, width, height);
 			
 		Auction au = new Auction(pnt, complete);
 		
@@ -73,15 +77,17 @@ public class FileLoader {
 				double amount = line.nextDouble();
 				String dateBid = line.next();
 				String usernameBid = line.next();
-							
-				for (Profile p : this.profiles) {
+					
+				for (Profile p : this.profiles) {	
 					if (p.getUsername().equals(usernameBid)) {
 						bidder = p;
+						
 					}	
 				}
-							
+						
 				Bid b = new Bid(bidder, pnt, amount, dateBid);
 				au.placeBid(b);
+				
 			}	
 		}
 		auctions.add(au);
@@ -89,7 +95,7 @@ public class FileLoader {
 	
 	public void loadSculpture(Scanner line) {
 		ArrayList<String> extraPhotos = new ArrayList<>();
-		Profile bidder = null;
+		Profile bidder = new Profile();
 			
 		String title = line.next();
 		String description = line.next();
@@ -97,14 +103,13 @@ public class FileLoader {
 		String creatorsName = line.next();
 		int creationYear = line.nextInt();
 		double price = line.nextDouble();
-		int bidTotal = line.nextInt();
 		String dateTime = line.next();
 		int width = line.nextInt();
 		int height = line.nextInt();
 		int depth = line.nextInt();
 		String material = line.next();
 			
-		Sculpture scu = new Sculpture(title, description, photo, creatorsName, creationYear, price, bidTotal,
+		Sculpture scu = new Sculpture(title, description, photo, creatorsName, creationYear, price,
 				dateTime, width, height, depth, material);
 		
 		String nextPhoto = line.next();

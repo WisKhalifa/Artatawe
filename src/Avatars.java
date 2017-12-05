@@ -31,6 +31,7 @@ public class Avatars implements EventHandler {
     public static Button currentProfilePic = new Button(); //To be implemented in the Profile GUI?
 
     public void chooseAvatar(Stage primaryStage, Profile currentProfile) {
+    	primaryStage.getIcons().add(new Image("applicationIcon.png"));
     	imageDirectory = currentProfile.getImagePath();
         currentProfilePic.setGraphic(new ImageView(imageDirectory));
         //Creating some buttons so i can put the Avatars in there

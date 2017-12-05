@@ -38,6 +38,7 @@ public class CustomDrawing implements EventHandler {
     private String imageDirectory;
     
     public void makeCustomDrawing(Stage primaryStage, Profile currentProfile) {
+    	primaryStage.getIcons().add(new Image("applicationIcon.png"));
         BorderPane root = new BorderPane();
         StackPane holdCanvas = new StackPane();
         TilePane holdFunctions = new TilePane();

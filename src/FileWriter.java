@@ -69,63 +69,64 @@ public class FileWriter {
 		for(int i = 0; i < auctions.size(); i++) {
 			
 			if (auctions.get(i).getArtwork() instanceof Painting) {
-				auctionWriter.print("Painting, ");
-				auctionWriter.print(auctions.get(i).getArtwork().getTitle() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getDescription() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getMainPhoto() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getCreatorName() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getCreationYear() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getPrice() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getBidTotal() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getDateTime() + ", ");
-				auctionWriter.print(((Painting) auctions.get(i).getArtwork()).getWidth() + ", ");
-				auctionWriter.print(((Painting) auctions.get(i).getArtwork()).getHeight() + ", ");
-				auctionWriter.print(auctions.get(i).isComplete() + ", ");
+				auctionWriter.print("Painting,");
+				auctionWriter.print(auctions.get(i).getArtwork().getTitle() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getDescription() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getMainPhoto() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreatorName() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreationYear() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getPrice() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getDateTime() + ",");
+				auctionWriter.print(((Painting) auctions.get(i).getArtwork()).getWidth() + ",");
+				auctionWriter.print(((Painting) auctions.get(i).getArtwork()).getHeight() + ",");
+				auctionWriter.print(auctions.get(i).isComplete() + ",");
 				
 				for (int j = 0; j < auctions.get(i).getAllBids().size(); j++) {
-					if ( j == auctions.get(i).getAllBids().size() - 1) {
-						auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ", ");
-						auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ", ");
-						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername() + ",");
+					auctionWriter.print(".,");
+					auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ",");
+					auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ",");
+					
+					if (j == auctions.get(i).getAllBids().size() -1) {
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername());
 					} else {
-						auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ", ");
-						auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ", ");
-						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername() + ", ");
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername() + ",");
 					}
 				}
 				//finishes the first line of data and moves onto the next line.
 				auctionWriter.println(""); 
 			} else {
-				auctionWriter.print("Sculpture, ");
-				auctionWriter.print(auctions.get(i).getArtwork().getTitle() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getDescription() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getMainPhoto() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getCreatorName() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getCreationYear() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getPrice() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getBidTotal() + ", ");
-				auctionWriter.print(auctions.get(i).getArtwork().getDateTime() + ", ");
-				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getWidth() + ", ");
-				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getHeight() + ", ");
-				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getDepth() + ", ");
-				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getMaterial() + ", ");
+				auctionWriter.print("Sculpture,");
+				auctionWriter.print(auctions.get(i).getArtwork().getTitle() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getDescription() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getMainPhoto() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreatorName() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getCreationYear() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getPrice() + ",");
+				auctionWriter.print(auctions.get(i).getArtwork().getDateTime() + ",");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getWidth() + ",");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getHeight() + ",");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getDepth() + ",");
+				auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getMaterial() + ",");
 				
 				//writes the extra photos to file.
 				for (int j = 0; j < ((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size(); j++) {
-					if (j == ((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().size() - 1) {
-						auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().get(j) + ",");
-					}else {
-						auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().get(j) + ", ");
-					}
+					auctionWriter.print(((Sculpture) auctions.get(i).getArtwork()).getExtraPhotos().get(j) + ",");
 				}
-				auctionWriter.print("!");
+				auctionWriter.print("!,");
 				
-				auctionWriter.print(auctions.get(i).isComplete() + ", ");
+				auctionWriter.print(auctions.get(i).isComplete() + ",");
 				
 				for (int j = 0;j < auctions.get(i).getAllBids().size(); j++) {
-					auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ", ");
-					auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ", ");
-					auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername());
+					auctionWriter.print(".,");
+					auctionWriter.print(auctions.get(i).getAllBids().get(j).getAmount() + ",");
+					auctionWriter.print(auctions.get(i).getAllBids().get(j).getDate() + ",");
+					
+					if (j == auctions.get(i).getAllBids().size() -1) {
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername());
+					} else {
+						auctionWriter.print(auctions.get(i).getAllBids().get(j).getBidder().getUsername() + ",");
+					}
+					
 				}
 				//finishes the first line of data and moves onto the next line.
 				auctionWriter.println(""); 

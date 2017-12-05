@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -20,6 +21,7 @@ public class ProfilePicture {
     private final int gridGap = 20;
 
     public void runProgram(Stage primaryStage, Profile currentProfile) {
+    	primaryStage.getIcons().add(new Image("applicationIcon.png"));
         BorderPane root = new BorderPane();
         TilePane tileButtons = new TilePane();
         TilePane tileLabel = new TilePane();

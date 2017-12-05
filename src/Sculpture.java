@@ -13,10 +13,10 @@ public class Sculpture extends Artwork {
   private ArrayList<String> extraPhotos;
 
   public Sculpture(String title, String description, String photo, String creatorsName,
-    int creationYear, double price, int bidTotal, String dateTime, int width, int height,
+    int creationYear, double price, String dateTime, int width, int height,
       int depth, String material) {
 
-    super(title, description, photo, creatorsName, creationYear, price, bidTotal, dateTime);
+    super(title, description, photo, creatorsName, creationYear, price, dateTime);
     this.width = width;
     this.height = height;
     this.depth = depth;

@@ -88,60 +88,9 @@ public class Artatawe extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		//creates the profile and auction managers.
-		profileManager = new ProfileManager();
-		auctionManager = new AuctionManager();
-		
-		//HARD CODED OBJECTS DELETE AFTER TESTING--------------------------------------------------------------------------
-		Profile p1 = new Profile("redneck","Wesly","Kenny","07831432809","10 Hillary Street", "SP3 8NT", "Image2.png");
-		Profile p2 = new Profile("chrome","Gia","Searle","07825753891","22 Bank Street", "BS2 4NK", "Image3.png");
-		Profile p3 = new Profile("roker","Caroline","Whitmore","07825764382","56 Wellington Street", "WE1 5ST", "Image4.png");
-		Profile p4 = new Profile("some_username","John","Stone","07825786273","10 Wild Green West", "WG2 5WE", "ImageDefault.png");
-		
-		Painting ap1 = new Painting("Son Of A Man", "This is a painting I created in my in my while at University a couple years ago.", "artworks/Son_Of_A_Man.png", "redneck", 2015, 500.0, 0, "2007/07/12 11:34:25", 30, 60);
-		Painting ap2 = new Painting("American Gothic", "This is a painting of a two americans.", "artworks/American_Gothic.png", "chrome", 2000, 1000.0, 0,"2009/05/04 06:22:34", 40, 80);
-		Sculpture as1 = new Sculpture("The Thinker", "A greek man thinking.", "artworks/The_Thinker.png", "roker", 1050, 2500.99, 0,"1999/06/24 18:45:37", 40, 80, 20, "Marble");
-		Sculpture as2 = new Sculpture("Discobolus", "A greek man with a Disc.", "artworks/Discobolus.png", "some_username", 980, 99.99, 0,"2003/08/01 03:22:56", 100, 200, 40, "Marble");
-		
-		ArrayList<String> photos = new ArrayList<>();
-		photos.add("artworks/The_Thinker2.png");
-		photos.add("artworks/The_Thinker3.png");
-		as1.setExtraPhotos(photos);
-		
-		Auction a1 = new Auction(ap1, false);
-		Auction a2 = new Auction(ap2, true);
-		Auction a3 = new Auction(as1, false);
-		Auction a4 = new Auction(as2, false);
-		
-		Bid b1 = new Bid(p2,ap1,600.0,"2007/08/22 12:34:25");
-		Bid b2 = new Bid(p3,ap1,650.0,"2007/09/12 17:34:44");
-		a1.placeBid(b1);
-		a1.placeBid(b2);
-		
-		Bid b3 = new Bid(p1,ap2,1200.0,"2009/06/04 04:17:34");
-		Bid b4 = new Bid(p3,ap2,1250.0,"2009/06/08 09:22:55");
-		Bid b5 = new Bid(p4,ap2,1400.0,"2009/05/10 12:22:34");
-		a2.placeBid(b3);
-		a2.placeBid(b4);
-		a2.placeBid(b5);
-		
-		Bid b6 = new Bid(p4,as1,3000.0,"2003/06/13 12:45:22");
-		a3.placeBid(b6);
-		
-		Bid b7 = new Bid(p1,as2,110.0,"2003/09/01 08:44:56");
-		Bid b8 = new Bid(p2,as2,120.0,"2003/10/03 06:21:36");
-		a4.placeBid(b7);
-		a4.placeBid(b8);
-		
-		auctionManager.addAuction(a1);
-		auctionManager.addAuction(a2);
-		auctionManager.addAuction(a3);
-		auctionManager.addAuction(a4);
-		
-		profileManager.addProfile(p1);
-		profileManager.addProfile(p2);
-		profileManager.addProfile(p3);
-		profileManager.addProfile(p4);
-		//HARD CODED OBJECTS DELETE AFTER TESTING--------------------------------------------------------------------------
+		FileLoader f1 = new FileLoader();
+		profileManager = new ProfileManager(f1);
+		auctionManager = new AuctionManager(f1);
 		
 		//stuff to do with the stage
 		primaryStage.setTitle("Artatawe");
@@ -734,6 +683,12 @@ public class Artatawe extends Application {
 			}
 		}
 		
+		//if the user is the owner of the auction they can't add 
+		//them selevs to favourites.
+		if (currentProfile.getUsername().equals(auction.getSeller())) {
+			addFav.setDisable(true);
+		}
+		
 		//creates the input to make a bid.
 		HBox makeBid = new HBox();
 		TextField enterBid = new TextField();
@@ -848,16 +803,24 @@ public class Artatawe extends Application {
 		col2.getChildren().add(col2Header);
 		col3.getChildren().add(col3Header);
 		
-		//loops backwards so the highest bid is at the top.
-		for (int i = auction.getAllBids().size() - 1; i >= 0; i--) {
-			Bid tempbid = auction.getAllBids().get(i);
-			Label col1Label = new Label(tempbid.getBidder().getUsername());
-			Label col2Label = new Label(Double.toString(tempbid.getAmount()));
-			Label col3Label = new Label(tempbid.getDate());
+		//checks if there is any bids in an auction.
+		if (auction.getAllBids().isEmpty()) {
+			Label col1Label = new Label("No bids found");
 			col1.getChildren().add(col1Label);
-			col2.getChildren().add(col2Label);
-			col3.getChildren().add(col3Label);
+		} else {
+			//loops backwards so the highest bid is at the top.
+			for (int i = auction.getAllBids().size() - 1; i >= 0; i--) {
+				Bid tempbid = auction.getAllBids().get(i);
+				Label col1Label = new Label(tempbid.getBidder().getUsername());
+				Label col2Label = new Label(Double.toString(tempbid.getAmount()));
+				Label col3Label = new Label(tempbid.getDate());
+				col1.getChildren().add(col1Label);
+				col2.getChildren().add(col2Label);
+				col3.getChildren().add(col3Label);
+			}
 		}
+		
+		
 		bidTable.getChildren().addAll(col1, col2, col3);
 		
 		return bidTable;
@@ -961,10 +924,12 @@ public class Artatawe extends Application {
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
 		col3.getChildren().add(col3Header);
+		
 		for (int i = 0; i < auctionManager.getAuctions().size(); i++) {
         	if (auctionManager.getAuctions().get(i).isComplete()){
         		if (auctionManager.getAuctions().get(i).getHighestBid().
         				getBidder().getUsername().equals(profile.getUsername())){
+        			
         			Label col1Label = new Label(auctionManager.getAuctions().
         					get(i).getArtwork().getTitle());
         			Label col2Label = new Label(Double.toString(auctionManager.
@@ -1044,6 +1009,7 @@ public class Artatawe extends Application {
 		col1.getChildren().add(col1Header);
 		col2.getChildren().add(col2Header);
 		col3.getChildren().add(col3Header);
+		
 		for (int i = 0; i < auctionManager.getAuctions().size(); i++) {
 			ArrayList<Bid> tempArray = auctionManager.getAuctions().get(i).getAllBids();
 			for (int j = 0; j < tempArray.size(); j++) {

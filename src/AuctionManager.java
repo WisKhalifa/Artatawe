@@ -11,10 +11,9 @@ public class AuctionManager {
         /**
          * Creates an instance of an auction manager.
          */
-        public AuctionManager() {
-                FileLoader fileLoader = new FileLoader();
-                //auctions = fileLoader.loadAuction();
-                auctions = new ArrayList<>(); //for testing
+        public AuctionManager(FileLoader f1) {
+                auctions = new ArrayList<>();
+                auctions = f1.loadAuction();
         }
         
         /**

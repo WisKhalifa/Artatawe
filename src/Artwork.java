@@ -17,7 +17,7 @@ public abstract class Artwork {
   private String dateTime;
 
   public Artwork(String title, String description, String photo, String creatorsName,
-    int creationYear, double price, int bidTotal, String dateTime) {
+    int creationYear, double price, String dateTime) {
 
       this.title = title;
       this.description = description;
@@ -25,7 +25,7 @@ public abstract class Artwork {
       this.creatorsName = creatorsName;
       this.creationYear = creationYear;
       this.price = price;
-      this.bidTotal = bidTotal;
+      this.bidTotal = 0;
       this.dateTime = dateTime;
 
   }
