@@ -34,7 +34,6 @@ public class FileLoader {
 				
 				while(!(nextElem.equals(","))) {
 					p.addFavourite(nextElem);
-					System.out.println(nextElem);
 					nextElem = in.nextLine();
 				}
 				
@@ -112,7 +111,6 @@ public class FileLoader {
 		
 		while(!(nextPhoto.equals("!"))) {
 			extraPhotos.add(nextPhoto);
-			System.out.println(nextPhoto);
 			nextPhoto = line.next();
 		}
 		
@@ -156,11 +154,8 @@ public class FileLoader {
 				
 				if (line.next().equalsIgnoreCase("Painting")) {
 					loadPainting(line);
-					System.out.println("yo yo");
-					
-				} else if (line.next().equalsIgnoreCase("Sculpture")) { 
+				} else { 
 					loadSculpture(line);
-					System.out.println("yo im here");
 				}
 				line.close();
 			}
