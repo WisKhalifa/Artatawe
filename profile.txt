@@ -3,11 +3,14 @@ Wesly
 Kenny
 07831432809
 10 Hillary Street
-SP3 8NT
-ImageOne.png
+SP3 3NT
+ImageDefault.png
 -
-roker
 chrome
+chrome
+johnDoe
+joker
+dodge
 ,
 chrome
 Gia

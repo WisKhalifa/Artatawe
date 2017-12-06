@@ -769,7 +769,7 @@ public class Artatawe extends Application {
 			} else {
 				//creates the time and date of the bid.
 				Date date = new Date();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 				String dateStr = sdf.format(date);
 				
 				Bid newbid = new Bid(currentProfile,auction.getArtwork(),newBidTotal,dateStr);
@@ -1114,10 +1114,9 @@ public class Artatawe extends Application {
 		});
 		
 		//adds the bids to a table.
-		for(int i = tempArray.size() - 1; i >= 0; i--) {
+		for(int i = tempArray.size() -1; i >= 0 ; i--) {
 			Bid temp = tempArray.get(i);
-			Label col1Label = new Label(auctionManager.getAuctions().
-					get(i).getArtwork().getTitle());
+			Label col1Label = new Label(temp.getArtwork().getTitle());
 			Label col2Label = new Label(Double.toString(temp.getAmount()));
 			Label col3Label = new Label(temp.getDate());
 			col1.getChildren().add(col1Label);
