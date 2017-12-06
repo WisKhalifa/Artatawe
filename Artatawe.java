@@ -675,6 +675,12 @@ public class Artatawe extends Application {
 		auctionPageVBox.setMargin(addFav,new Insets(NORMAL_MARGIN,
 				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
 		
+		//creates a button to remove a profile as a favourite.
+		Button removeFav = new Button("Remove from Favourites");
+		addFav.setId("auctionButtons");
+		auctionPageVBox.setMargin(removeFav,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		
 		//if the seller is already in the favourites list then disable add to fav button.
 		for (int i = 0; i < profileManager.getProfiles().size(); i++) {
 			if (profileManager.getProfiles().get(i).getUsername().equals(auction.getSeller())) {
@@ -734,6 +740,10 @@ public class Artatawe extends Application {
 			currentProfile.addFavourite(auction.getSeller());
 			addFav.setDisable(true);
 		});
+		removeFav.setOnAction( e -> {
+			currentProfile.getFavourites().remove(auction.getSeller());
+			addFav.setDisable(false);
+		});
 		
 		//creates a bid and sends it off to be added to the Auction.
 		sendBid.setOnAction( e -> {
@@ -777,7 +787,7 @@ public class Artatawe extends Application {
 		auctionPageVBox.getChildren().addAll(artworkName,
 				artworkComplete, artworkOwner, artworkCreationYear,
 				artworkPrice,artworkBidTotal, artworkDateAndTime,
-				artworkDescription, viewProfile, addFav, makeBid, 
+				artworkDescription, viewProfile, addFav, removeFav, makeBid, 
 				bidTableLabel, bidTable);
 		
 		auctionScrollPane.setContent(auctionPageVBox);
@@ -851,6 +861,12 @@ public class Artatawe extends Application {
 		addFav.setId("auctionButtons");
 		viewProfileVBox.setMargin(addFav,new Insets(NORMAL_MARGIN,
 				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		
+		//creates a button to remove a profile as a favourite.
+		Button removeFav = new Button("Remove from Favourites");
+		addFav.setId("auctionButtons");
+		viewProfileVBox.setMargin(removeFav,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
 				
 		//if the seller is already in the favourites list then disable add to fav button.
 		for (int i = 0; i < profileManager.getProfiles().size(); i++) {
@@ -868,40 +884,12 @@ public class Artatawe extends Application {
 			currentProfile.addFavourite(profile.getUsername());
 			addFav.setDisable(true);
 		});
+		removeFav.setOnAction( e -> {
+			currentProfile.getFavourites().remove(profile.getUsername());
+			addFav.setDisable(false);
+		});
 		
-		//list of won artwork's
-		Label wonArtworksLabel = new Label("All Won Artworks");
-		wonArtworksLabel.setId("profileDetails");
-		HBox wonArtworksTable = getWonArtworksTable(profile);
-		viewProfileVBox.setMargin(wonArtworksTable,new Insets(0,
-				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
-		
-		//list of artwork's sold
-		Label artworksSoldLabel = new Label("All Artworks Sold");
-		artworksSoldLabel.setId("profileDetails");
-		HBox artworksSoldTable = getArtworksSold(profile);
-		viewProfileVBox.setMargin(artworksSoldTable,new Insets(0,
-				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
-		
-		//list of all bids placed
-		Label allPlacedBidsLabel = new Label("All Bids Placed");
-		allPlacedBidsLabel.setId("profileDetails");
-		HBox allPlacedBidsTable = getBidsPlaced(profile);
-		viewProfileVBox.setMargin(allPlacedBidsTable,new Insets(0,
-				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
-		
-		//list of bids done on their artwork's.
-		Label bidsOnOwnersArtworksLabel = new Label("All bids on " +
-				profile.getUsername() + "'s Artworks");
-		bidsOnOwnersArtworksLabel.setId("profileDetails");
-		HBox bidsOnOwnersArtworksTable = getBidsOnOwnersArtwork(profile);
-		viewProfileVBox.setMargin(bidsOnOwnersArtworksTable,new Insets(0,
-				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
-		
-		viewProfileVBox.getChildren().addAll(profileHeader, addFav, wonArtworksLabel,
-				wonArtworksTable, artworksSoldLabel, artworksSoldTable,
-				allPlacedBidsLabel, allPlacedBidsTable, bidsOnOwnersArtworksLabel,
-				bidsOnOwnersArtworksTable);
+		viewProfileVBox.getChildren().addAll(profileHeader, addFav, removeFav);
 		
 		profileScrollPane.setContent(viewProfileVBox);
 		mainBorderPane.setCenter(profileScrollPane);
@@ -1486,6 +1474,12 @@ public class Artatawe extends Application {
 				addFav.setId("auctionButtons");
 				profileHBox.setMargin(addFav,new Insets(LARGE_MARGIN,
 						NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+				
+				//creates a button to remove a profile as a favourite.
+				Button removeFav = new Button("Remove from Favourites");
+				addFav.setId("auctionButtons");
+				profileHBox.setMargin(removeFav,new Insets(LARGE_MARGIN,
+						NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
 						
 				//if the seller is already in the favourites list then disable add to fav button.
 				for (int j = 0; j < profileManager.getProfiles().size(); j++) {
@@ -1503,8 +1497,12 @@ public class Artatawe extends Application {
 					currentProfile.addFavourite(tempProfile.getUsername());
 					addFav.setDisable(true);
 				});
+				removeFav.setOnAction( e -> {
+					currentProfile.getFavourites().remove(tempProfile.getUsername());
+					addFav.setDisable(false);
+				});
 				
-				profileHBox.getChildren().addAll(profileImage, profileUsername, addFav);
+				profileHBox.getChildren().addAll(profileImage, profileUsername, addFav, removeFav);
 				profileList.getChildren().add(profileHBox);
 				
 				//opens up the profile page for that particular profile.
