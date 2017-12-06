@@ -3,20 +3,28 @@ import java.io.*;
 /**
  * Loads and creates objects
  * @author Jay Markey
- *
+ * @version 1.4
  */
 public class FileLoader {
-	private final String profilePath = "profile.txt";
-	private final String auctionPath = "auction.txt";
-	private ArrayList<Auction> auctions;
-	private ArrayList<Profile> profiles;
-	
+	private final String profilePath = "C:\\Users\\Jay\\eclipse-workspace\\A3Test\\Profiles"; //Path to profile text file
+	private final String auctionPath = "C:\\Users\\Jay\\eclipse-workspace\\A3Test\\Auctions"; //Path to auction text file
+	private ArrayList<Auction> auctions = new ArrayList<>(); //ArrayList to store auction objects
+	private ArrayList<Profile> profiles = new ArrayList<>(); //ArrayList to store profile objects
+
+	/**
+	* Constructor for this class
+	* initiates the ArrayLists
+	*/	
 	public FileLoader() {
 		profiles = new ArrayList<>();
 		auctions = new ArrayList<>();
 	}
 	
-	
+	/**
+	 * Method to load the profiles from a text file
+	 * @throws FileNotFoundException if profilePath not found
+	 * @return ArrayList of profile objects 
+	 */
 	public ArrayList<Profile> loadProfile(){
 		try {
 			File file = new File(profilePath);
@@ -35,8 +43,13 @@ public class FileLoader {
 				Profile p = new Profile(username, firstName, lastName, 
 		                telephone, address, postcode, imagePath);
 				
-				String nextElem = in.nextLine();
+				String nextElem = in.nextLine(); //nextElem used compare the next element
 				
+				/**
+				 * while the next element isnt ","
+				 * use the addFavourite method in profile
+				 * to add favourite users
+				 */
 				while(!(nextElem.equals(","))) {
 					p.addFavourite(nextElem);
 					nextElem = in.nextLine();
@@ -52,6 +65,11 @@ public class FileLoader {
 		return profiles;
 	}
 	
+	/**
+	 * Method for loading painting objects
+	 * adds them to the auctions ArrayList
+	 * @param line
+	 */
 	public void loadPainting(Scanner line) {
 		Profile bidder = new Profile();
 		
@@ -72,19 +90,32 @@ public class FileLoader {
 			
 		Auction au = new Auction(pnt, complete);
 		
+		/**
+		 * while there is a next element
+		 * set the bid related variables
+		 */
 		while (line.hasNext()) {
 			if (line.next().equals(".")) {
 				double amount = line.nextDouble();
 				String dateBid = line.next();
 				String usernameBid = line.next();
-					
+				
+				/**
+				 * search through the ArrayList profiles
+				 * find the profile that matches username in the bid
+				 * then set bidder to this 
+				 */	
 				for (Profile p : this.profiles) {	
 					if (p.getUsername().equals(usernameBid)) {
 						bidder = p;
 						
 					}	
 				}
-						
+				
+				/**
+				*Create bid and use placeBid method in auction
+				*to add the bid to the arrayList
+				*/				
 				Bid b = new Bid(bidder, pnt, amount, dateBid);
 				au.placeBid(b);
 				
@@ -93,6 +124,11 @@ public class FileLoader {
 		auctions.add(au);
 	}	
 	
+	/**
+	 * Method for loading Sculpture objects
+	 * adds them to auction ArrayList
+	 * @param line
+	 */
 	public void loadSculpture(Scanner line) {
 		ArrayList<String> extraPhotos = new ArrayList<>();
 		Profile bidder = new Profile();
@@ -125,18 +161,28 @@ public class FileLoader {
 			
 		Auction au = new Auction(scu, complete);
 		
+
 		while (line.hasNext()) {
 			if (line.next().equals(".")) {
 				double amount = line.nextDouble();
 				String dateBid = line.next();
 				String usernameBid = line.next();
-							
+				
+				/**
+				 * search through the ArrayList profiles
+				 * find the profile that matches username in the bid
+				 * then set bidder to this 
+				 */				
 				for (Profile p : this.profiles) {
 					if (p.getUsername().equals(usernameBid)) {
 						bidder = p;
 					}	
 				}
-							
+				
+				/**
+				*Create bid and use placeBid method in auction
+				*to add the bid to the arrayList
+				*/			
 				Bid b = new Bid(bidder, scu, amount, dateBid);
 				au.placeBid(b);
 			}	
@@ -144,7 +190,13 @@ public class FileLoader {
 		auctions.add(au);
 	}
 	
-	
+	/**
+	 * Method that reads in text file
+	 * and decides whether to call loadPainting()
+	 * or LoadSculpture()
+	 * @throws FileNotFoundException if auctionPath cannot be found
+	 * @return ArrayList of Auction objects
+	 */
 	public ArrayList<Auction> loadAuction(){
 		try { 
 			File file = new File(auctionPath);
@@ -153,11 +205,20 @@ public class FileLoader {
 			
 			
 			while (in.hasNextLine()) {
+				/**
+				*curLine is used to read the currentline in the 
+				*text file
+				*/
 				String curLine = in.nextLine();
 				Scanner line = new Scanner(curLine);
-				line.useDelimiter(",");
+				line.useDelimiter(","); // "," is used to split the line
 				
-				if (line.next().equalsIgnoreCase("Painting")) {
+				/**
+				* no need to check case or check for "Sculpture"
+				* as we only have control over this part of the text file 
+				* and the only two bits will be "Painting" and "Sculpture"
+				*/
+				if (line.next().equals("Painting")) {
 					loadPainting(line);
 				} else { 
 					loadSculpture(line);
