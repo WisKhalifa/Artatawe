@@ -57,6 +57,10 @@ public class Artatawe extends Application {
 	private final int AVATAR_WIDTH = 200;
 	private final int AUCTION_IMAGE_CONTAINER = 200;
 	private final int TEXT_FIELD_MARGIN = 7;
+	private final int WIDE_MARGIN = 100;
+	private final int PROFILE_lIST_HBOX_HEIGHT = 50;
+	private final int BID_TABLE_HEIGHT_MARGIN = 30;
+	private final int BID_TABLE_WIDTH_MARGIN = 20;
 	
 	//instance variables
 	private Scene artataweScene; //The scene used for the program.
@@ -385,7 +389,8 @@ public class Artatawe extends Application {
 		viewProfile.setId("viewProfileButton");
 		viewAllProfiles.setId("viewAllProfiles");
 		logOutButton.setId("logOutButton");
-		navigationBar.getChildren().addAll(viewAuctions, viewProfile, viewAllProfiles, logOutButton);
+		navigationBar.getChildren().addAll(viewAuctions, viewProfile,
+				viewAllProfiles, logOutButton);
 		
 		//sets the actions for the buttons on the Navigation bar.
 		viewAuctions.setOnAction( e -> {
@@ -600,33 +605,7 @@ public class Artatawe extends Application {
 		
 		//add buttons for more pictures if artwork is a sculpture.
 		if (auction.getArtwork() instanceof Sculpture) {
-			HBox containerOfExtraPhotos = new HBox();
-			Button mainPicButton = new Button("Picture 1");
-			mainPicButton.setId("auctionButtons");
-			containerOfExtraPhotos.getChildren().add(mainPicButton);
-			containerOfExtraPhotos.setMargin(mainPicButton,
-					new Insets(NORMAL_MARGIN, NORMAL_MARGIN,
-							NORMAL_MARGIN, NORMAL_MARGIN));
-			
-			mainPicButton.setOnAction( e -> {
-				Image newPic = new Image(auction.getArtwork().getMainPhoto());
-				artworkImage.setImage(newPic);
-			});
-			
-			for (int i = 0; i < ((Sculpture) auction.getArtwork()).getExtraPhotos().size(); i++) {
-				Button picButton = new Button("Picture " + (i + 2));
-				picButton.setId("auctionButtons");
-				containerOfExtraPhotos.getChildren().add(picButton);
-				containerOfExtraPhotos.setMargin(picButton,
-						new Insets(NORMAL_MARGIN, NORMAL_MARGIN,
-								NORMAL_MARGIN, NORMAL_MARGIN));
-				String source = ((Sculpture) auction.getArtwork()).getExtraPhotos().get(i);
-				
-				picButton.setOnAction( e -> {
-					Image newPic = new Image(source);
-					artworkImage.setImage(newPic);
-				});
-			}
+			HBox containerOfExtraPhotos = createExtraPhotoButton(auction,artworkImage);
 			auctionPageVBox.getChildren().add(containerOfExtraPhotos);
 		}
 		
@@ -663,40 +642,34 @@ public class Artatawe extends Application {
 		Label artworkDescription = new Label(auction.getArtwork().getDescription());
 		artworkDescription.setId("auctionDetails");
 		
-		//creates a button to view owners profile.
-		Button viewProfile = new Button("View Profile");
-		viewProfile.setId("auctionButtons");
-		auctionPageVBox.setMargin(viewProfile,new Insets(NORMAL_MARGIN,
-				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		//VBox containing all the buttons.
+		VBox buttonContainer = createButtonContainer(auction, auctionPageVBox);
 		
-		//creates a button to add the owner to the profile favourite list.
-		Button addFav = new Button("Add to Favourites");
-		addFav.setId("auctionButtons");
-		auctionPageVBox.setMargin(addFav,new Insets(NORMAL_MARGIN,
-				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		//A VBox containing the bid table and the bid input.
+		VBox auctionBidContainer = makeAuctionBidContainer(auction, auctionPageVBox,
+				artworkBidTotal);
 		
-		//creates a button to remove a profile as a favourite.
-		Button removeFav = new Button("Remove from Favourites");
-		addFav.setId("auctionButtons");
-		auctionPageVBox.setMargin(removeFav,new Insets(NORMAL_MARGIN,
-				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+		auctionPageVBox.getChildren().addAll(artworkName,
+				artworkComplete, artworkOwner, artworkCreationYear,
+				artworkPrice,artworkBidTotal, artworkDateAndTime,
+				artworkDescription, buttonContainer, auctionBidContainer);
 		
-		//if the seller is already in the favourites list then disable add to fav button.
-		for (int i = 0; i < profileManager.getProfiles().size(); i++) {
-			if (profileManager.getProfiles().get(i).getUsername().equals(auction.getSeller())) {
-				for (int j = 0; j < currentProfile.getFavourites().size(); j++) {
-					if (auction.getSeller().equals(currentProfile.getFavourites().get(j))) {
-						addFav.setDisable(true);
-					}
-				}
-			}
-		}
+		auctionScrollPane.setContent(auctionPageVBox);
+		mainBorderPane.setCenter(auctionScrollPane);
+	}
+	
+	/**
+	 * This method makes a VBox container than hold the bid input and the bid
+	 * table for an Auction page.
+	 * @param auction The Auction being worked upon.
+	 * @param auctionPageVBox The Main VBox of the auction page.
+	 * @param artworkBidTotal A label that needs to be updated when a bid is made.
+	 * @return A container of the bid input GUI and the bid table.
+	 */
+	public VBox makeAuctionBidContainer(Auction auction, VBox auctionPageVBox,
+			Label artworkBidTotal) {
 		
-		//if the user is the owner of the auction they can't add 
-		//them selevs to favourites.
-		if (currentProfile.getUsername().equals(auction.getSeller())) {
-			addFav.setDisable(true);
-		}
+		VBox auctionBidContainer = new VBox();
 		
 		//creates the input to make a bid.
 		HBox makeBid = new HBox();
@@ -723,27 +696,8 @@ public class Artatawe extends Application {
 		Label bidTableLabel = new Label("All Bids");
 		bidTableLabel.setId("auctionDetails");
 		bidTable = makeBidTable(auction);
-		auctionPageVBox.setMargin(bidTable,new Insets(0,30,20,30));
-		
-		//button to view the auction owners profile.
-		viewProfile.setOnAction( e -> {
-			for (int i = 0; i < profileManager.getProfiles().size(); i++){
-				if (auction.getArtwork().getCreatorName().
-						equals(profileManager.getProfiles().get(i).getUsername())){
-					viewProfile(profileManager.getProfiles().get(i));
-				}
-			}
-		});
-		
-		//this adds the seller to the users favourites.
-		addFav.setOnAction( e -> {
-			currentProfile.addFavourite(auction.getSeller());
-			addFav.setDisable(true);
-		});
-		removeFav.setOnAction( e -> {
-			currentProfile.getFavourites().remove(auction.getSeller());
-			addFav.setDisable(false);
-		});
+		auctionPageVBox.setMargin(bidTable,new Insets(0, BID_TABLE_HEIGHT_MARGIN,
+				BID_TABLE_WIDTH_MARGIN, BID_TABLE_HEIGHT_MARGIN));
 		
 		//creates a bid and sends it off to be added to the Auction.
 		sendBid.setOnAction( e -> {
@@ -776,22 +730,125 @@ public class Artatawe extends Application {
 				auction.placeBid(newbid);
 				enterBid.setText("");
 				bidErrorMessage.setText("");
-				auctionPageVBox.getChildren().remove(bidTable);
+				auctionBidContainer.getChildren().remove(bidTable);
 				bidTable = makeBidTable(auction);
 				artworkBidTotal.setText("Total bids: " + auction.getArtwork().getBidTotal());
-				auctionPageVBox.getChildren().add(bidTable);
-				auctionPageVBox.setMargin(bidTable,new Insets(0,30,20,30));
+				auctionBidContainer.getChildren().add(bidTable);
+				auctionBidContainer.setMargin(bidTable,new Insets(0 , BID_TABLE_HEIGHT_MARGIN,
+						BID_TABLE_WIDTH_MARGIN ,BID_TABLE_HEIGHT_MARGIN));
 			}  
 		});
+		auctionBidContainer.getChildren().addAll(makeBid, bidTableLabel, bidTable);
 		
-		auctionPageVBox.getChildren().addAll(artworkName,
-				artworkComplete, artworkOwner, artworkCreationYear,
-				artworkPrice,artworkBidTotal, artworkDateAndTime,
-				artworkDescription, viewProfile, addFav, removeFav, makeBid, 
-				bidTableLabel, bidTable);
+		return auctionBidContainer;
+	}
+	
+	/**
+	 * This method creates a container full of buttons that will be dislayed on
+	 * the Auction page.
+	 * @param auction The auction that the buttons will be on.
+	 * @param auctionPageVBox The main Container in the Auction Page.
+	 * @return A VBox that contains the buttons.
+	 */
+	public VBox createButtonContainer(Auction auction, VBox auctionPageVBox){
+		VBox buttonContainer = new VBox();
 		
-		auctionScrollPane.setContent(auctionPageVBox);
-		mainBorderPane.setCenter(auctionScrollPane);
+		//creates a button to view owners profile.
+		Button viewProfile = new Button("View Profile");
+		viewProfile.setId("auctionButtons");
+		auctionPageVBox.setMargin(viewProfile,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+				
+		//creates a button to add the owner to the profile favourite list.
+		Button addFav = new Button("Add to Favourites");
+		addFav.setId("auctionButtons");
+		auctionPageVBox.setMargin(addFav,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+				
+		//creates a button to remove a profile as a favourite.
+		Button removeFav = new Button("Remove from Favourites");
+		addFav.setId("auctionButtons");
+		auctionPageVBox.setMargin(removeFav,new Insets(NORMAL_MARGIN,
+				NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+				
+		//if the seller is already in the favourites list then disable add to fav button.
+		for (int i = 0; i < profileManager.getProfiles().size(); i++) {
+			if (profileManager.getProfiles().get(i).getUsername().equals(auction.getSeller())) {
+				for (int j = 0; j < currentProfile.getFavourites().size(); j++) {
+					if (auction.getSeller().equals(currentProfile.getFavourites().get(j))) {
+						addFav.setDisable(true);
+					}
+				}
+			}
+		}
+		
+		//if the user is the owner of the auction they can't add 
+		//them selevs to favourites.
+		if (currentProfile.getUsername().equals(auction.getSeller())) {
+			addFav.setDisable(true);
+		}
+		
+		//button to view the auction owners profile.
+		viewProfile.setOnAction( e -> {
+			for (int i = 0; i < profileManager.getProfiles().size(); i++){
+				if (auction.getArtwork().getCreatorName().
+						equals(profileManager.getProfiles().get(i).getUsername())){
+					viewProfile(profileManager.getProfiles().get(i));
+				}
+			}
+		});
+		
+		//this adds the seller to the users favourites.
+		addFav.setOnAction( e -> {
+			currentProfile.addFavourite(auction.getSeller());
+			addFav.setDisable(true);
+		});
+		removeFav.setOnAction( e -> {
+			currentProfile.getFavourites().remove(auction.getSeller());
+			addFav.setDisable(false);
+		});
+		
+		buttonContainer.getChildren().addAll(viewProfile, addFav, removeFav);
+		
+		return buttonContainer;
+	}
+	
+	/**
+	 * This method returns a HBox that contains buttons that
+	 * change the auction image.
+	 * @param auction The auction the images belong to.
+	 * @param artworkImage The Image container that changes.
+	 * @return A HBox that contains the buttons.
+	 */
+	public HBox createExtraPhotoButton(Auction auction, ImageView artworkImage) {
+		HBox containerOfExtraPhotos = new HBox();
+		Button mainPicButton = new Button("Picture 1");
+		mainPicButton.setId("auctionButtons");
+		containerOfExtraPhotos.getChildren().add(mainPicButton);
+		containerOfExtraPhotos.setMargin(mainPicButton,
+				new Insets(NORMAL_MARGIN, NORMAL_MARGIN,
+						NORMAL_MARGIN, NORMAL_MARGIN));
+		
+		mainPicButton.setOnAction( e -> {
+			Image newPic = new Image(auction.getArtwork().getMainPhoto());
+			artworkImage.setImage(newPic);
+		});
+		
+		for (int i = 0; i < ((Sculpture) auction.getArtwork()).getExtraPhotos().size(); i++) {
+			Button picButton = new Button("Picture " + (i + 2));
+			picButton.setId("auctionButtons");
+			containerOfExtraPhotos.getChildren().add(picButton);
+			containerOfExtraPhotos.setMargin(picButton,
+					new Insets(NORMAL_MARGIN, NORMAL_MARGIN,
+							NORMAL_MARGIN, NORMAL_MARGIN));
+			String source = ((Sculpture) auction.getArtwork()).getExtraPhotos().get(i);
+			
+			picButton.setOnAction( e -> {
+				Image newPic = new Image(source);
+				artworkImage.setImage(newPic);
+			});
+		}
+		return containerOfExtraPhotos;
 	}
 	
 	/**
@@ -933,35 +990,14 @@ public class Artatawe extends Application {
 		}
 		
 		//sorts the Array on date
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Collections.sort(tempArray, new Comparator<Auction>() {
-			  public int compare(Auction o1, Auction o2) {
-				  Date date = new Date();
-				  Date date2 = new Date();
-				  String sd = o1.getHighestBid().getDate();
-				  String sd2 = o2.getHighestBid().getDate();
-				  try {
-					  date = sdf.parse(sd);
-				  } catch (ParseException e1) {
-					  e1.printStackTrace();
-				  }
-				  try {  
-					date2 = sdf.parse(sd2);
-				  } catch (ParseException e) {
-					e.printStackTrace();
-				  }
-				  
-				  if (date == null || date2 == null)
-					  return 0;
-				  return date.compareTo(date2);
-			  }
-		});
+		tempArray = sortAuction(tempArray);
 		
 		//makes the table of won artworks.
 		for (int i = tempArray.size() - 1; i >= 0; i--) {
 			Label col1Label = new Label(tempArray.
         		get(i).getArtwork().getTitle());
-			Label col2Label = new Label(Double.toString(tempArray.get(i).getHighestBid().getAmount()));
+			Label col2Label = new Label(Double.toString(tempArray.get(i).
+					getHighestBid().getAmount()));
         	Label col3Label = new Label(tempArray.
         		get(i).getArtwork().getCreatorName());
         	Label col4Label = new Label(tempArray.
@@ -1013,34 +1049,13 @@ public class Artatawe extends Application {
 		}
 		
 		//sorts the Array on date
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Collections.sort(tempArray, new Comparator<Auction>() {
-			  public int compare(Auction o1, Auction o2) {
-				  Date date = new Date();
-				  Date date2 = new Date();
-				  String sd = o1.getHighestBid().getDate();
-				  String sd2 = o2.getHighestBid().getDate();
-				  try {
-					  date = sdf.parse(sd);
-				  } catch (ParseException e1) {
-					  e1.printStackTrace();
-				  }
-				  try {  
-					date2 = sdf.parse(sd2);
-				  } catch (ParseException e) {
-					e.printStackTrace();
-				  }
-				  
-				  if (date == null || date2 == null)
-					  return 0;
-				  return date.compareTo(date2);
-			  }
-		});
+		tempArray = sortAuction(tempArray);
 		
 		for (int i = tempArray.size() - 1; i >= 0; i--) {
 			Label col1Label = new Label(tempArray.
 				get(i).getArtwork().getTitle());
-        	Label col2Label = new Label(Double.toString(tempArray.get(i).getHighestBid().getAmount()));
+        	Label col2Label = new Label(Double.toString(tempArray.get(i).
+        			getHighestBid().getAmount()));
         	Label col3Label = new Label(tempArray.
         		get(i).getHighestBid().getBidder().getUsername());
         	Label col4Label = new Label(tempArray.
@@ -1088,30 +1103,8 @@ public class Artatawe extends Application {
 			}
         }
 		
-		//sorts the Array on date
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Collections.sort(tempArray, new Comparator<Bid>() {
-			  public int compare(Bid o1, Bid o2) {
-				  Date date = new Date();
-				  Date date2 = new Date();
-				  String sd = o1.getDate();
-				  String sd2 = o2.getDate();
-				  try {
-					  date = sdf.parse(sd);
-				  } catch (ParseException e1) {
-					  e1.printStackTrace();
-				  }
-				  try {  
-					date2 = sdf.parse(sd2);
-				  } catch (ParseException e) {
-					e.printStackTrace();
-				  }
-				  
-				  if (date == null || date2 == null)
-					  return 0;
-				  return date.compareTo(date2);
-			  }
-		});
+		//sorts the Array on date.
+		tempArray = sortBid(tempArray);
 		
 		//adds the bids to a table.
 		for(int i = tempArray.size() -1; i >= 0 ; i--) {
@@ -1164,6 +1157,70 @@ public class Artatawe extends Application {
 		}
 		
 		//sorts the Array on date.
+		tempArray = sortBid(tempArray);
+		
+		//adds it all to a table.
+		for (int j = tempArray.size() - 1; j >= 0; j--) {
+			Bid temp = tempArray.get(j);
+			Label col1Label = new Label(tempArray.get(j).getArtwork().getTitle());
+	        Label col2Label = new Label(Double.toString(temp.getAmount()));
+	        Label col3Label = new Label(temp.getBidder().getUsername());
+	        Label col4Label = new Label(temp.getDate());
+	        col1.getChildren().add(col1Label);
+	        col2.getChildren().add(col2Label);
+	        col3.getChildren().add(col3Label);
+	        col4.getChildren().add(col4Label);
+		}
+
+		bidsOnOwnersArtworkTable.getChildren().addAll(col1, col2, col3, col4);
+        
+        return bidsOnOwnersArtworkTable;
+	}
+	
+	/**
+	 * This methos sorts a list of Auctions in order of date. useful when you want
+	 * to sort through artworks.
+	 * @param tempArray The array of Auctions.
+	 * @return tempArray An array of Auctions but sorted by date.
+	 */
+	public ArrayList<Auction> sortAuction(ArrayList<Auction> tempArray) {
+		//sorts the Array on date
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Collections.sort(tempArray, new Comparator<Auction>() {
+			  public int compare(Auction o1, Auction o2) {
+				  Date date = new Date();
+				  Date date2 = new Date();
+				  String sd = o1.getHighestBid().getDate();
+				  String sd2 = o2.getHighestBid().getDate();
+				  try {
+					  date = sdf.parse(sd);
+				  } catch (ParseException e1) {
+					  e1.printStackTrace();
+				  }
+				  try {  
+					date2 = sdf.parse(sd2);
+				  } catch (ParseException e) {
+					e.printStackTrace();
+				  }
+				  
+				  if (date == null || date2 == null) {
+					  return 0;
+				  } else {
+					 return date.compareTo(date2); 
+				  }
+			 }
+		});
+		return tempArray;
+	}
+	
+	/**
+	 * This methos sorts a list of Bids in order of date. useful when you want
+	 * to sort through Bids.
+	 * @param tempArray The array of Bids.
+	 * @return An array of Bids but sorted by date.
+	 */
+	public ArrayList<Bid> sortBid(ArrayList<Bid> tempArray) {
+		//sorts the Array on date.
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Collections.sort(tempArray, new Comparator<Bid>() {
 			public int compare(Bid o1, Bid o2) {
@@ -1182,28 +1239,14 @@ public class Artatawe extends Application {
 					e.printStackTrace();
 				}
 						  
-				if (date == null || date2 == null)
+				if (date == null || date2 == null) {
 					return 0;
-				return date.compareTo(date2);
+				} else {
+					return date.compareTo(date2);
 				}
-			});
-		
-		//adds it all to a table.
-		for (int j = tempArray.size() - 1; j >= 0; j--) {
-			Bid temp = tempArray.get(j);
-			Label col1Label = new Label(tempArray.get(j).getArtwork().getTitle());
-	        Label col2Label = new Label(Double.toString(temp.getAmount()));
-	        Label col3Label = new Label(temp.getBidder().getUsername());
-	        Label col4Label = new Label(temp.getDate());
-	        col1.getChildren().add(col1Label);
-	        col2.getChildren().add(col2Label);
-	        col3.getChildren().add(col3Label);
-	        col4.getChildren().add(col4Label);
-		}
-
-		bidsOnOwnersArtworkTable.getChildren().addAll(col1, col2, col3, col4);
-        
-        return bidsOnOwnersArtworkTable;
+			}
+		});
+		return tempArray;
 	}
 	
 	/** This method makes the current Profiles page. This allows
@@ -1454,19 +1497,19 @@ public class Artatawe extends Application {
 				Profile tempProfile = profileManager.getProfiles().get(i);
 				HBox profileHBox = new HBox();
 				profileHBox.setId("profileHBox");
-				profileHBox.setMaxHeight(50);
-				profileHBox.setMinHeight(50);
+				profileHBox.setMaxHeight(PROFILE_lIST_HBOX_HEIGHT);
+				profileHBox.setMinHeight(PROFILE_lIST_HBOX_HEIGHT);
 				
 				//creates profile image
 				ImageView profileImage = createImage(tempProfile.getImagePath());
 				profileImage.fitHeightProperty().bind(profileHBox.heightProperty());
-				profileImage.setFitWidth(50);
+				profileImage.setFitWidth(PROFILE_lIST_HBOX_HEIGHT);
 				
 				//creates label
 				Label profileUsername = new Label(tempProfile.getUsername());
 				profileUsername.setId("profileUsername");
 				
-				profileList.setMargin(profileHBox,new Insets(0, 100, 0, 100));
+				profileList.setMargin(profileHBox,new Insets(0, WIDE_MARGIN, 0, WIDE_MARGIN));
 				
 				//creates the add to fav button
 				Button addFav = new Button("Add to Favourites");
