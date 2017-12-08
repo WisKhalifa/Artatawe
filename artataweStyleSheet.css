@@ -20,7 +20,7 @@
 	-fx-font-size: 12px;
 }
 #loginButton{
-	-fx-background-radius: 0 0 10 10;
+	-fx-background-radius: 0 0 10 0;
 	-fx-background-color: #e8e8e8;
 	-fx-font-size: 15px;
 	-fx-font-weight: bold;
@@ -28,7 +28,15 @@
 #loginButton:hover{
 	-fx-background-color: #cccccc;
 }
-
+#signUpButton{
+	-fx-background-radius: 0 0 0 10;
+	-fx-background-color: #e8e8e8;
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+}
+#signUpButton:hover{
+	-fx-background-color: #cccccc;
+}
 /* BorderPane Top */
 #mainBorderPane{
 	-fx-background-color: white;

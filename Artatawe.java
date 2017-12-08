@@ -39,7 +39,7 @@ public class Artatawe extends Application {
 	private final int SCENE_HEIGHT = 700;
 	private final int LOGIN_BOX_HEIGHT = 100;
 	private final int LOGIN_BOX_WIDTH = 300;
-	private final int LOGIN_BUTTON_WIDTH = 300;
+	private final int LOGIN_BUTTON_WIDTH = 150;
 	private final int AUCTION_BOX_ITEM_PIC_CONTAINER_HEIGHT = 160;
 	private final int AUCTION_BOX_ITEM_PIC_CONTAINER_WIDTH = 200;
 	private final int AUCTION_BOX_ITEM_WIDTH = 200;
@@ -53,6 +53,8 @@ public class Artatawe extends Application {
 	private final int EXTRA_LARGE_MARGIN = 30;
 	private final int SETTINGS_SCENE_WIDTH = 300;
 	private final int SETTINGS_SCENE_HEIGHT = 320;
+	private final int SIGNUP_SCENE_WIDTH = 300;
+	private final int SIGNUP_SCENE_HEIGHT = 450;
 	private final int PROFILE_HEADER_HEIGHT = 200;
 	private final int AVATAR_WIDTH = 200;
 	private final int AUCTION_IMAGE_CONTAINER = 200;
@@ -190,11 +192,21 @@ public class Artatawe extends Application {
 		//Edit errorLabel.
 		Label errorLabel = new Label("");
 		errorLabel.setId("errorLabel");
-				
+		
+		//HBox
+		HBox loginButtonsHBox = new HBox();
+		
 		//Login Button.
 		Button loginButton = new Button("Connect");
 		loginButton.setMinWidth(LOGIN_BUTTON_WIDTH);
 		loginButton.setId("loginButton");
+		
+		//sign up button
+		Button signUp = new Button("Sign Up");
+		signUp.setMinWidth(LOGIN_BUTTON_WIDTH);
+		signUp.setId("signUpButton");
+		
+		loginButtonsHBox.getChildren().addAll(signUp, loginButton);
 		
 		//When you click the Login Button.
 		loginButton.setOnAction( e -> {
@@ -213,11 +225,139 @@ public class Artatawe extends Application {
 				errorLabel.setStyle("-fx-text-fill: red");
 			}
 		});
+		
+		//the action for the sign up button.
+		signUp.setOnAction( e -> {
+			openSignUpWindow();
+		});
+		
 		//create VBox to go in borderPane bottom.
-		borderPaneVBox.getChildren().addAll(errorLabel, loginButton);
+		borderPaneVBox.getChildren().addAll(errorLabel, loginButtonsHBox);
 		borderPaneVBox.setMargin(errorLabel,new Insets(SMALL_MARGIN,
 				SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN + 1));
 		return borderPaneVBox;
+	}
+	
+	/**
+	 * Allows the user to make an account if they havent got one.
+	 * This method creates a GUI in a new window which then allows a user
+	 * to create a profile.
+	 */
+	public void openSignUpWindow() {
+		Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.resizableProperty().setValue(Boolean.FALSE);
+        window.setTitle("Sign Up");
+        window.getIcons().add(new Image("applicationIcon.png"));
+        
+        VBox signUpVBox = new VBox();
+        
+        //displays the information that can be added.
+        Label addUsername = new Label("Add Username");
+        TextField addUsernameField = new TextField();
+        Label errorMessageUsername = new Label("");
+        
+        Label addFirstName = new Label("Add FirstName");
+        TextField firstNameField = new TextField();
+        
+        Label addLastName = new Label("Add LastName");
+        TextField lastNameField = new TextField();
+        
+        Label addTelephone = new Label("Add Telephone Number");
+        TextField telephoneField = new TextField();
+        Label errorMessageTelephone = new Label("");
+        
+        Label addAddress = new Label("Add Address");
+        TextField addressField = new TextField();
+        
+        Label addPostCode = new Label("Add PostCode");
+        TextField postCodeField = new TextField();
+        
+        Button addProfileButton = new Button("Make Profile");
+        
+        signUpVBox.getChildren().addAll(addUsername, addUsernameField,
+        		errorMessageUsername, addFirstName, firstNameField, addLastName,
+        		lastNameField, addTelephone, telephoneField, errorMessageTelephone,
+        		addAddress, addressField, addPostCode, postCodeField,
+        		addProfileButton);
+        
+        //The action for creating a profile.
+        addProfileButton.setOnAction(e -> {
+        	boolean noError = true;
+        	
+        	for (int i = 0; i < profileManager.getProfiles().size(); i++) {
+        		if (profileManager.getProfiles().get(i).getUsername().equalsIgnoreCase(addUsernameField.getText())) {
+        			errorMessageUsername.setText("Username already used!");
+        			errorMessageUsername.setStyle("-fx-text-fill: red");
+        			noError = false;
+        		}
+        	}
+        	
+        	if (noError) {
+	        	String username = addUsernameField.getText();
+	        	String firstName = firstNameField.getText();
+	        	String lastName = lastNameField.getText();
+	        	
+	        	if (telephoneField.getText().length() > 10) {
+	        		errorMessageTelephone.setText("Telepone Number too Long!");
+	        		errorMessageTelephone.setStyle("-fx-text-fill: red");
+	        	} else {
+	        		String telephone = telephoneField.getText();
+	        		try {
+	        			int tel = Integer.parseInt(telephone);
+	        		}catch(NumberFormatException e1) {
+	        			errorMessageTelephone.setText("Can only contain digits!");
+	        			errorMessageTelephone.setStyle("-fx-text-fill: red");
+	        			noError = false;
+	        		}
+	        		if (noError) {
+		        		String Address = addressField.getText();
+			        	String postCode = postCodeField.getText();
+			        	String imagePath = "ImageDefault.png";
+			        	
+			        	Profile newProfile = new Profile(username, firstName, lastName, telephone,
+			        			Address, postCode, imagePath);
+			        	profileManager.addProfile(newProfile);
+			        	window.close();
+	        		}
+	        	}
+        	}
+        });
+        
+        signUpVBox.setMargin(addUsername,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addUsernameField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addFirstName,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(firstNameField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addLastName,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(lastNameField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addTelephone,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(telephoneField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addAddress,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addressField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addPostCode,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(postCodeField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(addProfileButton,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(errorMessageUsername,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(errorMessageTelephone,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+
+		Scene scene = new Scene(signUpVBox, SIGNUP_SCENE_WIDTH, SIGNUP_SCENE_HEIGHT);
+        window.setScene(scene);
+        window.showAndWait();
 	}
 	
 	/**
