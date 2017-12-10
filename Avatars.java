@@ -29,6 +29,12 @@ public class Avatars implements EventHandler {
 
     private static Button currentProfilePic = new Button();
 
+    /**
+     * Creates the GUI that allows a user to use an avatar as
+     * their profile image.
+     * @param primaryStage
+     * @param currentProfile The user currently logged in.
+     */
     public void chooseAvatar(Stage primaryStage, Profile currentProfile) {
     	primaryStage.getIcons().add(new Image("applicationIcon.png"));
     	imageDirectory = currentProfile.getImagePath();
@@ -82,9 +88,8 @@ public class Avatars implements EventHandler {
         primaryPane.setBottom(avatarsTile);
 
         //EventHandling
-        /**
+        /*
          * Buttons that choose an avatar
-         * @author Elias Nemr, 961625
         */
         imageButton1.setOnAction((ActionEvent event) -> {
             
@@ -137,9 +142,8 @@ public class Avatars implements EventHandler {
             currentProfilePic.setGraphic(new ImageView(image)); 
             imageDirectory = "ImageDefault.png";
         });  
-        /**
+        /*
          * A back button that takes us back to the profile picture GUI
-         * @author Elias Nemr, 961625
          */
         imageButtonB.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Back To Homepage");
@@ -173,7 +177,6 @@ public class Avatars implements EventHandler {
     /**
      * This method displays an alert notifying the user that their profile picture
      * has been set and saved.
-     * @author Elias Nemr, 961625
      */
     public void setImageAlert() {
         
@@ -183,8 +186,5 @@ public class Avatars implements EventHandler {
         alert.setContentText("Enjoy your new Profile picture!");
 
         alert.showAndWait();
- 
     }     
-    
-
 }

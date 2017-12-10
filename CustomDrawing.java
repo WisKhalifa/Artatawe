@@ -38,6 +38,12 @@ public class CustomDrawing implements EventHandler {
     private final int borderStrokeXY = 1;
     private String imageDirectory;
 
+    /**
+     * Creates the GUI for allowing the user to create a custom drawing
+     * which they could then use as their profile picture.
+     * @param primaryStage
+     * @param currentProfile The user currently logged in.
+     */
     public void makeCustomDrawing(Stage primaryStage, Profile currentProfile) {
     	primaryStage.getIcons().add(new Image("applicationIcon.png"));
         BorderPane root = new BorderPane();
@@ -78,12 +84,11 @@ public class CustomDrawing implements EventHandler {
         slider.valueProperty().addListener(e->{ 
             brush.setLineWidth(slider.getValue());
         });
-        /**
+        /*
          * If eraser is off and mouse is clicked then we can particle trace
          *  circles,
          * If eraser is On then we can erase.
          * Resizeable by the slider.
-         * @author Elias Nemr, 961625
          */
         canvas.setOnMousePressed(e -> {
             if(eraserCB.isSelected()){
@@ -94,11 +99,10 @@ public class CustomDrawing implements EventHandler {
                 brush.fillOval(e.getX(), e.getY(), slider.getValue(), slider.getValue());
             }
         });   
-        /**
+        /*
          * If mouse is dragged when eraserCB we will just have a particle trace
          * otherwise we will erase, resizeable with the Slider for both
          * drawing and erasing.
-         * @author Elias Nemr, 961625
          */
         canvas.setOnMouseDragged(e-> { 
             if(eraserCB.isSelected()) {
@@ -111,9 +115,8 @@ public class CustomDrawing implements EventHandler {
                         slider.getValue(), slider.getValue());
             }
         });
-        /**
+        /*
          * Back button which returns us back to the main profile picture GUI
-         * @author Elias Nemr, 961625
          */
         backButton.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Back To Homepage");
@@ -122,11 +125,10 @@ public class CustomDrawing implements EventHandler {
             run.runProgram(backStage, currentProfile);
             primaryStage.close();
         });           
-        /**
+        /*
         * This EventHandler allows that when a user clicks on the saveBtn
         * then it converts the JavaFX Canvas to a .PNG and replaces users 
         * ImagePATH
-        * @author Elias Nemr, 961625
         */
         saveBtn.setOnAction((ActionEvent event)-> {
             try {
@@ -151,6 +153,7 @@ public class CustomDrawing implements EventHandler {
         primaryStage.setScene(scene);
         primaryStage.show();    
     }
+    
     /**
      * Keeping this empty as we have to have all methods of a interface Class
      * EventHandler
@@ -160,6 +163,7 @@ public class CustomDrawing implements EventHandler {
     public void handle(Event event) {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
+    
     /**
     * This method displays an alert notifying the user that their profile picture
     * has been set and saved.
@@ -173,7 +177,4 @@ public class CustomDrawing implements EventHandler {
 
         alert.showAndWait();
     }  
-
 }
-    
-  

@@ -20,6 +20,13 @@ public class ProfilePicture {
     private final int sceneHeight = 400;
     private final int gridGap = 20;
 
+    /**
+     * This is the GUI that is run when the user first wants to make changes
+     * to their profile picture. This GUI provides the user a choice to use an avatar
+     * or to make a custom drawing to replace their current profile picture.
+     * @param primaryStage
+     * @param currentProfile The user currently logged in.
+     */
     public void runProgram(Stage primaryStage, Profile currentProfile) {
     	primaryStage.getIcons().add(new Image("applicationIcon.png"));
         BorderPane root = new BorderPane();

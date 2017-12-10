@@ -45,7 +45,7 @@ public class FileLoader {
 				
 				String nextElem = in.nextLine(); //nextElem used compare the next element
 				
-				/**
+				/*
 				 * while the next element isnt ","
 				 * use the addFavourite method in profile
 				 * to add favourite users
@@ -59,7 +59,7 @@ public class FileLoader {
 			}
 			in.close();
 		} 	catch (FileNotFoundException e) {
-			System.out.println(profilePath + "not found");
+			System.out.println(PROFILE_PATH + "not found");
 			System.exit(0);
 		}
 		return profiles;
@@ -71,7 +71,7 @@ public class FileLoader {
 	 * @param line
 	 */
 	public void loadPainting(Scanner line) {
-		Profile bidder = new Profile();
+		Profile bidder = null;
 		
 		String title = line.next();
 		String description = line.next();
@@ -90,7 +90,7 @@ public class FileLoader {
 			
 		Auction au = new Auction(pnt, complete);
 		
-		/**
+		/*
 		 * while there is a next element
 		 * set the bid related variables
 		 */
@@ -100,7 +100,7 @@ public class FileLoader {
 				String dateBid = line.next();
 				String usernameBid = line.next();
 				
-				/**
+				/*
 				 * search through the ArrayList profiles
 				 * find the profile that matches username in the bid
 				 * then set bidder to this 
@@ -112,7 +112,7 @@ public class FileLoader {
 					}	
 				}
 				
-				/**
+				/*
 				*Create bid and use placeBid method in auction
 				*to add the bid to the arrayList
 				*/				
@@ -131,7 +131,7 @@ public class FileLoader {
 	 */
 	public void loadSculpture(Scanner line) {
 		ArrayList<String> extraPhotos = new ArrayList<>();
-		Profile bidder = new Profile();
+		Profile bidder = null;
 			
 		String title = line.next();
 		String description = line.next();
@@ -168,7 +168,7 @@ public class FileLoader {
 				String dateBid = line.next();
 				String usernameBid = line.next();
 				
-				/**
+				/*
 				 * search through the ArrayList profiles
 				 * find the profile that matches username in the bid
 				 * then set bidder to this 
@@ -179,7 +179,7 @@ public class FileLoader {
 					}	
 				}
 				
-				/**
+				/*
 				*Create bid and use placeBid method in auction
 				*to add the bid to the arrayList
 				*/			
@@ -205,7 +205,7 @@ public class FileLoader {
 			
 			
 			while (in.hasNextLine()) {
-				/**
+				/*
 				*curLine is used to read the currentline in the 
 				*text file
 				*/
@@ -213,7 +213,7 @@ public class FileLoader {
 				Scanner line = new Scanner(curLine);
 				line.useDelimiter(","); // "," is used to split the line
 				
-				/**
+				/*
 				* no need to check case or check for "Sculpture"
 				* as we only have control over this part of the text file 
 				* and the only two bits will be "Painting" and "Sculpture"
@@ -227,7 +227,7 @@ public class FileLoader {
 			}
 			in.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(auctionPath + "not found");
+			System.out.println(AUCTION_PATH + "not found");
 			System.exit(0);
 		}
 		return auctions;
