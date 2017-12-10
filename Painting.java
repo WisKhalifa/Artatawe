@@ -48,7 +48,7 @@ public class Painting extends Artwork {
    * sets the width of the painting 
    * @param width
    */
-  public void setWidth (int width) {
+  public void setWidth(int width) {
     this.width = width;
   }
 
@@ -56,7 +56,7 @@ public class Painting extends Artwork {
    * sets the height of the painting 
    * @param height
    */
-  public void setHeight (int height) {
+  public void setHeight(int height) {
     this.height = height;
   }
 
