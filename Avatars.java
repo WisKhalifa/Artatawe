@@ -12,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
-
 /**
  * Set an already existing avatar for User profile picture
  * @author Elias Nemr, 961625
@@ -28,12 +27,11 @@ public class Avatars implements EventHandler {
     private String imageDirectory;
     private String defaultImage = "ImageDefault.png";
 
-    public static Button currentProfilePic = new Button(); //To be implemented in the Profile GUI?
+    private static Button currentProfilePic = new Button();
 
     public void chooseAvatar(Stage primaryStage, Profile currentProfile) {
     	primaryStage.getIcons().add(new Image("applicationIcon.png"));
     	imageDirectory = currentProfile.getImagePath();
-        currentProfilePic.setGraphic(new ImageView(imageDirectory));
         //Creating some buttons so i can put the Avatars in there
         Button imageButtonB = new Button(); // Back Button
         Button imageButton1 = new Button();
@@ -65,7 +63,7 @@ public class Avatars implements EventHandler {
         TilePane tileCurrent = new TilePane();
         TilePane avatarsTile = new TilePane();
         TilePane backButtonTile = new TilePane();
-        Label label = new Label("Current Profile Picture set:");     
+        Label label = new Label("Current Avatar Picture selected:");     
         
         avatarsTile.setAlignment(Pos.CENTER);
         avatarsTile.getChildren().addAll(imageButton1, imageButton2,
@@ -83,7 +81,11 @@ public class Avatars implements EventHandler {
         primaryPane.setCenter(tileCurrent);
         primaryPane.setBottom(avatarsTile);
 
-        //EventHandling   
+        //EventHandling
+        /**
+         * Buttons that choose an avatar
+         * @author Elias Nemr, 961625
+        */
         imageButton1.setOnAction((ActionEvent event) -> {
             
             System.out.println("Abertawe: Choosing an Avatar");
@@ -134,7 +136,11 @@ public class Avatars implements EventHandler {
             
             currentProfilePic.setGraphic(new ImageView(image)); 
             imageDirectory = "ImageDefault.png";
-        });   
+        });  
+        /**
+         * A back button that takes us back to the profile picture GUI
+         * @author Elias Nemr, 961625
+         */
         imageButtonB.setOnAction((ActionEvent event) -> {
             System.out.println("Abertawe: Back To Homepage");
             ProfilePicture run = new ProfilePicture();
@@ -146,7 +152,6 @@ public class Avatars implements EventHandler {
         setAvatar.setOnAction((ActionEvent event) -> {
             
             System.out.println("Abertawe: Avatar set as profile picture.");
-            currentProfilePic.setGraphic(currentProfilePic.getGraphic());
             
             currentProfile.setImagePath(imageDirectory);
             setImageAlert();
@@ -179,5 +184,7 @@ public class Avatars implements EventHandler {
 
         alert.showAndWait();
  
-    }       
+    }     
+    
+
 }
