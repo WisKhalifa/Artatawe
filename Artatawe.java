@@ -769,6 +769,16 @@ public class Artatawe extends Application {
 			auctionPageVBox.getChildren().add(containerOfExtraPhotos);
 		}
 		
+		//adds an option to add extra photos if you own this auction.
+		if (auction.getArtwork() instanceof Sculpture) {
+			if (auction.getSeller().equals(currentProfile.getUsername())) {
+				Button addExtraPhotos = addExtraPhotos(auction);
+				auctionPageVBox.getChildren().add(addExtraPhotos);
+				auctionPageVBox.setMargin(addExtraPhotos,new Insets(NORMAL_MARGIN,
+						NORMAL_MARGIN, NORMAL_MARGIN, NORMAL_MARGIN));
+			}		
+		}
+		
 		//adds the information about the artwork
 		Label artworkName = new Label(auction.getArtwork().getTitle());
 		artworkName.setId("auctionImportantDetails");
@@ -816,6 +826,43 @@ public class Artatawe extends Application {
 		
 		auctionScrollPane.setContent(auctionPageVBox);
 		mainBorderPane.setCenter(auctionScrollPane);
+	}
+	
+	/**
+	 * This method is called when the user wants to add an extra photo
+	 * to their auction. Only works if the auction is a sculpture.
+	 * @return
+	 */
+	public Button addExtraPhotos(Auction auction) {
+		Button addPhotos = new Button("Add Photos");
+		
+		addPhotos.setOnAction(e -> {
+			//creates a directory chooser and saves the choice to a file.
+        	try {
+	        	FileChooser newFileChooser = new FileChooser();
+	    		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Image Files", "*.png");
+	    		newFileChooser.getExtensionFilters().add(extFilter);
+	    		selectedDirectory = newFileChooser.showOpenDialog(mainStage);
+        	} catch(NullPointerException e1) {
+        		System.out.println("Error when getting file with filechooser.");
+        	}
+        	String newDir = "";
+            try {
+            	BufferedImage image = ImageIO.read(selectedDirectory);
+            	
+            	int imageNumber = ((Sculpture) auction.getArtwork()).getExtraPhotos().size() + 1;
+            	newDir = "artworks/" + auction.getArtwork().getTitle() + "_" + currentProfile.getUsername() + imageNumber + ".png";
+            	File newFile = new File(newDir);
+            	newFile.getParentFile().mkdirs();
+            	ImageIO.write(image, "png", newFile);   	
+            } catch (IOException e1) {
+            	System.out.println("Error when saving photo.");
+            }
+            //adds the new photo to the extra photos array list.
+            ((Sculpture) auction.getArtwork()).addExtraPhotos(newDir);
+		});
+		
+		return addPhotos;
 	}
 	
 	/**

@@ -117,5 +117,13 @@ public class Sculpture extends Artwork {
   public void setExtraPhotos (ArrayList<String> extraPhotos) {
     this.extraPhotos = extraPhotos;
   }
+  
+  /**
+   * Adds an extra Photo to the already existing ExtraPhotos
+   * @param extraPhotos
+   */
+  public void addExtraPhotos (String extraPhoto) {
+    extraPhotos.add(extraPhoto);
+  }
 
 }
