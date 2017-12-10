@@ -1,4 +1,7 @@
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+
+import javax.imageio.ImageIO;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -25,6 +30,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -54,7 +60,11 @@ public class Artatawe extends Application {
 	private final int SETTINGS_SCENE_WIDTH = 300;
 	private final int SETTINGS_SCENE_HEIGHT = 320;
 	private final int SIGNUP_SCENE_WIDTH = 300;
-	private final int SIGNUP_SCENE_HEIGHT = 450;
+	private final int SIGNUP_SCENE_HEIGHT = 500;
+	private final int MAKE_AUCTION_SCENE_WIDTH = 300;
+	private final int MAKE_AUCTION_SCENE_HEIGHT = 650;
+	private final int MAKE_AUCTION_SCULPTURE_SCENE_WIDTH = 350;
+	private final int MAKE_AUCTION_SCULPTURE_SCENE_HEIGHT = 750;
 	private final int PROFILE_HEADER_HEIGHT = 200;
 	private final int AVATAR_WIDTH = 200;
 	private final int AUCTION_IMAGE_CONTAINER = 200;
@@ -66,6 +76,7 @@ public class Artatawe extends Application {
 	
 	//instance variables
 	private Scene artataweScene; //The scene used for the program.
+	private Stage mainStage;
 	private ProfileManager profileManager;
 	private AuctionManager auctionManager;
 	private Profile currentProfile; //the profile that is being used on the program.
@@ -80,6 +91,7 @@ public class Artatawe extends Application {
 	private ScrollPane profileScrollPane;
 	private ScrollPane currentProfileScrollPane;
 	private ScrollPane viewAllProfilesScrollPane;
+	private File selectedDirectory = null;
 	
 	/**
 	 * This is the method that is called when the program launches.
@@ -101,18 +113,19 @@ public class Artatawe extends Application {
 		profileManager = new ProfileManager(f1);
 		auctionManager = new AuctionManager(f1);
 		
+		mainStage = primaryStage;
 		//stuff to do with the stage
-		primaryStage.setTitle("Artatawe");
-		primaryStage.getIcons().add(new Image("applicationIcon.png"));
+		mainStage.setTitle("Artatawe");
+		mainStage.getIcons().add(new Image("applicationIcon.png"));
 		
 		artataweScene = new Scene(makeLoginPage(), SCENE_WIDTH, SCENE_HEIGHT);
 		artataweScene.getStylesheets().add("artataweStyleSheet.css");
 		
 		//calls this method when user closes the program (red x).
-		primaryStage.setOnCloseRequest(e -> closeProgram());
+		mainStage.setOnCloseRequest(e -> closeProgram());
 		
-		primaryStage.setScene(artataweScene);
-		primaryStage.show();
+		mainStage.setScene(artataweScene);
+		mainStage.show();
 	}
 	
 	/**
@@ -239,7 +252,7 @@ public class Artatawe extends Application {
 	}
 	
 	/**
-	 * Allows the user to make an account if they havent got one.
+	 * Allows the user to make an account if they haven't got one.
 	 * This method creates a GUI in a new window which then allows a user
 	 * to create a profile.
 	 */
@@ -274,54 +287,59 @@ public class Artatawe extends Application {
         TextField postCodeField = new TextField();
         
         Button addProfileButton = new Button("Make Profile");
+        Label mainErrorLabel = new Label("");
         
         signUpVBox.getChildren().addAll(addUsername, addUsernameField,
         		errorMessageUsername, addFirstName, firstNameField, addLastName,
         		lastNameField, addTelephone, telephoneField, errorMessageTelephone,
         		addAddress, addressField, addPostCode, postCodeField,
-        		addProfileButton);
+        		addProfileButton, mainErrorLabel);
         
         //The action for creating a profile.
         addProfileButton.setOnAction(e -> {
-        	boolean noError = true;
+        	if (addUsernameField.getText().isEmpty() || 
+        			firstNameField.getText().isEmpty() || lastNameField.getText().isEmpty() || 
+        			telephoneField.getText().isEmpty() || addressField.getText().isEmpty() || postCodeField.getText().isEmpty()) {
+        		mainErrorLabel.setText("Must complete all Fields!");
+        		mainErrorLabel.setStyle("-fx-text-fill: red");
+        		return;
+        	}
         	
         	for (int i = 0; i < profileManager.getProfiles().size(); i++) {
         		if (profileManager.getProfiles().get(i).getUsername().equalsIgnoreCase(addUsernameField.getText())) {
         			errorMessageUsername.setText("Username already used!");
         			errorMessageUsername.setStyle("-fx-text-fill: red");
-        			noError = false;
+        			return;
         		}
         	}
         	
-        	if (noError) {
-	        	String username = addUsernameField.getText();
-	        	String firstName = firstNameField.getText();
-	        	String lastName = lastNameField.getText();
+	        String username = addUsernameField.getText();
+	        String firstName = firstNameField.getText();
+	        String lastName = lastNameField.getText();
 	        	
-	        	if (telephoneField.getText().length() > 10) {
-	        		errorMessageTelephone.setText("Telepone Number too Long!");
-	        		errorMessageTelephone.setStyle("-fx-text-fill: red");
-	        	} else {
-	        		String telephone = telephoneField.getText();
-	        		try {
-	        			int tel = Integer.parseInt(telephone);
-	        		}catch(NumberFormatException e1) {
-	        			errorMessageTelephone.setText("Can only contain digits!");
-	        			errorMessageTelephone.setStyle("-fx-text-fill: red");
-	        			noError = false;
-	        		}
-	        		if (noError) {
-		        		String Address = addressField.getText();
-			        	String postCode = postCodeField.getText();
-			        	String imagePath = "ImageDefault.png";
+	        if (telephoneField.getText().length() > 10) {
+	        	errorMessageTelephone.setText("Telepone Number too Long!");
+	        	errorMessageTelephone.setStyle("-fx-text-fill: red");
+	        	return;
+	        }
+	        
+	        String telephone = telephoneField.getText();
+	        try {
+	        	int tel = Integer.parseInt(telephone);
+	        }catch(NumberFormatException e1) {
+	        	errorMessageTelephone.setText("Can only contain digits!");
+	        	errorMessageTelephone.setStyle("-fx-text-fill: red");
+	        	return;
+	        }
+	        
+		    String Address = addressField.getText();
+			String postCode = postCodeField.getText();
+			String imagePath = "ImageDefault.png";
 			        	
-			        	Profile newProfile = new Profile(username, firstName, lastName, telephone,
-			        			Address, postCode, imagePath);
-			        	profileManager.addProfile(newProfile);
-			        	window.close();
-	        		}
-	        	}
-        	}
+			Profile newProfile = new Profile(username, firstName, lastName, telephone,
+					Address, postCode, imagePath);
+			profileManager.addProfile(newProfile);
+			window.close();
         });
         
         signUpVBox.setMargin(addUsername,new Insets(SMALL_MARGIN,
@@ -353,6 +371,8 @@ public class Artatawe extends Application {
         signUpVBox.setMargin(errorMessageUsername,new Insets(SMALL_MARGIN,
         		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
         signUpVBox.setMargin(errorMessageTelephone,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        signUpVBox.setMargin(mainErrorLabel,new Insets(SMALL_MARGIN,
         		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
 
 		Scene scene = new Scene(signUpVBox, SIGNUP_SCENE_WIDTH, SIGNUP_SCENE_HEIGHT);
@@ -884,7 +904,7 @@ public class Artatawe extends Application {
 	}
 	
 	/**
-	 * This method creates a container full of buttons that will be dislayed on
+	 * This method creates a container full of buttons that will be displayed on
 	 * the Auction page.
 	 * @param auction The auction that the buttons will be on.
 	 * @param auctionPageVBox The main Container in the Auction Page.
@@ -1132,7 +1152,7 @@ public class Artatawe extends Application {
 		//sorts the Array on date
 		tempArray = sortAuction(tempArray);
 		
-		//makes the table of won artworks.
+		//makes the table of won artwork's.
 		for (int i = tempArray.size() - 1; i >= 0; i--) {
 			Label col1Label = new Label(tempArray.
         		get(i).getArtwork().getTitle());
@@ -1318,10 +1338,10 @@ public class Artatawe extends Application {
 	}
 	
 	/**
-	 * This methos sorts a list of Auctions in order of date. useful when you want
-	 * to sort through artworks.
-	 * @param tempArray The array of Auctions.
-	 * @return tempArray An array of Auctions but sorted by date.
+	 * This method's sorts a list of Auction's in order of date. useful when you want
+	 * to sort through artwork's.
+	 * @param tempArray The array of Auction's.
+	 * @return tempArray An array of Auction's but sorted by date.
 	 */
 	public ArrayList<Auction> sortAuction(ArrayList<Auction> tempArray) {
 		//sorts the Array on date
@@ -1354,7 +1374,7 @@ public class Artatawe extends Application {
 	}
 	
 	/**
-	 * This methos sorts a list of Bids in order of date. useful when you want
+	 * This method's sorts a list of Bids in order of date. useful when you want
 	 * to sort through Bids.
 	 * @param tempArray The array of Bids.
 	 * @return An array of Bids but sorted by date.
@@ -1422,7 +1442,23 @@ public class Artatawe extends Application {
 		profilePostCode.setId("profileDetails");
 		//adds some margin to the last label.
 		currentProfilePageVBox.setMargin(profilePostCode,new Insets(0,
-				0, LARGE_MARGIN, 0));
+				0, 0, 0));
+		
+		//Make auction Buttons
+		HBox makeAuctionHBox = new HBox();
+		Button makePAuciton = new Button("Make new Auction (Painting)");
+		makeAuctionHBox.setMargin(makePAuciton,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, LARGE_MARGIN, NORMAL_MARGIN));
+		makePAuciton.setOnAction(e -> {
+			makeAuctionPWindow(currentProfile);
+		});
+		Button makeSAuciton = new Button("Make new Auction (Sculpture)");
+		makeAuctionHBox.setMargin(makeSAuciton,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, LARGE_MARGIN, NORMAL_MARGIN));
+		makeSAuciton.setOnAction(e -> {
+			makeAuctionSWindow(currentProfile);
+		});
+		makeAuctionHBox.getChildren().addAll(makePAuciton, makeSAuciton);
 		
 		//list of won artwork's
 		Label wonArtworksLabel = new Label("All Won Artworks");
@@ -1454,7 +1490,7 @@ public class Artatawe extends Application {
 				EXTRA_LARGE_MARGIN, LARGE_MARGIN, EXTRA_LARGE_MARGIN));
 		
 		currentProfilePageVBox.getChildren().addAll(profileHeader, profileFirstName,
-				profileLastName, profileTelephone, profileAddress, profilePostCode,
+				profileLastName, profileTelephone, profileAddress, profilePostCode, makeAuctionHBox,
 				wonArtworksLabel, wonArtworksTable, artworksSoldLabel,
 				artworksSoldTable, allPlacedBidsLabel, allPlacedBidsTable,
 				bidsOnOwnersArtworksLabel, bidsOnOwnersArtworksTable);
@@ -1463,6 +1499,425 @@ public class Artatawe extends Application {
 		mainBorderPane.setCenter(currentProfileScrollPane);
 	}
 	
+	/**
+	 * This method creates a new instance of an Auction for the user.
+	 * This opens up a window where the user can enter in information
+	 * in order to create a new auction. This method is only called if the 
+	 * users wants to add a painting to an Auciton.
+	 */
+	public void makeAuctionPWindow(Profile profile) {
+		Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.resizableProperty().setValue(Boolean.FALSE);
+        window.setTitle("Make Auction");
+        window.getIcons().add(new Image("applicationIcon.png"));
+        
+        VBox makeAuctionVBox = new VBox();
+        
+        //displays the information that can be added.
+        Label addArtworkTitle = new Label("Name of Artwork");
+        TextField addArtworkTitleField = new TextField();
+        
+        Label addDescription = new Label("Add a Description");
+        TextField addDescriptionField = new TextField();
+        
+        Label addMainPhoto = new Label("Add Main Photo");
+        HBox browseSource = new HBox();
+        TextField addMainPhotoField = new TextField();
+        addMainPhotoField.setEditable(false); //can't edit this text field.
+        Button browse = new Button("Browse");
+        browseSource.getChildren().addAll(addMainPhotoField, browse);
+        
+        Label addYearCreated = new Label("Year Artwork Created");
+        TextField addYearCreatedField = new TextField();
+        Label errorMessageYearCreated = new Label("");
+        errorMessageYearCreated.setStyle("-fx-text-fill: red");
+        
+        Label addPrice = new Label("Add Price");
+        TextField addPriceField = new TextField();
+        Label errorMessagePrice = new Label("");
+        errorMessagePrice.setStyle("-fx-text-fill: red");
+        
+        Label addWidth = new Label("Add Width");
+        TextField addWidthField = new TextField();
+        Label errorMessageWidth = new Label("");
+        errorMessageWidth.setStyle("-fx-text-fill: red");
+        
+        Label addHeight = new Label("Add Height");
+        TextField addHeightField = new TextField();
+        Label errorMessageHeight = new Label("");
+        errorMessageHeight.setStyle("-fx-text-fill: red");
+        
+        Button addAuctionButton = new Button("Make Auction");
+        Label errorMessageMain = new Label("");
+        errorMessageMain.setStyle("-fx-text-fill: red");
+        
+        makeAuctionVBox.getChildren().addAll(addArtworkTitle, addArtworkTitleField,
+        		addDescription, addDescriptionField, addMainPhoto, browseSource,
+        		addYearCreated, addYearCreatedField, errorMessageYearCreated, addPrice,
+        		addPriceField, errorMessagePrice, addWidth, addWidthField, errorMessageWidth, addHeight,
+        		addHeightField, errorMessageHeight, addAuctionButton, errorMessageMain);
+        
+        //when you click the browse button.
+        browse.setOnAction(e -> {
+        	//creates a directory chooser and saves the choice to a file.
+        	try {
+	        	FileChooser newFileChooser = new FileChooser();
+	    		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Image Files", "*.png");
+	    		newFileChooser.getExtensionFilters().add(extFilter);
+	    		selectedDirectory = newFileChooser.showOpenDialog(mainStage);
+	    		addMainPhotoField.setText(selectedDirectory.getPath());
+        	} catch(NullPointerException e1) {
+        		errorMessageMain.setText("File not Found!");
+        		errorMessageMain.setStyle("-fx-text-fill: red");
+        	}
+        });
+        
+        //The action for creating an Auction.
+        addAuctionButton.setOnAction(e -> {
+        	if (addArtworkTitleField.getText().isEmpty() || 
+        			addMainPhotoField.getText().isEmpty() || addYearCreatedField.getText().isEmpty() || 
+        			addPriceField.getText().isEmpty() || addWidthField.getText().isEmpty() || addHeightField.getText().isEmpty()) {
+        		errorMessageMain.setText("Must complete all Fields!");
+        		errorMessageMain.setStyle("-fx-text-fill: red");
+        		return;
+        	}
+
+        	String title = addArtworkTitleField.getText();
+        	String description = addDescriptionField.getText();
+        	
+        	int year = 0;
+        	try {
+        		year = Integer.parseInt(addYearCreatedField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessageYearCreated.setText("Can only contain digits!");
+        		errorMessageYearCreated.setStyle("-fx-text-fill: red");
+        		return;
+        	}
+        	
+        	double price = 0;
+        	try {
+        		price = Double.parseDouble(addPriceField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessagePrice.setText("Can only contain digits!");
+        		errorMessagePrice.setStyle("-fx-text-fill: red");
+        		return;
+        	}
+        	
+        	int width = 0;
+        	try {
+        		width = Integer.parseInt(addWidthField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessageWidth.setText("Can only contain digits!");
+            	errorMessageWidth.setStyle("-fx-text-fill: red");
+            	return;
+        	}
+
+  			int height = 0;
+        	try {
+        		height = Integer.parseInt(addHeightField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessageHeight.setText("Can only contain digits!");
+               	errorMessageHeight.setStyle("-fx-text-fill: red");
+               	return;
+        	}
+        	//makes the date and time of the auction being uploaded.
+	        Date date = new Date();
+	  		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	        String dateStr = sdf.format(date);
+	        
+	        //This copies the image that the user has chosen and saves it into the artwork's folder.
+	        String newDir = saveImage(selectedDirectory, title, profile, errorMessageMain);
+	        if (newDir.isEmpty()) {
+	        	return;
+	        }
+	    				
+	        Painting newArtwork = new Painting(title, description, newDir, 
+	        		profile.getUsername(), year, price, dateStr, width, height);
+	        Auction newAuction = new Auction(newArtwork, false);
+	        auctionManager.getAuctions().add(newAuction);
+	        window.close();
+        });
+        
+        makeAuctionVBox.setMargin(addArtworkTitle,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addArtworkTitleField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addDescription,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addDescriptionField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addMainPhoto,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(browseSource,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addYearCreated,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addYearCreatedField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(errorMessageYearCreated,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addPrice,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addPriceField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(errorMessagePrice,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addWidth,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addWidthField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addHeight,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addHeightField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addAuctionButton,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(errorMessageMain,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+
+		Scene scene = new Scene(makeAuctionVBox, MAKE_AUCTION_SCENE_WIDTH, MAKE_AUCTION_SCENE_HEIGHT);
+        window.setScene(scene);
+        window.showAndWait();
+	}
+	
+	/**
+	 * This method saves an image into the artwork's folder. This is so the program can access the images
+	 * when a user creates an Auction.
+	 * @param selectedDirectory The directory.
+	 * @param title The title of artwork.
+	 * @param profile The profile creating the artwork.
+	 * @param errorMessageMain The error message if something goes wrong.
+	 * @return A string of the new Directory.
+	 */
+	public String saveImage(File selectedDirectory, String title, Profile profile, Label errorMessageMain) {
+		String newDir = "";
+        try {
+        	BufferedImage image = ImageIO.read(selectedDirectory);
+        	newDir = "artworks/" + title + "_" + profile.getUsername() + ".png";
+        	File newFile = new File(newDir);
+        	newFile.getParentFile().mkdirs();
+        	ImageIO.write(image, "png", newFile);   	
+        } catch (IOException e1) {
+        	errorMessageMain.setText("Error Saving File!");
+    		errorMessageMain.setStyle("-fx-text-fill: red");
+    		return "";
+        }
+        return newDir;
+	}
+	
+	/**
+	 * this method is called when the user wants to create a new auction
+	 * for a sculpture. This will allow the user to create an auction by
+	 * adding the relevant data.
+	 * @param profile The user who will own the Auction.
+	 */
+	public void makeAuctionSWindow(Profile profile) {
+		Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.resizableProperty().setValue(Boolean.FALSE);
+        window.setTitle("Make Auction");
+        window.getIcons().add(new Image("applicationIcon.png"));
+        
+        VBox makeAuctionVBox = new VBox();
+        
+        //displays the information that can be added.
+        Label addArtworkTitle = new Label("Name of Artwork");
+        TextField addArtworkTitleField = new TextField();
+        
+        Label addDescription = new Label("Add a Description");
+        TextField addDescriptionField = new TextField();
+        
+        Label addMainPhoto = new Label("Add Main Photo");
+        HBox browseSource = new HBox();
+        TextField addMainPhotoField = new TextField();
+        addMainPhotoField.setEditable(false); //can't edit this text field.
+        Button browse = new Button("Browse");
+        browseSource.getChildren().addAll(addMainPhotoField, browse);
+        
+        Label addYearCreated = new Label("Year Artwork Created");
+        TextField addYearCreatedField = new TextField();
+        Label errorMessageYearCreated = new Label("");
+        errorMessageYearCreated.setStyle("-fx-text-fill: red");
+        
+        Label addPrice = new Label("Add Price");
+        TextField addPriceField = new TextField();
+        Label errorMessagePrice = new Label("");
+        errorMessagePrice.setStyle("-fx-text-fill: red");
+        
+        Label addWidth = new Label("Add Width");
+        TextField addWidthField = new TextField();
+        Label errorMessageWidth = new Label("");
+        errorMessageWidth.setStyle("-fx-text-fill: red");
+        
+        Label addHeight = new Label("Add Height");
+        TextField addHeightField = new TextField();
+        Label errorMessageHeight = new Label("");
+        errorMessageHeight.setStyle("-fx-text-fill: red");
+        
+        Label addDepth = new Label("Add Depth");
+        TextField addDepthField = new TextField();
+        Label errorMessageDepth = new Label("");
+        errorMessageDepth.setStyle("-fx-text-fill: red");
+        
+        Label addMaterial = new Label("Add Material");
+        TextField addMaterialField = new TextField();
+        
+        Button addAuctionButton = new Button("Make Auction");
+        Label errorMessageMain = new Label("");
+        errorMessageMain.setStyle("-fx-text-fill: red");
+        
+        makeAuctionVBox.getChildren().addAll(addArtworkTitle, addArtworkTitleField,
+        		addDescription, addDescriptionField, addMainPhoto, browseSource,
+        		addYearCreated, addYearCreatedField, errorMessageYearCreated, addPrice,
+        		addPriceField, errorMessagePrice, addWidth, addWidthField, errorMessageWidth, addHeight,
+        		addHeightField, errorMessageHeight, addDepth, addDepthField, errorMessageDepth, 
+        		addMaterial, addMaterialField, addAuctionButton, errorMessageMain);
+        
+        //when you click the browse button.
+        browse.setOnAction(e -> {
+        	//creates a directory chooser and saves the choice to a file.
+        	try {
+	        	FileChooser newFileChooser = new FileChooser();
+	    		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Image Files", "*.png");
+	    		newFileChooser.getExtensionFilters().add(extFilter);
+	    		selectedDirectory = newFileChooser.showOpenDialog(mainStage);
+	    		addMainPhotoField.setText(selectedDirectory.getPath());
+        	} catch(NullPointerException e1) {
+        		errorMessageMain.setText("File not Found!");
+        		errorMessageMain.setStyle("-fx-text-fill: red");
+        	}
+        });
+        
+        //The action for creating an Auction.
+        addAuctionButton.setOnAction(e -> {
+        	if (addArtworkTitleField.getText().isEmpty() || 
+        			addMainPhotoField.getText().isEmpty() || addYearCreatedField.getText().isEmpty() || 
+        			addPriceField.getText().isEmpty() || addWidthField.getText().isEmpty() || addHeightField.getText().isEmpty() ||
+        			addMaterialField.getText().isEmpty() || addMaterialField.getText().isEmpty()) {
+        		errorMessageMain.setText("Must complete all Fields!");
+        		errorMessageMain.setStyle("-fx-text-fill: red");
+        		return;
+        	}
+
+        	String title = addArtworkTitleField.getText();
+        	String description = addDescriptionField.getText();
+        	
+        	int year = 0;
+        	try {
+        		year = Integer.parseInt(addYearCreatedField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessageYearCreated.setText("Can only contain digits!");
+        		errorMessageYearCreated.setStyle("-fx-text-fill: red");
+        		return;
+        	}
+        	
+        	double price = 0;
+        	try {
+        		price = Double.parseDouble(addPriceField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessagePrice.setText("Can only contain digits!");
+        		errorMessagePrice.setStyle("-fx-text-fill: red");
+        		return;
+        	}
+        	
+        	int width = 0;
+        	try {
+        		width = Integer.parseInt(addWidthField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessageWidth.setText("Can only contain digits!");
+            	errorMessageWidth.setStyle("-fx-text-fill: red");
+            	return;
+        	}
+
+  			int height = 0;
+        	try {
+        		height = Integer.parseInt(addHeightField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessageHeight.setText("Can only contain digits!");
+               	errorMessageHeight.setStyle("-fx-text-fill: red");
+               	return;
+        	}
+        	
+        	int depth = 0;
+        	try {
+        		depth = Integer.parseInt(addDepthField.getText());
+        	} catch(NumberFormatException e1) {
+        		errorMessageDepth.setText("Can only contain digits!");
+               	errorMessageDepth.setStyle("-fx-text-fill: red");
+               	return;
+        	}
+        	
+        	String material = addMaterialField.getText();
+        	
+        	//makes the date and time of the auction being uploaded.
+	        Date date = new Date();
+	  		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	        String dateStr = sdf.format(date);
+	        				
+	        //This copies the image that the user has chosen and saves it into the artwork's folder.
+	        String newDir = saveImage(selectedDirectory, title, profile, errorMessageMain);
+	        if (newDir.isEmpty()) {
+	        	return;
+	        }
+	    				
+	        Sculpture newArtwork = new Sculpture(title, description, newDir, 
+	        		profile.getUsername(), year, price, dateStr, width, height, depth, material);
+	        Auction newAuction = new Auction(newArtwork, false);
+	        auctionManager.getAuctions().add(newAuction);
+	        window.close();
+        });
+        
+        makeAuctionVBox.setMargin(addArtworkTitle,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addArtworkTitleField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addDescription,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addDescriptionField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addMainPhoto,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(browseSource,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addYearCreated,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addYearCreatedField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(errorMessageYearCreated,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addPrice,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addPriceField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(errorMessagePrice,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addWidth,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addWidthField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addHeight,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addHeightField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addAuctionButton,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(errorMessageMain,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addDepth,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addDepthField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addMaterial,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+        makeAuctionVBox.setMargin(addMaterialField,new Insets(SMALL_MARGIN,
+        		SMALL_MARGIN, SMALL_MARGIN, SMALL_MARGIN));
+
+		Scene scene = new Scene(makeAuctionVBox, MAKE_AUCTION_SCULPTURE_SCENE_WIDTH, MAKE_AUCTION_SCULPTURE_SCENE_HEIGHT);
+        window.setScene(scene);
+        window.showAndWait();
+	}
+		
 	/**
 	 * This creates the GUI that will be the profile header.
 	 * This is found at the top of any profile page and includes the profiles name
@@ -1485,6 +1940,7 @@ public class Artatawe extends Application {
 		
 		return profileHeader;
 	}
+	
 	
 	/**
 	 * Creates a profile Navigation Bar. This is a bar that will appear underneath the main
@@ -1519,6 +1975,7 @@ public class Artatawe extends Application {
 		
 		return profileNavigationBar;
 	}
+	
 	
 	/**
 	 * This method creates a settings window which allows the user to edit
@@ -1617,6 +2074,7 @@ public class Artatawe extends Application {
         window.showAndWait();
 	}
 	
+	
 	/**
 	 * This method creates the GUI that shows all the profiles that have
 	 * an account on Artatawe and allows you to visit their Account page.
@@ -1697,6 +2155,7 @@ public class Artatawe extends Application {
 		mainBorderPane.setCenter(viewAllProfilesScrollPane);
 	}
 	
+	
 	/**
 	 * This method is called when the user wants to close the program
 	 * by clicking the red x in the top right corner. This method will close the
@@ -1705,6 +2164,7 @@ public class Artatawe extends Application {
 	public void closeProgram() {
 		saveData();
 	}
+	
 	
 	/**
 	 * This method saves the data.
