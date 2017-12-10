@@ -36,7 +36,7 @@ import javafx.stage.Stage;
 
 /**
  * This class contains all the GUI for the Artatawe program.
- * @author Bradley Tenuta
+ * @author Bradley Tenuta 902559
  */
 public class Artatawe extends Application {
 	
@@ -871,14 +871,16 @@ public class Artatawe extends Application {
 				return; //breaks from the button click.
 			}
 			
-			if (currentProfile.getUsername().equals(auction.getHighestBid().
+			if (!(auction.getAllBids().size() == 0)) {
+				if (currentProfile.getUsername().equals(auction.getHighestBid().
 					getBidder().getUsername())) {
-				bidErrorMessage.setText("You already have the highest Bid!");
-			} else if (auction.getArtwork().getPrice() > newBidTotal) {
-				bidErrorMessage.setText("You must enter a bid higher than initial price.");
-			} else if (auction.getHighestBid().getAmount() > newBidTotal){
-				bidErrorMessage.setText("Must be higher than current highest bid.");
-			} else if (auction.getSeller().equals(currentProfile.getUsername())){
+					bidErrorMessage.setText("You already have the highest Bid!");
+				} else if (auction.getHighestBid().getAmount() > newBidTotal){
+					bidErrorMessage.setText("Must be higher than current highest bid.");
+				}
+			} 
+			
+			if (auction.getSeller().equals(currentProfile.getUsername())){
 				bidErrorMessage.setText("You can't bid on your own Auction!");
 			} else {
 				//creates the time and date of the bid.
@@ -1050,7 +1052,6 @@ public class Artatawe extends Application {
 				col3.getChildren().add(col3Label);
 			}
 		}
-		
 		
 		bidTable.getChildren().addAll(col1, col2, col3);
 		
