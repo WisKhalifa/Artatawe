@@ -31,7 +31,7 @@ public class FileLoader {
 			
 			Scanner in = new Scanner(file);
 			
-			while(in.hasNextLine()) {
+			while (in.hasNextLine()) {
 				String username = in.nextLine();
 				String firstName = in.nextLine();
 				String lastName = in.nextLine();
@@ -50,7 +50,7 @@ public class FileLoader {
 				 * use the addFavourite method in profile
 				 * to add favourite users
 				 */
-				while(!(nextElem.equals(","))) {
+				while (!(nextElem.equals(","))) {
 					p.addFavourite(nextElem);
 					nextElem = in.nextLine();
 				}
@@ -150,7 +150,7 @@ public class FileLoader {
 		
 		String nextPhoto = line.next();
 		
-		while(!(nextPhoto.equals("!"))) {
+		while (!(nextPhoto.equals("!"))) {
 			extraPhotos.add(nextPhoto);
 			nextPhoto = line.next();
 		}
