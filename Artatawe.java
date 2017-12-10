@@ -132,7 +132,7 @@ public class Artatawe extends Application {
 	 * Creates the Login page for Artatawe.
 	 * @return A Container containing the login page.
 	 */
-	public StackPane makeLoginPage(){
+	private StackPane makeLoginPage(){
 		//The root pane everything will be attached to.
 		StackPane loginStackPane = new StackPane();
 		
@@ -187,7 +187,7 @@ public class Artatawe extends Application {
 	 * @param url This is the string location of the source image.
 	 * @return An ImageView object.
 	 */
-	public ImageView createImage(String url) {
+	private ImageView createImage(String url) {
 		Image loginBackgroundImage = new Image(url);
 		ImageView loginImage = new ImageView();
 		loginImage.setImage(loginBackgroundImage);
@@ -200,7 +200,7 @@ public class Artatawe extends Application {
 	 * @param usernameTextField Required when running the logic to log the user in.
 	 * @return returns the a container with the login button inside.
 	 */
-	public VBox createLoginButton(TextField usernameTextField) {
+	private VBox createLoginButton(TextField usernameTextField) {
 		VBox borderPaneVBox = new VBox();
 		//Edit errorLabel.
 		Label errorLabel = new Label("");
@@ -256,7 +256,7 @@ public class Artatawe extends Application {
 	 * This method creates a GUI in a new window which then allows a user
 	 * to create a profile.
 	 */
-	public void openSignUpWindow() {
+	private void openSignUpWindow() {
 		Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.resizableProperty().setValue(Boolean.FALSE);
@@ -384,7 +384,7 @@ public class Artatawe extends Application {
 	 * Creates the dash board page, This GUI is loaded once the user logs in.
 	 * The dash board page is the browse Auction page.
 	 */
-	public void makeDashboard() {	
+	private void makeDashboard() {	
 		mainBorderPane = new BorderPane();
 		mainBorderPane.setId("mainBorderPane");
 		
@@ -430,7 +430,7 @@ public class Artatawe extends Application {
 	 * @param AuctionFP
 	 * @return A container containing the navigation bar.
 	 */
-	public HBox createAuctionNavigationBar() {
+	private HBox createAuctionNavigationBar() {
 		auctionNavigationBar = new HBox();
 		auctionNavigationBar.setId("auctionNavigationBar");
 		auctionNavigationBar.setMaxHeight(AUCTION_NAVIGATION_BAR_HEIGHT);
@@ -537,7 +537,7 @@ public class Artatawe extends Application {
 	 * Creates the Navigation bar used for in the application.
 	 * @return A container containing the Navigation bar.
 	 */
-	public HBox createNavigationBar() {
+	private HBox createNavigationBar() {
 		HBox navigationBar = new HBox();
 		navigationBar.setId("navigationBar");
 		
@@ -588,7 +588,7 @@ public class Artatawe extends Application {
 	 * @param paintingFilter Used to see if the painting filter needs to be applied.
 	 * @param sculptureFilter Used to see if the sculpture filter needs to be applied.
 	 */
-	public void displayAuctions() {
+	private void displayAuctions() {
 		for(Auction auction : auctionManager.getAuctions()) {
 		
 			BorderPane auctionItemBox = new BorderPane();
@@ -618,7 +618,7 @@ public class Artatawe extends Application {
 	 * shown on the dash board.
 	 * @param username The input from the user.
 	 */
-	public void searchAuction(String username) {
+	private void searchAuction(String username) {
 		for (Auction auction : auctionManager.getAuctions()) {
 			
 			BorderPane auctionItemBox = new BorderPane();
@@ -642,7 +642,7 @@ public class Artatawe extends Application {
 	/**
 	 * This method finds and displays all the completed auction's.
 	 */
-	public void showCompletedAuctions() {
+	private void showCompletedAuctions() {
 		for (Auction auction : auctionManager.getAuctions()) {
 			
 			BorderPane auctionItemBox = new BorderPane();
@@ -666,7 +666,7 @@ public class Artatawe extends Application {
 	/**
 	 * This method finds and displays all the favourites auction's of the user.
 	 */
-	public void showFavourites() {
+	private void showFavourites() {
 		for (Auction auction : auctionManager.getAuctions()) {
 			
 			BorderPane auctionItemBox = new BorderPane();
@@ -694,7 +694,7 @@ public class Artatawe extends Application {
 	 * This finds all the auction's and creates a GUI for them and then displays them
 	 * in the auction page or dash board.
 	 */
-	public BorderPane createAuctionItem(BorderPane auctionItemBox, Auction auction) {
+	private BorderPane createAuctionItem(BorderPane auctionItemBox, Auction auction) {
 		BorderPane auctionItemBoxPicContainer = new BorderPane();
 		ImageView auctionBoxImageView = createImage(auction.getArtwork().getMainPhoto());
 		
@@ -744,7 +744,7 @@ public class Artatawe extends Application {
 	 * to bid on the Auction.
 	 * @param auction The auction clicked on by the user.
 	 */
-	public void createAuctionPage(Auction auction) {
+	private void createAuctionPage(Auction auction) {
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 		
 		ScrollPane auctionScrollPane = new ScrollPane();
@@ -833,7 +833,7 @@ public class Artatawe extends Application {
 	 * to their auction. Only works if the auction is a sculpture.
 	 * @return
 	 */
-	public Button addExtraPhotos(Auction auction) {
+	private Button addExtraPhotos(Auction auction) {
 		Button addPhotos = new Button("Add Photos");
 		
 		addPhotos.setOnAction(e -> {
@@ -873,7 +873,7 @@ public class Artatawe extends Application {
 	 * @param artworkBidTotal A label that needs to be updated when a bid is made.
 	 * @return A container of the bid input GUI and the bid table.
 	 */
-	public VBox makeAuctionBidContainer(Auction auction, VBox auctionPageVBox,
+	private VBox makeAuctionBidContainer(Auction auction, VBox auctionPageVBox,
 			Label artworkBidTotal) {
 		
 		VBox auctionBidContainer = new VBox();
@@ -959,7 +959,7 @@ public class Artatawe extends Application {
 	 * @param auctionPageVBox The main Container in the Auction Page.
 	 * @return A VBox that contains the buttons.
 	 */
-	public VBox createButtonContainer(Auction auction, VBox auctionPageVBox){
+	private VBox createButtonContainer(Auction auction, VBox auctionPageVBox){
 		VBox buttonContainer = new VBox();
 		
 		//creates a button to view owners profile.
@@ -1029,7 +1029,7 @@ public class Artatawe extends Application {
 	 * @param artworkImage The Image container that changes.
 	 * @return A HBox that contains the buttons.
 	 */
-	public HBox createExtraPhotoButton(Auction auction, ImageView artworkImage) {
+	private HBox createExtraPhotoButton(Auction auction, ImageView artworkImage) {
 		HBox containerOfExtraPhotos = new HBox();
 		Button mainPicButton = new Button("Picture 1");
 		mainPicButton.setId("auctionButtons");
@@ -1066,7 +1066,7 @@ public class Artatawe extends Application {
 	 * @param auction
 	 * @return A table containing the bids of an Auction.
 	 */
-	public HBox makeBidTable(Auction auction) {
+	private HBox makeBidTable(Auction auction) {
 		HBox bidTable = new HBox();
 		bidTable.setId("Table");
 		VBox col1 = new VBox();
@@ -1110,7 +1110,7 @@ public class Artatawe extends Application {
 	 * is not the current Users profile but another Users profile.
 	 * @param profile The profile that is being viewed.
 	 */
-	public void viewProfile(Profile profile) {
+	private void viewProfile(Profile profile) {
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 		
 		profileScrollPane = new ScrollPane();
@@ -1166,7 +1166,7 @@ public class Artatawe extends Application {
 	 * @param profile
 	 * @return A table of won artwork's.
 	 */
-	public HBox getWonArtworksTable(Profile profile) {
+	private HBox getWonArtworksTable(Profile profile) {
 		HBox wonArtworksTable = new HBox();
 		wonArtworksTable.setId("Table");
 		VBox col1 = new VBox();
@@ -1225,7 +1225,7 @@ public class Artatawe extends Application {
 	 * @param profile
 	 * @return A table of all sold artwork's.
 	 */
-	public HBox getArtworksSold(Profile profile) {
+	private HBox getArtworksSold(Profile profile) {
 		HBox artworksSoldTable = new HBox();
 		artworksSoldTable.setId("Table");
 		VBox col1 = new VBox();
@@ -1284,7 +1284,7 @@ public class Artatawe extends Application {
 	 * @param profile
 	 * @return A table of bids placed.
 	 */
-	public HBox getBidsPlaced(Profile profile) {
+	private HBox getBidsPlaced(Profile profile) {
 		HBox bidsPlacedTable = new HBox();
 		bidsPlacedTable.setId("Table");
 		VBox col1 = new VBox();
@@ -1335,7 +1335,7 @@ public class Artatawe extends Application {
 	 * @param profile
 	 * @return A table of bids placed on the profiles Auction's.
 	 */
-	public HBox getBidsOnOwnersArtwork(Profile profile) {
+	private HBox getBidsOnOwnersArtwork(Profile profile) {
 		HBox bidsOnOwnersArtworkTable = new HBox();
 		bidsOnOwnersArtworkTable.setId("Table");
 		VBox col1 = new VBox();
@@ -1391,7 +1391,7 @@ public class Artatawe extends Application {
 	 * @param tempArray The array of Auction's.
 	 * @return tempArray An array of Auction's but sorted by date.
 	 */
-	public ArrayList<Auction> sortAuction(ArrayList<Auction> tempArray) {
+	private ArrayList<Auction> sortAuction(ArrayList<Auction> tempArray) {
 		//sorts the Array on date
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Collections.sort(tempArray, new Comparator<Auction>() {
@@ -1427,7 +1427,7 @@ public class Artatawe extends Application {
 	 * @param tempArray The array of Bids.
 	 * @return An array of Bids but sorted by date.
 	 */
-	public ArrayList<Bid> sortBid(ArrayList<Bid> tempArray) {
+	private ArrayList<Bid> sortBid(ArrayList<Bid> tempArray) {
 		//sorts the Array on date.
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Collections.sort(tempArray, new Comparator<Bid>() {
@@ -1461,7 +1461,7 @@ public class Artatawe extends Application {
 	 * the current user to view their information and make
 	 * changes to their information and also make custom drawings.
 	 */
-	public void viewCurrentProfile() {
+	private void viewCurrentProfile() {
 		//checks if the scene already has a 
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 		
@@ -1553,7 +1553,7 @@ public class Artatawe extends Application {
 	 * in order to create a new auction. This method is only called if the 
 	 * users wants to add a painting to an Auciton.
 	 */
-	public void makeAuctionPWindow(Profile profile) {
+	private void makeAuctionPWindow(Profile profile) {
 		Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.resizableProperty().setValue(Boolean.FALSE);
@@ -1738,7 +1738,7 @@ public class Artatawe extends Application {
 	 * @param errorMessageMain The error message if something goes wrong.
 	 * @return A string of the new Directory.
 	 */
-	public String saveImage(File selectedDirectory, String title, Profile profile, Label errorMessageMain) {
+	private String saveImage(File selectedDirectory, String title, Profile profile, Label errorMessageMain) {
 		String newDir = "";
         try {
         	BufferedImage image = ImageIO.read(selectedDirectory);
@@ -1760,7 +1760,7 @@ public class Artatawe extends Application {
 	 * adding the relevant data.
 	 * @param profile The user who will own the Auction.
 	 */
-	public void makeAuctionSWindow(Profile profile) {
+	private void makeAuctionSWindow(Profile profile) {
 		Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.resizableProperty().setValue(Boolean.FALSE);
@@ -1972,7 +1972,7 @@ public class Artatawe extends Application {
 	 * and their profile picture.
 	 * @return A container containing the profile Header.
 	 */
-	public HBox makeProfileHeader(Profile profile) {
+	private HBox makeProfileHeader(Profile profile) {
 		HBox profileHeader = new HBox();
 		
 		profileHeader.setId("profileHeader");
@@ -1995,7 +1995,7 @@ public class Artatawe extends Application {
 	 * navigation bar once the user views their own profile.
 	 * @return A profile Navigation bar in a HBox container.
 	 */
-	public HBox createProfileNavigationBar() {
+	private HBox createProfileNavigationBar() {
 		profileNavigationBar = new HBox();
 		profileNavigationBar.setId("profileNavigationBar");
 		profileNavigationBar.setMaxHeight(PROFILE_NAVIGATION_BAR_HEIGHT);
@@ -2029,7 +2029,7 @@ public class Artatawe extends Application {
 	 * This method creates a settings window which allows the user to edit
 	 * their information such as name, address or telephone number.
 	 */
-	public void makeSettingsWindow() {
+	private void makeSettingsWindow() {
 		Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.resizableProperty().setValue(Boolean.FALSE);
@@ -2127,7 +2127,7 @@ public class Artatawe extends Application {
 	 * This method creates the GUI that shows all the profiles that have
 	 * an account on Artatawe and allows you to visit their Account page.
 	 */
-	public void viewAllCurrentProfiles() {
+	private void viewAllCurrentProfiles() {
 		mainBorderPaneTopVBox.getChildren().remove(auctionNavigationBar);
 		mainBorderPaneTopVBox.getChildren().remove(profileNavigationBar);
 		
@@ -2209,7 +2209,7 @@ public class Artatawe extends Application {
 	 * by clicking the red x in the top right corner. This method will close the
 	 * program but first it saves all the data, so changes are not lost.
 	 */
-	public void closeProgram() {
+	private void closeProgram() {
 		saveData();
 	}
 	
@@ -2217,7 +2217,7 @@ public class Artatawe extends Application {
 	/**
 	 * This method saves the data.
 	 */
-	public void saveData() {
+	private void saveData() {
 		FileWriter filewriter1 = null;
 		try {
 			filewriter1 = new FileWriter("profile.txt", "auction.txt");
