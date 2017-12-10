@@ -25,7 +25,7 @@ public class FileLoader {
 	 * @throws FileNotFoundException if profilePath not found
 	 * @return ArrayList of profile objects 
 	 */
-	public ArrayList<Profile> loadProfile(){
+	public ArrayList<Profile> loadProfile() {
 		try {
 			File file = new File(profilePath);
 			
@@ -197,7 +197,7 @@ public class FileLoader {
 	 * @throws FileNotFoundException if auctionPath cannot be found
 	 * @return ArrayList of Auction objects
 	 */
-	public ArrayList<Auction> loadAuction(){
+	public ArrayList<Auction> loadAuction() {
 		try { 
 			File file = new File(auctionPath);
 			
