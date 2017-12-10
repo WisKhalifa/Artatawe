@@ -163,7 +163,7 @@ public abstract class Artwork {
    * sets the maximum amount of bids allowed on the artwork
    * @param bidTotal
    */
-  public void setBidTotal (int bidTotal) {
+  public void setBidTotal(int bidTotal) {
     this.bidTotal = bidTotal;
   }
 
