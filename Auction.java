@@ -1,84 +1,77 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
- *
- * @author Cormac
+ * This class simulates an auction.
+ * @author Cormac Anderson 911013
  */
 public class Auction {
+    
+        // Contant values
+        final int MAX_NO_OF_BIDS = 10;
+        
+        // Instance values
         private final Artwork artwork;
         private ArrayList<Bid> bids;
         private Boolean isComplete;
         private int bidsLeft;
         
-        final int MAX_NO_OF_BIDS = 10;
-        final int MIN_NO_OF_BIDS = 5;
-        
         /**
-         * 
-         * @param a
-         * @param isComplete 
+         * Constructs an instance of an auction.
+         * @param a The artwork to be sold on the auction.
+         * @param isComplete The state of the auction.
          */
         public Auction(Artwork a, Boolean isComplete) {
                 this.artwork = a;
                 this.isComplete = isComplete;
                 bids = new ArrayList<>();
-                Random rand = new Random();
-                // sets bidsLeft to a random int between the min and max constants.
-                bidsLeft = rand.nextInt((MAX_NO_OF_BIDS - MIN_NO_OF_BIDS) + 1) + MIN_NO_OF_BIDS;
+                bidsLeft = MAX_NO_OF_BIDS;
         }
         
         /**
-         * 
-         * @return 
+         * @return The artwork being sold on the auction.
          */
         public Artwork getArtwork() {
                 return artwork;
         }
         
         /**
-         * 
-         * @return 
+         * @return The last placed bid on the auction.
          */
         public Bid getHighestBid() {
                 return bids.get(bids.size() -1);
         }
         
         /**
-         * 
-         * @return 
+         * @return All of the bids made on the auction.
          */
         public ArrayList<Bid> getAllBids() {
                 return bids;
         }
         
         /**
-         * 
-         * @return 
+         * @return The state of the auction.
          */
         public Boolean isComplete() {
                 return isComplete;
         }
         
         /**
-         * 
-         * @return 
+         * @return The name of the seller of the auction.
          */
         public String getSeller() {
                 return artwork.getCreatorName();
         }
         
         /**
-         * 
-         * @return 
+         * @return The number of bids left on the auction.
          */
         public int getBidsLeft() {
                 return bidsLeft;
         }
         
         /**
-         * 
-         * @param b 
+         * Places a bid on the auction.
+         * @param b The bid to be placed.
          */
         public void placeBid(Bid b){
                 bidsLeft -= 1;

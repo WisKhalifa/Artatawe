@@ -1,22 +1,26 @@
 import java.util.ArrayList;
 
 /**
- *
- * @author Cormac Anderson
+ * This class simulates a profile manager which handles all of the profiles
+ * in the system.
+ * @author Cormac Anderson 911013
  */
 public class ProfileManager {
+    
+        // Instance values
         private ArrayList<Profile> profiles;
         
         /**
          * Creates an instance of a profile manager.
+         * @param fl The file loader to load all of the profiles.
          */
-        public ProfileManager(FileLoader f1) {
+        public ProfileManager(FileLoader fl) {
             profiles = new ArrayList<>();
-            profiles = f1.loadProfile();
+            profiles = fl.loadProfile();
         }
         
         /**
-         * @return the array list of profiles 
+         * @return The array list of profiles.
          */
         public ArrayList<Profile> getProfiles() {
                 return profiles;
@@ -24,7 +28,7 @@ public class ProfileManager {
         
         /**
          * Adds a profile to the profile manager.
-         * @param a 
+         * @param a The profile to be added to the manager.
          */
         public void addProfile(Profile p) {
                 profiles.add(p);
@@ -32,15 +36,15 @@ public class ProfileManager {
 
         /**
          * Removes a profile from the profile manager.
-         * @param a the auction to be removed
+         * @param a the profile to be removed
          */        
         public void deleteProfile(Profile p) {
                 profiles.remove(p);
         }
         
         /**
-         * 
-         * @param fw 
+         * Save all of the profiles in the profile manager to file.
+         * @param fw The file writer to save all of the profiles.
          */
         public void saveProfiles(FileWriter fw) {
                 fw.writeProfileToFile(profiles);
