@@ -82,7 +82,7 @@ public class Sculpture extends Artwork {
    * sets the width of the sculpture
    * @param width
    */
-  public void setWidth (int width) {
+  public void setWidth(int width) {
     this.width = width;
   }
   
@@ -90,7 +90,7 @@ public class Sculpture extends Artwork {
    * sets the height of the sculpture
    * @param height
    */
-  public void setHeight (int height) {
+  public void setHeight(int height) {
     this.height = height;
   }
   
@@ -98,7 +98,7 @@ public class Sculpture extends Artwork {
    * sets the depth of the sculpture
    * @param depth
    */
-  public void setDepth (int depth) {
+  public void setDepth(int depth) {
     this.depth = depth;
   }
 
@@ -106,7 +106,7 @@ public class Sculpture extends Artwork {
    * sets the material ths sculpture is made of
    * @param material
    */
-  public void setMaterial (String material) {
+  public void setMaterial(String material) {
     this.material = material;
   }
 
@@ -114,7 +114,7 @@ public class Sculpture extends Artwork {
    * sets the extra photos of the sculpture
    * @param extraPhotos
    */
-  public void setExtraPhotos (ArrayList<String> extraPhotos) {
+  public void setExtraPhotos(ArrayList<String> extraPhotos) {
     this.extraPhotos = extraPhotos;
   }
   
@@ -122,7 +122,7 @@ public class Sculpture extends Artwork {
    * Adds an extra Photo to the already existing ExtraPhotos
    * @param extraPhotos
    */
-  public void addExtraPhotos (String extraPhoto) {
+  public void addExtraPhotos(String extraPhoto) {
     extraPhotos.add(extraPhoto);
   }
 
